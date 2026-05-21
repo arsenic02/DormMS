@@ -1,0 +1,6 @@
+@DormMS_HostAddress = http://localhost:5153
+
+GET {{DormMS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

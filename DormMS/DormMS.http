@@ -4,3 +4,61 @@ GET {{DormMS_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{DormMS_HostAddress}}/api/students
+Accept: application/json
+
+###
+
+GET {{DormMS_HostAddress}}/api/students/1
+Accept: application/json
+
+###
+
+POST {{DormMS_HostAddress}}/api/students
+Content-Type: application/json
+
+{
+  "name": "Marko",
+  "surname": "Marković",
+  "homeAddress": "Beograd",
+  "studentIDNumber": "2020/001",
+  "email": "marko@example.com",
+  "age": 22,
+  "gender": 0,
+  "yearOfEnrollment": 2020,
+  "studyLevel": 0,
+  "status": 0,
+  "facultyId": 1,
+  "espb": 120,
+  "isBudgetStudent": true,
+  "dormitoryRoomId": null
+}
+
+###
+
+PUT {{DormMS_HostAddress}}/api/students/1
+Content-Type: application/json
+
+{
+  "name": "Marko",
+  "surname": "Marković",
+  "homeAddress": "Novi Sad",
+  "studentIDNumber": "2020/001",
+  "email": "marko@example.com",
+  "age": 23,
+  "gender": 0,
+  "yearOfEnrollment": 2020,
+  "studyLevel": 0,
+  "status": 0,
+  "facultyId": 1,
+  "espb": 150,
+  "isBudgetStudent": true,
+  "dormitoryRoomId": null
+}
+
+###
+
+DELETE {{DormMS_HostAddress}}/api/students/1
+
+###

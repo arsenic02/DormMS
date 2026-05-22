@@ -1,19 +1,19 @@
 public class DormitoryRoom
 {
     public int Id { get; set; }
-    public string RoomNumber { get; set; } =string.Empty;
+    public string RoomNumber { get; set; } = string.Empty;
     public int Capacity { get; set; }
     public int CurrentOccupancy { get; set; }
     public bool IsOccupied { get; set; }
     public GenderType Gender { get; set; }
     public RoomStatus Status { get; set; }
 
-    public  DormitoryRoom? Dorm{ get; set; }
+    public int DormId { get; set; } // FK
+    public Dorm? Dorm { get; set; }
 
     public int AvailableSpots => Capacity - CurrentOccupancy;
     public bool IsFull => CurrentOccupancy >= Capacity;
-    
-    
+
 }
 
 public enum GenderType

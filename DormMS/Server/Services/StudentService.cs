@@ -11,44 +11,38 @@ public class StudentService : IStudentService
 
     public Task<Student?> GetByIdAsync(int id) => _repository.GetByIdAsync(id);
 
-    public async Task<(Student? Student, string? Error)> CreateAsync(StudentCreateUpdateDto dto)
+    public async Task<Student?> CreateAsync(StudentCreateUpdateDto dto)
     {
-        var validationError = await ValidateDormitoryRoomAsync(dto.DormitoryRoomId);
-        if (validationError is not null)
-            return (null, validationError);
+        if (!await IsDormitoryRoomValidAsync(dto.DormitoryRoomId))
+            return null;
 
         var student = MapToEntity(dto);
         await _repository.AddAsync(student);
-        return (student, null);
+        return student;
     }
 
-    public async Task<(bool Found, string? Error)> UpdateAsync(int id, StudentCreateUpdateDto dto)
+    public async Task<bool?> UpdateAsync(int id, StudentCreateUpdateDto dto)
     {
         var student = await _repository.GetByIdTrackedAsync(id);
         if (student is null)
-            return (false, null);
+            return null;
 
-        var validationError = await ValidateDormitoryRoomAsync(dto.DormitoryRoomId);
-        if (validationError is not null)
-            return (true, validationError);
+        if (!await IsDormitoryRoomValidAsync(dto.DormitoryRoomId))
+            return false;
 
         MapToEntity(dto, student);
         await _repository.UpdateAsync(student);
-        return (true, null);
+        return true;
     }
 
     public Task<bool> DeleteAsync(int id) => _repository.DeleteAsync(id);
 
-    private async Task<string?> ValidateDormitoryRoomAsync(int? dormitoryRoomId)
+    private async Task<bool> IsDormitoryRoomValidAsync(int? dormitoryRoomId)
     {
         if (!dormitoryRoomId.HasValue)
-            return null;
+            return true;
 
-        var exists = await _repository.DormitoryRoomExistsAsync(dormitoryRoomId.Value);
-        if (!exists)
-            return $"Soba sa ID {dormitoryRoomId.Value} ne postoji.";
-
-        return null;
+        return await _repository.DormitoryRoomExistsAsync(dormitoryRoomId.Value);
     }
 
     private static Student MapToEntity(StudentCreateUpdateDto dto, Student? existing = null)

@@ -30,21 +30,21 @@ public class StudentController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Student>> CreateStudent(StudentCreateUpdateDto dto)
     {
-        var (student, error) = await _studentService.CreateAsync(dto);
-        if (error is not null)
-            return BadRequest(error);
+        var student = await _studentService.CreateAsync(dto);
+        if (student is null)
+            return BadRequest();
 
-        return CreatedAtAction(nameof(GetStudent), new { id = student!.Id }, student);
+        return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, student);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateStudent(int id, StudentCreateUpdateDto dto)
     {
-        var (found, error) = await _studentService.UpdateAsync(id, dto);
-        if (!found)
+        var result = await _studentService.UpdateAsync(id, dto);
+        if (result is null)
             return NotFound();
-        if (error is not null)
-            return BadRequest(error);
+        if (result is false)
+            return BadRequest();
 
         return NoContent();
     }

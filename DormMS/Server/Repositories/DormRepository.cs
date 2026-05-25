@@ -1,0 +1,48 @@
+using Microsoft.EntityFrameworkCore;
+
+public class DormRepository : IDormRepository
+{
+    private readonly AppDbContext _context;
+
+    public DormRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<IEnumerable<Dorm>> GetAllAsync()
+    {
+        return await _context.Dorms.AsNoTracking().ToListAsync();
+    }
+
+    public async Task<Dorm?> GetByIdAsync(int id)
+    {
+        return await _context.Dorms.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
+    }
+
+    public async Task<Dorm?> GetByIdTrackedAsync(int id)
+    {
+        return await _context.Dorms.FindAsync(id);
+    }
+
+    public async Task AddAsync(Dorm dorm)
+    {
+        _context.Dorms.Add(dorm);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Dorm dorm)
+    {
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var dorm = await _context.Dorms.FindAsync(id);
+        if (dorm is null)
+            return false;
+
+        _context.Dorms.Remove(dorm);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+}

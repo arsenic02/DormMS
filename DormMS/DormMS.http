@@ -62,3 +62,41 @@ Content-Type: application/json
 DELETE {{DormMS_HostAddress}}/api/students/1
 
 ###
+
+GET {{DormMS_HostAddress}}/api/Dorm
+Accept: application/json
+
+###
+
+GET {{DormMS_HostAddress}}/api/Dorm/1
+Accept: application/json
+
+###
+
+POST {{DormMS_HostAddress}}/api/Dorm
+Content-Type: application/json
+
+{
+  "name": "Studentski grad",
+  "location": "Beograd",
+  "capacity": 500,
+  "currentOccupancy": 0
+}
+
+###
+
+PUT {{DormMS_HostAddress}}/api/Dorm/1
+Content-Type: application/json
+
+{
+  "name": "Studentski grad",
+  "location": "Beograd",
+  "capacity": 600,
+  "currentOccupancy": 120
+}
+
+###
+
+DELETE {{DormMS_HostAddress}}/api/Dorm/1
+
+###

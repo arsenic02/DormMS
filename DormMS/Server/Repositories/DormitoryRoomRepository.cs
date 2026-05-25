@@ -1,0 +1,53 @@
+using Microsoft.EntityFrameworkCore;
+
+public class DormitoryRoomRepository : IDormitoryRoomRepository
+{
+    private readonly AppDbContext _context;
+
+    public DormitoryRoomRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<IEnumerable<DormitoryRoom>> GetAllAsync()
+    {
+        return await _context.DormitoryRooms.AsNoTracking().ToListAsync();
+    }
+
+    public async Task<DormitoryRoom?> GetByIdAsync(int id)
+    {
+        return await _context.DormitoryRooms.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);
+    }
+
+    public async Task<DormitoryRoom?> GetByIdTrackedAsync(int id)
+    {
+        return await _context.DormitoryRooms.FindAsync(id);
+    }
+
+    public async Task AddAsync(DormitoryRoom room)
+    {
+        _context.DormitoryRooms.Add(room);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(DormitoryRoom room)
+    {
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var room = await _context.DormitoryRooms.FindAsync(id);
+        if (room is null)
+            return false;
+
+        _context.DormitoryRooms.Remove(room);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DormExistsAsync(int dormId)
+    {
+        return await _context.Dorms.AnyAsync(d => d.Id == dormId);
+    }
+}

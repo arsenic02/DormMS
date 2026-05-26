@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -28,6 +29,7 @@ public class DormitoryRoomController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult<DormitoryRoom>> CreateDormitoryRoom(DormitoryRoomCreateUpdateDto dto)
     {
         var room = await _dormitoryRoomService.CreateAsync(dto);
@@ -38,6 +40,7 @@ public class DormitoryRoomController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> UpdateDormitoryRoom(int id, DormitoryRoomCreateUpdateDto dto)
     {
         var result = await _dormitoryRoomService.UpdateAsync(id, dto);
@@ -50,6 +53,7 @@ public class DormitoryRoomController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> DeleteDormitoryRoom(int id)
     {
         var deleted = await _dormitoryRoomService.DeleteAsync(id);

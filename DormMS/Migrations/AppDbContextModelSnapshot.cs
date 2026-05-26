@@ -209,6 +209,48 @@ namespace DormMS.Migrations
                     b.ToTable("Students");
                 });
 
+            modelBuilder.Entity("User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AdminId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("DormManagerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminId");
+
+                    b.HasIndex("DormManagerId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("DormManager", b =>
                 {
                     b.HasOne("Dorm", "Dorm")
@@ -238,6 +280,27 @@ namespace DormMS.Migrations
                         .HasForeignKey("DormitoryRoomId");
 
                     b.Navigation("DormitoryRoom");
+                });
+
+            modelBuilder.Entity("User", b =>
+                {
+                    b.HasOne("Admin", "Admin")
+                        .WithMany()
+                        .HasForeignKey("AdminId");
+
+                    b.HasOne("DormManager", "DormManager")
+                        .WithMany()
+                        .HasForeignKey("DormManagerId");
+
+                    b.HasOne("Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId");
+
+                    b.Navigation("Admin");
+
+                    b.Navigation("DormManager");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Dorm", b =>

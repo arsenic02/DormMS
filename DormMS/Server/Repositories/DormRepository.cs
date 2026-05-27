@@ -11,12 +11,18 @@ public class DormRepository : IDormRepository
 
     public async Task<IEnumerable<Dorm>> GetAllAsync()
     {
-        return await _context.Dorms.AsNoTracking().ToListAsync();
+        return await _context.Dorms
+        .Include(d => d.Rooms)
+        .AsNoTracking()
+        .ToListAsync();
     }
 
     public async Task<Dorm?> GetByIdAsync(int id)
     {
-        return await _context.Dorms.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
+        return await _context.Dorms
+        .Include(d => d.Rooms)
+        .AsNoTracking()
+        .FirstOrDefaultAsync(d => d.Id == id);
     }
 
     public async Task<Dorm?> GetByIdTrackedAsync(int id)

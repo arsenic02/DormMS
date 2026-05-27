@@ -63,3 +63,4 @@ public class DormService : IDormService
         return dorm;
     }
 }
+//potrebno je ubaciti mapiranje za DormGetDto,

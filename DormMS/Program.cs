@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>() ?? new JwtSettings();
+if (string.IsNullOrWhiteSpace(jwtSettings.Key))
+{
+    throw new InvalidOperationException(
+        "JWT key is missing. Configure JwtSettings:Key in environment variables (JwtSettings__Key).");
+}
 
 builder.Services.AddAuthentication(x =>
 {
@@ -24,10 +33,10 @@ builder.Services.AddAuthentication(x =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         
-        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-        ValidAudience = builder.Configuration["JwtSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? string.Empty)),
-        RoleClaimType = "role",
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+        RoleClaimType = ClaimTypes.Role,
         //ClockSkew = TimeSpan.Zero
     };
 });
@@ -41,7 +50,9 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+   // options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+   options.AddPolicy("AdminOrDormManager", policy =>
+    policy.RequireRole("Admin", "DormManager"));
 });
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -53,8 +64,11 @@ builder.Services.AddScoped<IDormRepository, DormRepository>();
 builder.Services.AddScoped<IDormService, DormService>();
 builder.Services.AddScoped<IDormitoryRoomRepository, DormitoryRoomRepository>();
 builder.Services.AddScoped<IDormitoryRoomService, DormitoryRoomService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
+
+await app.Services.SeedDefaultAdminAsync(builder.Configuration);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

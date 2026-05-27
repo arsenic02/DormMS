@@ -1,4 +1,25 @@
 @DormMS_HostAddress = http://localhost:5153
+@AdminToken = REPLACE_WITH_BEARER_TOKEN
+
+POST {{DormMS_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "student1@dormms.local",
+  "password": "Student123!"
+}
+
+###
+
+POST {{DormMS_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@dormms.local",
+  "password": "Admin123!"
+}
+
+###
 
 GET {{DormMS_HostAddress}}/api/students
 Accept: application/json
@@ -70,6 +91,7 @@ Accept: application/json
 
 POST {{DormMS_HostAddress}}/api/Dorm
 Content-Type: application/json
+Authorization: Bearer {{AdminToken}}
 
 {
   "name": "Studentski grad",
@@ -82,6 +104,7 @@ Content-Type: application/json
 
 PUT {{DormMS_HostAddress}}/api/Dorm/1
 Content-Type: application/json
+Authorization: Bearer {{AdminToken}}
 
 {
   "name": "Studentski grad",
@@ -93,6 +116,7 @@ Content-Type: application/json
 ###
 
 DELETE {{DormMS_HostAddress}}/api/Dorm/1
+Authorization: Bearer {{AdminToken}}
 
 ###
 
@@ -108,6 +132,7 @@ Accept: application/json
 
 POST {{DormMS_HostAddress}}/api/DormitoryRoom
 Content-Type: application/json
+Authorization: Bearer {{AdminToken}}
 
 {
   "roomNumber": "101",
@@ -123,6 +148,7 @@ Content-Type: application/json
 
 PUT {{DormMS_HostAddress}}/api/DormitoryRoom/1
 Content-Type: application/json
+Authorization: Bearer {{AdminToken}}
 
 {
   "roomNumber": "101",
@@ -137,5 +163,6 @@ Content-Type: application/json
 ###
 
 DELETE {{DormMS_HostAddress}}/api/DormitoryRoom/1
+Authorization: Bearer {{AdminToken}}
 
 ###

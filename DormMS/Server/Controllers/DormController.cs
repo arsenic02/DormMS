@@ -29,7 +29,8 @@ public class DormController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "AdminOnly")]
+    //[Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<Dorm>> CreateDorm(DormCreateUpdateDto dto)
     {
         var dorm = await _dormService.CreateAsync(dto);
@@ -40,7 +41,8 @@ public class DormController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    //[Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateDorm(int id, DormCreateUpdateDto dto)
     {
         var result = await _dormService.UpdateAsync(id, dto);
@@ -53,7 +55,8 @@ public class DormController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    //[Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteDorm(int id)
     {
         var deleted = await _dormService.DeleteAsync(id);

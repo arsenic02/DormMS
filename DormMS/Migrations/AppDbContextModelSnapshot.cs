@@ -130,9 +130,6 @@ namespace DormMS.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsOccupied")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("RoomNumber")
                         .IsRequired()
                         .HasColumnType("text");
@@ -179,6 +176,9 @@ namespace DormMS.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("IsBudgetStudent")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsProfileComplete")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")

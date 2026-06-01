@@ -1,13 +1,40 @@
 @DormMS_HostAddress = http://localhost:5153
 @AdminToken = REPLACE_WITH_BEARER_TOKEN
+@StudentToken = REPLACE_WITH_BEARER_TOKEN
 
 POST {{DormMS_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
   "email": "student1@dormms.local",
-  "password": "Student123!"
+  "password": "Student123!",
+  "name": "Ana",
+  "surname": "Anić",
+  "studentIDNumber": "2024/001"
 }
+
+###
+
+PUT {{DormMS_HostAddress}}/api/Student/me/profile
+Content-Type: application/json
+Authorization: Bearer {{StudentToken}}
+
+{
+  "homeAddress": "Beograd, Knez Mihailova 1",
+  "age": 20,
+  "gender": 1,
+  "yearOfEnrollment": 2024,
+  "studyLevel": 0,
+  "facultyId": 1,
+  "espb": 120,
+  "isBudgetStudent": true,
+  "dormitoryRoomId": null
+}
+
+###
+
+GET {{DormMS_HostAddress}}/api/Student/me
+Authorization: Bearer {{StudentToken}}
 
 ###
 

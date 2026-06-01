@@ -61,7 +61,6 @@ public class DormitoryRoomService : IDormitoryRoomService
         room.RoomNumber = dto.RoomNumber;
         room.Capacity = dto.Capacity;
         room.CurrentOccupancy = dto.CurrentOccupancy;
-        room.IsOccupied = dto.IsOccupied;
         room.Gender = dto.Gender;
         room.Status = dto.Status;
         room.DormId = dto.DormId;

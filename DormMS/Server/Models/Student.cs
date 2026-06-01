@@ -16,7 +16,8 @@ public class Student
     public int ESPB { get; set; }
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; } //FK
-    public DormitoryRoom? DormitoryRoom { get; set; } 
+    public DormitoryRoom? DormitoryRoom { get; set; }
+    public bool IsProfileComplete { get; set; }
 
     //bolje da se racuna nego da se cuva u bazi, jer se menja svake godine
     public int CurrentYearOfStudy => DateTime.Now.Year - YearOfEnrollment + 1;

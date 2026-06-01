@@ -1,3 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -25,6 +28,36 @@ public class StudentController : ControllerBase
             return NotFound();
 
         return student;
+    }
+
+    [Authorize(Roles = "Student")]
+    [HttpGet("me")]
+    public async Task<ActionResult<StudentGetDto>> GetMyProfile()
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        var profile = await _studentService.GetByUserIdAsync(userId.Value);
+        if (profile is null)
+            return NotFound();
+
+        return profile;
+    }
+
+    [Authorize(Roles = "Student")]
+    [HttpPut("me/profile")]
+    public async Task<ActionResult<StudentGetDto>> CompleteMyProfile(StudentProfileUpdateDto dto)
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        var profile = await _studentService.CompleteProfileAsync(userId.Value, dto);
+        if (profile is null)
+            return BadRequest();
+
+        return profile;
     }
 
     [HttpPost]
@@ -57,5 +90,13 @@ public class StudentController : ControllerBase
             return NotFound();
 
         return NoContent();
+    }
+
+    private int? GetCurrentUserId()
+    {
+        var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+        return int.TryParse(idValue, out var userId) ? userId : null;
     }
 }

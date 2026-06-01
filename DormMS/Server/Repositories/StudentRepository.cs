@@ -19,9 +19,35 @@ public class StudentRepository : IStudentRepository
         return await _context.Students.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id);
     }
 
+    public async Task<Student?> GetByUserIdAsync(int userId)
+    {
+        var studentId = await _context.Users
+            .Where(u => u.Id == userId)
+            .Select(u => u.StudentId)
+            .FirstOrDefaultAsync();
+
+        if (!studentId.HasValue)
+            return null;
+
+        return await GetByIdAsync(studentId.Value);
+    }
+
     public async Task<Student?> GetByIdTrackedAsync(int id)
     {
         return await _context.Students.FindAsync(id);
+    }
+
+    public async Task<Student?> GetByIdTrackedByUserIdAsync(int userId)
+    {
+        var studentId = await _context.Users
+            .Where(u => u.Id == userId)
+            .Select(u => u.StudentId)
+            .FirstOrDefaultAsync();
+
+        if (!studentId.HasValue)
+            return null;
+
+        return await GetByIdTrackedAsync(studentId.Value);
     }
 
     public async Task AddAsync(Student student)

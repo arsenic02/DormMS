@@ -30,6 +30,17 @@ public class AuthService : IAuthService
             };
         }
 
+        if (string.IsNullOrWhiteSpace(request.Name) ||
+            string.IsNullOrWhiteSpace(request.Surname) ||
+            string.IsNullOrWhiteSpace(request.StudentIDNumber))
+        {
+            return new AuthResponseDto
+            {
+                IsAuthenticated = false,
+                Message = "Name, surname and student ID number are required."
+            };
+        }
+
         var normalizedEmail = request.Email.Trim().ToLowerInvariant();
         var emailExists = await _context.Users.AnyAsync(u => u.Email == normalizedEmail);
         if (emailExists)
@@ -41,11 +52,36 @@ public class AuthService : IAuthService
             };
         }
 
+        var indexNumber = request.StudentIDNumber.Trim();
+        var indexExists = await _context.Students.AnyAsync(s => s.StudentIDNumber == indexNumber);
+        if (indexExists)
+        {
+            return new AuthResponseDto
+            {
+                IsAuthenticated = false,
+                Message = "Student ID number is already registered."
+            };
+        }
+
+        var student = new Student
+        {
+            Name = request.Name.Trim(),
+            Surname = request.Surname.Trim(),
+            StudentIDNumber = indexNumber,
+            Email = normalizedEmail,
+            Status = StudentStatus.Active,
+            IsProfileComplete = false
+        };
+
+        _context.Students.Add(student);
+        await _context.SaveChangesAsync();
+
         var user = new User
         {
             Email = normalizedEmail,
             Role = UserRole.Student,
-            IsActive = true
+            IsActive = true,
+            StudentId = student.Id
         };
 
         user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
@@ -53,7 +89,7 @@ public class AuthService : IAuthService
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        return BuildAuthResponse(user, "Registration successful.");
+        return BuildAuthResponse(user, "Registration successful. Complete your profile when ready.");
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
@@ -107,9 +143,11 @@ public class AuthService : IAuthService
 
         var claims = new List<Claim>
         {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(ClaimTypes.Email, user.Email),
             new(JwtRegisteredClaimNames.Email, user.Email),
-            new("role", user.Role.ToString())
+            new(ClaimTypes.Role, user.Role.ToString())
         };
 
         var keyBytes = Encoding.UTF8.GetBytes(_jwtSettings.Key);

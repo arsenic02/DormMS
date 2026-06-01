@@ -95,7 +95,7 @@ public class DormService : IDormService
         Capacity = room.Capacity,
         CurrentOccupancy = room.CurrentOccupancy,
         AvailableSpots = room.AvailableSpots,
-        IsOccupied = room.IsOccupied,
+        //IsOccupied = room.IsOccupied,
         Gender = room.Gender,
         Status = room.Status,
         DormId = room.DormId

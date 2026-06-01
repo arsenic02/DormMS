@@ -7,9 +7,22 @@ public class DormService : IDormService
         _repository = repository;
     }
 
-    public Task<IEnumerable<Dorm>> GetAllAsync() => _repository.GetAllAsync();
+    public async Task<IEnumerable<DormGetDto>> GetAllAsync()
+    {
+        var dorms = await _repository.GetAllAsync();
+        return dorms.Select(MapToGetDto);
+    }
 
-    public Task<Dorm?> GetByIdAsync(int id) => _repository.GetByIdAsync(id);
+    public async Task<DormGetDto?> GetByIdAsync(int id)
+    {
+        var dorm = await _repository.GetByIdAsync(id);
+
+        if (dorm is null)
+            return null;
+
+        return MapToGetDto(dorm);
+        //return dorm is null ? null : MapToGetDto(dorm);
+    }
 
     public async Task<Dorm?> CreateAsync(DormCreateUpdateDto dto)
     {
@@ -62,5 +75,29 @@ public class DormService : IDormService
 
         return dorm;
     }
+
+    private static DormGetDto MapToGetDto(Dorm dorm) => new()
+    {
+        Id = dorm.Id,
+        Name = dorm.Name,
+        Location = dorm.Location,
+        Capacity = dorm.Capacity,
+        CurrentOccupancy = dorm.CurrentOccupancy,
+        AvailableSpots = dorm.AvailableSpots,
+        IsFull = dorm.IsFull,
+        Rooms = dorm.Rooms.Select(MapRoomToGetDto).ToList()
+    };
+
+    private static DormitoryRoomGetDto MapRoomToGetDto(DormitoryRoom room) => new()
+    {
+        Id = room.Id,
+        RoomNumber = room.RoomNumber,
+        Capacity = room.Capacity,
+        CurrentOccupancy = room.CurrentOccupancy,
+        AvailableSpots = room.AvailableSpots,
+        IsOccupied = room.IsOccupied,
+        Gender = room.Gender,
+        Status = room.Status,
+        DormId = room.DormId
+    };
 }
-//potrebno je ubaciti mapiranje za DormGetDto,

@@ -13,13 +13,16 @@ public class DormController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Dorm>>> GetDorms()
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<IEnumerable<DormGetDto>>> GetDorms()
     {
         return Ok(await _dormService.GetAllAsync());
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Dorm>> GetDorm(int id)
+    [Authorize(Roles = "Admin, Manager")]
+    //[Authorize(Roles = "Manager")]
+    public async Task<ActionResult<DormGetDto>> GetDorm(int id)
     {
         var dorm = await _dormService.GetByIdAsync(id);
         if (dorm is null)

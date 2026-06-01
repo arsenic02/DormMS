@@ -20,7 +20,7 @@ public class DormController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "Admin, Manager")]
+    [Authorize(Roles = "Admin, DormManager")]
     //[Authorize(Roles = "Manager")]
     public async Task<ActionResult<DormGetDto>> GetDorm(int id)
     {

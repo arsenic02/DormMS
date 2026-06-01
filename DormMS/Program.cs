@@ -68,7 +68,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
-await app.Services.SeedDefaultAdminAsync(builder.Configuration);
+await app.Services.SeedDefaultUsersAsync(builder.Configuration);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

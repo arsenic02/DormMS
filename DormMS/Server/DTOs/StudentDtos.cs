@@ -49,3 +49,20 @@ public class StudentGetDto
     public int CurrentYearOfStudy { get; set; }
     public bool IsProfileComplete { get; set; }
 }
+
+public class StudentCsvImportDto
+{
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Surname { get; set; } = string.Empty;
+    public string StudentIDNumber { get; set; } = string.Empty;
+}
+
+public class StudentImportResultDto
+{
+    public int TotalProcessed { get; set; }
+    public int SuccessfullyImported { get; set; }
+    public int Failed { get; set; }
+    public List<string> Errors { get; set; } = new();
+}

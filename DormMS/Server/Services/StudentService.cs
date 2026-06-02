@@ -1,10 +1,17 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 public class StudentService : IStudentService
 {
     private readonly IStudentRepository _repository;
+    private readonly AppDbContext _context;
+    private readonly PasswordHasher<User> _passwordHasher;
 
-    public StudentService(IStudentRepository repository)
+    public StudentService(IStudentRepository repository, AppDbContext context)
     {
         _repository = repository;
+        _context = context;
+        _passwordHasher = new PasswordHasher<User>();
     }
 
     public Task<IEnumerable<Student>> GetAllAsync() => _repository.GetAllAsync();
@@ -62,6 +69,108 @@ public class StudentService : IStudentService
     }
 
     public Task<bool> DeleteAsync(int id) => _repository.DeleteAsync(id);
+
+    public async Task<StudentImportResultDto> ImportFromCsvAsync(IFormFile csvFile)
+    {
+        var result = new StudentImportResultDto();
+
+        try
+        {
+            using var reader = new StreamReader(csvFile.OpenReadStream());
+            using var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+
+            /////za slucaj da nece
+            // using var reader = new StreamReader(csvFile.OpenReadStream());
+
+            // var config = new CsvHelper.Configuration.CsvConfiguration(
+            //     System.Globalization.CultureInfo.InvariantCulture)
+            // {
+            //     HeaderValidated = null,
+            //     MissingFieldFound = null,
+            //     PrepareHeaderForMatch = args => args.Header.ToLower()
+            // };
+
+            // using var csv = new CsvHelper.CsvReader(reader, config);
+            /////// za slucaj da nece
+            /// 
+
+            var records = csv.GetRecords<StudentCsvImportDto>().ToList();
+            result.TotalProcessed = records.Count;
+
+            foreach (var record in records)
+            {
+                try
+                {
+                    var normalizedEmail = record.Email.Trim().ToLowerInvariant();
+                    var indexNumber = record.StudentIDNumber.Trim();
+
+                    // Check if email already exists
+                    var emailExists = await _context.Users.AnyAsync(u => u.Email == normalizedEmail);
+                    if (emailExists)
+                    {
+                        result.Errors.Add($"Email {normalizedEmail} already exists");
+                        result.Failed++;
+                        continue;
+                    }
+
+                    // Check if student ID number already exists
+                    var indexExists = await _context.Students.AnyAsync(s => s.StudentIDNumber == indexNumber);
+                    if (indexExists)
+                    {
+                        result.Errors.Add($"Student ID {indexNumber} already exists");
+                        result.Failed++;
+                        continue;
+                    }
+
+                    // Create student
+                    var student = new Student
+                    {
+                        Name = record.Name.Trim(),
+                        Surname = record.Surname.Trim(),
+                        StudentIDNumber = indexNumber,
+                        Email = normalizedEmail,
+                        Status = StudentStatus.Active,
+                        IsProfileComplete = false
+                    };
+
+                    _context.Students.Add(student);
+                    await _context.SaveChangesAsync();
+
+                    // Create user
+                    var user = new User
+                    {
+                        Email = normalizedEmail,
+                        Role = UserRole.Student,
+                        IsActive = true,
+                        StudentId = student.Id
+                    };
+
+                    user.PasswordHash = _passwordHasher.HashPassword(user, record.Password);
+
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+
+                    result.SuccessfullyImported++;
+                }
+                catch (Exception ex)
+                {
+                    result.Errors.Add($"Error importing {record.Email}: {ex.Message} | Inner: {ex.InnerException?.Message}");
+                    result.Failed++;
+                }
+            }
+            //await _context.SaveChangesAsync(); // ovde ne treba save changesAsync
+
+        }
+        catch (Exception ex)
+        {
+            result.Errors.Add(
+                $"Import failed: {ex.Message} | Inner: {ex.InnerException?.Message}"
+    );
+            //result.Errors.Add($"CSV parsing error: {ex.Message}");
+        }
+
+        return result;
+    }
 
     private async Task<bool> IsDormitoryRoomValidAsync(int? dormitoryRoomId)
     {

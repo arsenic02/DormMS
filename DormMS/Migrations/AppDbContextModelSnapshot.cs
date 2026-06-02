@@ -57,12 +57,6 @@ namespace DormMS.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Capacity")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CurrentOccupancy")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("text");

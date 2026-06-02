@@ -157,10 +157,10 @@ public static class SeedExtensions
 
         var dorm = new Dorm
         {
-            Name = "Studentski dom (seed)",
-            Location = "Beograd",
-            Capacity = 100,
-            CurrentOccupancy = 0
+            Name = "Studentski dom Nis",
+            Location = "Nis",
+           // Capacity = 100,
+            //CurrentOccupancy = 0
         };
         context.Dorms.Add(dorm);
         await context.SaveChangesAsync();

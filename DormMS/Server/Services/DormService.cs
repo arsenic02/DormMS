@@ -52,13 +52,7 @@ public class DormService : IDormService
 
     private static bool IsValid(DormCreateUpdateDto dto)
     {
-        if (dto.Capacity <= 0)
-            return false;
-
-        if (dto.CurrentOccupancy < 0)
-            return false;
-
-        if (dto.CurrentOccupancy > dto.Capacity)
+        if (string.IsNullOrWhiteSpace(dto.Name))
             return false;
 
         return true;
@@ -70,8 +64,6 @@ public class DormService : IDormService
 
         dorm.Name = dto.Name;
         dorm.Location = dto.Location;
-        dorm.Capacity = dto.Capacity;
-        dorm.CurrentOccupancy = dto.CurrentOccupancy;
 
         return dorm;
     }

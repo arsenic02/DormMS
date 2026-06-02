@@ -42,12 +42,6 @@ public class DormitoryRoomService : IDormitoryRoomService
         if (dto.Capacity <= 0)
             return false;
 
-        if (dto.CurrentOccupancy < 0)
-            return false;
-
-        if (dto.CurrentOccupancy > dto.Capacity)
-            return false;
-
         if (string.IsNullOrWhiteSpace(dto.RoomNumber))
             return false;
 
@@ -60,7 +54,6 @@ public class DormitoryRoomService : IDormitoryRoomService
 
         room.RoomNumber = dto.RoomNumber;
         room.Capacity = dto.Capacity;
-        room.CurrentOccupancy = dto.CurrentOccupancy;
         room.Gender = dto.Gender;
         room.Status = dto.Status;
         room.DormId = dto.DormId;

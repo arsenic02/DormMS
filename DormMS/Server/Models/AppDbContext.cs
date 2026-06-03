@@ -10,4 +10,6 @@ public class AppDbContext : DbContext
     public DbSet<DormManager> DormManagers { get; set; }
     public DbSet<Admin> Admins { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Competition> Competitions { get; set; }
+    public DbSet<CompetitionApplication> CompetitionApplications { get; set; }
 }

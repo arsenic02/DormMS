@@ -50,6 +50,14 @@ public class StudentRepository : IStudentRepository
         return await GetByIdTrackedAsync(studentId.Value);
     }
 
+    public async Task<Student?> GetByIdWithFinancialStatusAsync(int id)
+    {
+        return await _context.Students
+            .Include(s => s.FinancialStatus)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == id);
+    }
+
     public async Task AddAsync(Student student)
     {
         _context.Students.Add(student);

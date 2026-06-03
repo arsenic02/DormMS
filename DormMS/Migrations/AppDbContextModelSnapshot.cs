@@ -140,6 +140,10 @@ namespace DormMS.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Municipality")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -251,12 +255,20 @@ namespace DormMS.Migrations
                     b.Property<bool>("IsBudgetStudent")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsProfileComplete")
-                        .HasColumnType("boolean");
+                    b.Property<string>("JMBG")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MunicipalityOfResidence")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("ProfileStatus")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -280,6 +292,45 @@ namespace DormMS.Migrations
                     b.HasIndex("DormitoryRoomId");
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("StudentFinancialStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FamilyMemberCount")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("TotalFamilyIncome")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("VerifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("VerifiedByAdminId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique();
+
+                    b.HasIndex("VerifiedByAdminId");
+
+                    b.ToTable("StudentFinancialStatus");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -389,6 +440,23 @@ namespace DormMS.Migrations
                     b.Navigation("DormitoryRoom");
                 });
 
+            modelBuilder.Entity("StudentFinancialStatus", b =>
+                {
+                    b.HasOne("Student", "Student")
+                        .WithOne("FinancialStatus")
+                        .HasForeignKey("StudentFinancialStatus", "StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Admin", "VerifiedByAdmin")
+                        .WithMany()
+                        .HasForeignKey("VerifiedByAdminId");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("VerifiedByAdmin");
+                });
+
             modelBuilder.Entity("User", b =>
                 {
                     b.HasOne("Admin", "Admin")
@@ -420,6 +488,11 @@ namespace DormMS.Migrations
                     b.Navigation("Managers");
 
                     b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("Student", b =>
+                {
+                    b.Navigation("FinancialStatus");
                 });
 #pragma warning restore 612, 618
         }

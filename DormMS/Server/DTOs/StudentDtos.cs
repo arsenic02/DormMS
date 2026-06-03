@@ -19,6 +19,8 @@ public class StudentCreateUpdateDto
 public class StudentProfileUpdateDto
 {
     public string HomeAddress { get; set; } = string.Empty;
+    public string MunicipalityOfResidence { get; set; } = string.Empty;
+    public string JMBG { get; set; } = string.Empty;
     public int Age { get; set; }
     public Gender Gender { get; set; }
     public int YearOfEnrollment { get; set; }
@@ -29,6 +31,22 @@ public class StudentProfileUpdateDto
     public int? DormitoryRoomId { get; set; }
 }
 
+public class StudentFinancialStatusCreateDto
+{
+    public decimal TotalFamilyIncome { get; set; }
+    public int FamilyMemberCount { get; set; }
+}
+
+public class StudentFinancialStatusGetDto
+{
+    public decimal TotalFamilyIncome { get; set; }
+    public int FamilyMemberCount { get; set; }
+    public decimal IncomePerMember { get; set; }
+    public bool IsVerified { get; set; }
+    public DateTime SubmittedAt { get; set; }
+    public DateTime? VerifiedAt { get; set; }
+}
+
 public class StudentGetDto
 {
     public int Id { get; set; }
@@ -37,6 +55,7 @@ public class StudentGetDto
     public string Email { get; set; } = string.Empty;
     public string StudentIDNumber { get; set; } = string.Empty;
     public string HomeAddress { get; set; } = string.Empty;
+    public string MunicipalityOfResidence { get; set; } = string.Empty;
     public int Age { get; set; }
     public Gender Gender { get; set; }
     public int YearOfEnrollment { get; set; }
@@ -48,6 +67,10 @@ public class StudentGetDto
     public int? DormitoryRoomId { get; set; }
     public int CurrentYearOfStudy { get; set; }
     public bool IsProfileComplete { get; set; }
+
+    public StudentProfileStatus ProfileStatus { get; set; }             
+    public bool IsEligibleToApply { get; set; }                        
+    public StudentFinancialStatusGetDto? FinancialStatus { get; set; }
 }
 
 public class StudentCsvImportDto
@@ -66,3 +89,4 @@ public class StudentImportResultDto
     public int Failed { get; set; }
     public List<string> Errors { get; set; } = new();
 }
+

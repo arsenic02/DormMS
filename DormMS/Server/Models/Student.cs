@@ -4,6 +4,9 @@ public class Student
     public string Name { get; set; } = string.Empty;
     public string Surname { get; set; } = string.Empty;
     public string HomeAddress { get; set; } = string.Empty;
+
+    public string MunicipalityOfResidence { get; set; } = string.Empty;
+    public string JMBG { get; set; } = string.Empty;
     public string StudentIDNumber { get; set; } = string.Empty;//broj indeksa
     public string Email { get; set; } = string.Empty;
     public int Age { get; set; }
@@ -17,7 +20,16 @@ public class Student
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; } //FK
     public DormitoryRoom? DormitoryRoom { get; set; }
-    public bool IsProfileComplete { get; set; }
+
+    public StudentProfileStatus ProfileStatus { get; set; } = StudentProfileStatus.Incomplete; // NOVO
+    public StudentFinancialStatus? FinancialStatus { get; set; }
+
+    //public bool IsProfileComplete { get; set; }
+
+    public bool IsEligibleToApply =>
+        ProfileStatus == StudentProfileStatus.Verified &&
+        FinancialStatus != null &&
+        FinancialStatus.IsVerified;
 
     //bolje da se racuna nego da se cuva u bazi, jer se menja svake godine
     public int CurrentYearOfStudy => DateTime.Now.Year - YearOfEnrollment + 1;
@@ -43,4 +55,12 @@ public enum Gender
 {
     Male,
     Female
+}
+
+public enum StudentProfileStatus
+{
+    Incomplete, // Tek registrovan
+    PendingVerification,  // Popunio podatke, čeka verifikaciju od admina
+    Verified, // Admin potvrdio podatke
+    Rejected // Admin odbio podatke, student treba da ih ispravi
 }

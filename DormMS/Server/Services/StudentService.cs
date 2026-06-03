@@ -30,7 +30,7 @@ public class StudentService : IStudentService
             return null;
 
         var student = MapToEntity(dto);
-        student.IsProfileComplete = true;
+        student.ProfileStatus = StudentProfileStatus.PendingVerification;
         await _repository.AddAsync(student);
         return student;
     }
@@ -62,7 +62,7 @@ public class StudentService : IStudentService
             return null;
 
         ApplyProfile(dto, student);
-        student.IsProfileComplete = true;
+        student.ProfileStatus = StudentProfileStatus.PendingVerification;
         await _repository.UpdateAsync(student);
 
         return MapToGetDto(student);
@@ -130,7 +130,7 @@ public class StudentService : IStudentService
                         StudentIDNumber = indexNumber,
                         Email = normalizedEmail,
                         Status = StudentStatus.Active,
-                        IsProfileComplete = false
+                        ProfileStatus = StudentProfileStatus.Incomplete
                     };
 
                     _context.Students.Add(student);
@@ -203,6 +203,8 @@ public class StudentService : IStudentService
     private static void ApplyProfile(StudentProfileUpdateDto dto, Student student)
     {
         student.HomeAddress = dto.HomeAddress.Trim();
+        student.MunicipalityOfResidence = dto.MunicipalityOfResidence.Trim();
+        student.JMBG = dto.JMBG.Trim();
         student.Age = dto.Age;
         student.Gender = dto.Gender;
         student.YearOfEnrollment = dto.YearOfEnrollment;
@@ -253,6 +255,6 @@ public class StudentService : IStudentService
         IsBudgetStudent = student.IsBudgetStudent,
         DormitoryRoomId = student.DormitoryRoomId,
         CurrentYearOfStudy = student.CurrentYearOfStudy,
-        IsProfileComplete = student.IsProfileComplete
+        ProfileStatus = student.ProfileStatus
     };
 }

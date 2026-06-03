@@ -4,11 +4,19 @@ public class CompetitionService : ICompetitionService
 {
     private readonly ICompetitionRepository _repository;
     private readonly AppDbContext _context;
+    private readonly IStudentRepository _studentRepository;
+    private readonly IDormRepository _dormitoryRepository;
 
-    public CompetitionService(ICompetitionRepository repository, AppDbContext context)
+    public CompetitionService(
+        ICompetitionRepository repository,
+        AppDbContext context,
+        IStudentRepository studentRepository,
+        IDormRepository dormitoryRepository)
     {
         _repository = repository;
         _context = context;
+        _studentRepository = studentRepository;
+        _dormitoryRepository = dormitoryRepository;
     }
 
     public async Task<IEnumerable<CompetitionGetDto>> GetAllAsync()
@@ -36,7 +44,7 @@ public class CompetitionService : ICompetitionService
             return null;
 
         if (competition.Status != CompetitionStatus.Draft)
-            return null; 
+            return null;
 
         competition.Status = CompetitionStatus.Open;
         await _repository.UpdateAsync(competition);
@@ -44,22 +52,22 @@ public class CompetitionService : ICompetitionService
     }
 
     public async Task<CompetitionGetDto?> ToggleCompetitionStatusAsync(int id)
-{
-    var competition = await _repository.GetByIdTrackedAsync(id);
-    if (competition is null)
-        return null;
-
-    competition.Status = competition.Status switch
     {
-        CompetitionStatus.Draft => CompetitionStatus.Open,
-        CompetitionStatus.Open => CompetitionStatus.Closed,
-        CompetitionStatus.Closed => CompetitionStatus.Open,
-        _ => competition.Status 
-    };
+        var competition = await _repository.GetByIdTrackedAsync(id);
+        if (competition is null)
+            return null;
 
-    await _repository.UpdateAsync(competition);
-    return MapToGetDto(competition);
-}
+        competition.Status = competition.Status switch
+        {
+            CompetitionStatus.Draft => CompetitionStatus.Open,
+            CompetitionStatus.Open => CompetitionStatus.Closed,
+            CompetitionStatus.Closed => CompetitionStatus.Open,
+            _ => competition.Status
+        };
+
+        await _repository.UpdateAsync(competition);
+        return MapToGetDto(competition);
+    }
     public async Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int userId, string role)
     {
         int? adminId = null;
@@ -145,10 +153,29 @@ public class CompetitionService : ICompetitionService
     public async Task<CompetitionApplicationGetDto?> ApplyAsync(int studentId, CompetitionApplicationCreateDto dto)
     {
         var competition = await _repository.GetByIdAsync(dto.CompetitionId);
-        if (competition is null)
+        if (competition is null || !competition.IsOpen)
             return null;
 
-        if (!competition.IsOpen)
+        var student = await _studentRepository.GetByIdWithFinancialStatusAsync(studentId);
+        if (student is null)
+            return null;
+
+        // Provera da li student ispunjava uslove
+        if (!student.IsEligibleToApply)
+            return null;
+
+        // Provera opštine — ne sme biti ista kao opština doma
+        Dorm? dormitory = null;
+        if (competition.CreatedByDormManagerId.HasValue)
+        {
+            var dormManager = await _context.DormManagers
+                .Include(dm => dm.Dorm)
+                .FirstOrDefaultAsync(dm => dm.Id == competition.CreatedByDormManagerId.Value);
+            dormitory = dormManager?.Dorm;
+        }
+
+        if (dormitory != null &&
+            student.MunicipalityOfResidence.Equals(dormitory.Municipality, StringComparison.OrdinalIgnoreCase))
             return null;
 
         var existingApplication = await _repository.GetApplicationByStudentAndCompetitionAsync(studentId, dto.CompetitionId);
@@ -159,13 +186,40 @@ public class CompetitionService : ICompetitionService
         {
             StudentId = studentId,
             CompetitionId = dto.CompetitionId,
-            Notes = dto?.Notes,
-            Status = ApplicationStatus.Pending
+            Notes = dto.Notes,
+            Status = ApplicationStatus.Pending,
+            AppliedAt = DateTime.UtcNow
         };
 
         await _repository.AddApplicationAsync(application);
-        return MapToApplicationGetDto(application);
+
+        var full = await _repository.GetApplicationByIdAsync(application.Id);
+        return MapToApplicationGetDto(full!);
     }
+    // public async Task<CompetitionApplicationGetDto?> ApplyAsync(int studentId, CompetitionApplicationCreateDto dto)
+    // {
+    //     var competition = await _repository.GetByIdAsync(dto.CompetitionId);
+    //     if (competition is null)
+    //         return null;
+
+    //     if (!competition.IsOpen)
+    //         return null;
+
+    //     var existingApplication = await _repository.GetApplicationByStudentAndCompetitionAsync(studentId, dto.CompetitionId);
+    //     if (existingApplication is not null)
+    //         return null;
+
+    //     var application = new CompetitionApplication
+    //     {
+    //         StudentId = studentId,
+    //         CompetitionId = dto.CompetitionId,
+    //         Notes = dto?.Notes,
+    //         Status = ApplicationStatus.Pending
+    //     };
+
+    //     await _repository.AddApplicationAsync(application);
+    //     return MapToApplicationGetDto(application);
+    // }
 
     public async Task<IEnumerable<CompetitionApplicationGetDto>> GetApplicationsByCompetitionIdAsync(int competitionId)
     {

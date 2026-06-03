@@ -70,7 +70,7 @@ public class AuthService : IAuthService
             StudentIDNumber = indexNumber,
             Email = normalizedEmail,
             Status = StudentStatus.Active,
-            IsProfileComplete = false
+            ProfileStatus = StudentProfileStatus.Incomplete
         };
 
         _context.Students.Add(student);

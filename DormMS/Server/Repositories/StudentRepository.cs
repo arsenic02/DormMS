@@ -80,7 +80,11 @@ public class StudentRepository : IStudentRepository
     {
         await _context.SaveChangesAsync();
     }
-
+    public async Task UpdateProfileAsync(Student student)
+    {
+        _context.Students.Update(student);
+        await _context.SaveChangesAsync();
+    }
     public async Task<bool> DeleteAsync(int id)
     {
         var student = await _context.Students.FindAsync(id);

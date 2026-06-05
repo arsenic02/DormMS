@@ -198,8 +198,8 @@ public class StudentService : IStudentService
             StudentId = student.Id,
             TotalFamilyIncome = dto.TotalFamilyIncome,
             FamilyMemberCount = dto.FamilyMemberCount,
-            IsVerified = false,
-            SubmittedAt = DateTime.UtcNow
+            //IsVerified = false,
+            //SubmittedAt = DateTime.UtcNow
         };
 
         await _repository.AddFinancialStatusAsync(financialStatus);
@@ -209,9 +209,9 @@ public class StudentService : IStudentService
             TotalFamilyIncome = financialStatus.TotalFamilyIncome,
             FamilyMemberCount = financialStatus.FamilyMemberCount,
             IncomePerMember = financialStatus.IncomePerMember,
-            IsVerified = financialStatus.IsVerified,
-            SubmittedAt = financialStatus.SubmittedAt,
-            VerifiedAt = financialStatus.VerifiedAt
+            // IsVerified = financialStatus.IsVerified,
+            //SubmittedAt = financialStatus.SubmittedAt,
+            //VerifiedAt = financialStatus.VerifiedAt
         };
     }
     private async Task<bool> IsDormitoryRoomValidAsync(int? dormitoryRoomId)
@@ -257,6 +257,20 @@ public class StudentService : IStudentService
         student.ESPB = dto.ESPB;
         student.IsBudgetStudent = dto.IsBudgetStudent;
         student.DormitoryRoomId = dto.DormitoryRoomId;
+    }
+
+    public async Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status)
+    {
+        var student = await _repository.GetByIdTrackedAsync(studentId);
+        if (student is null) return null;
+
+        // Dozvoli samo prelaze koji imaju smisla
+        if (status != StudentProfileStatus.Verified && status != StudentProfileStatus.Rejected)
+            return null;
+
+        student.ProfileStatus = status;
+        await _repository.UpdateProfileAsync(student);
+        return MapToGetDto(student);
     }
 
     private static Student MapToEntity(StudentCreateUpdateDto dto, Student? existing = null)

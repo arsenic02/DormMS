@@ -122,6 +122,15 @@ public class StudentController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPatch("{studentId}/verify-profile")]
+    [Authorize(Roles = "Admin,DormManager")]
+    public async Task<IActionResult> VerifyProfile(int studentId, StudentProfileVerificationDto dto)
+    {
+        var result = await _studentService.VerifyProfileAsync(studentId, dto.Status);
+        if (result is null) return NotFound();
+        return Ok(result);
+    }
     private int? GetCurrentUserId()
     {
         var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier)

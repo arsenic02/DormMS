@@ -11,4 +11,5 @@ public interface IStudentService
     Task<StudentFinancialStatusGetDto?> SubmitFinancialStatusAsync(
     int userId,
     StudentFinancialStatusCreateDto dto);
+    Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status);
 }

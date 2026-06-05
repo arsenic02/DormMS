@@ -12,9 +12,9 @@ public class StudentFinancialStatus
         ? TotalFamilyIncome / FamilyMemberCount 
         : 0;
 
-    public bool IsVerified { get; set; } = false;     // Admin/referent verifikuje
-    public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? VerifiedAt { get; set; }
-    public int? VerifiedByAdminId { get; set; }
-    public Admin? VerifiedByAdmin { get; set; }
+    // public bool IsVerified { get; set; } = false;     // Admin/referent verifikuje
+    // public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
+    // public DateTime? VerifiedAt { get; set; }
+    // public int? VerifiedByAdminId { get; set; }
+    // public Admin? VerifiedByAdmin { get; set; }
 }

@@ -305,30 +305,16 @@ namespace DormMS.Migrations
                     b.Property<int>("FamilyMemberCount")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<decimal>("TotalFamilyIncome")
                         .HasColumnType("numeric");
-
-                    b.Property<DateTime?>("VerifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("VerifiedByAdminId")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StudentId")
                         .IsUnique();
-
-                    b.HasIndex("VerifiedByAdminId");
 
                     b.ToTable("StudentFinancialStatuses");
                 });
@@ -448,13 +434,7 @@ namespace DormMS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Admin", "VerifiedByAdmin")
-                        .WithMany()
-                        .HasForeignKey("VerifiedByAdminId");
-
                     b.Navigation("Student");
-
-                    b.Navigation("VerifiedByAdmin");
                 });
 
             modelBuilder.Entity("User", b =>

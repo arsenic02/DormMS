@@ -105,6 +105,23 @@ public class StudentController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Student")]
+    [HttpPost("me/financial-status")]
+    public async Task<ActionResult<StudentFinancialStatusGetDto>> SubmitFinancialStatus(StudentFinancialStatusCreateDto dto)
+    {
+        var userId = GetCurrentUserId();
+
+        if (userId is null)
+            return Unauthorized();
+
+        var result = await _studentService
+            .SubmitFinancialStatusAsync(userId.Value, dto);
+
+        if (result is null)
+            return BadRequest();
+
+        return Ok(result);
+    }
     private int? GetCurrentUserId()
     {
         var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier)

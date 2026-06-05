@@ -150,41 +150,51 @@ public class CompetitionService : ICompetitionService
         return await _repository.DeleteAsync(id);
     }
 
-    public async Task<CompetitionApplicationGetDto?> ApplyAsync(int studentId, CompetitionApplicationCreateDto dto)
+    public async Task<ApplyResult> ApplyAsync(int userId, CompetitionApplicationCreateDto dto)
     {
+        var studentId = await _context.Users
+        .Where(u => u.Id == userId)
+        .Select(u => u.StudentId)
+        .FirstOrDefaultAsync();
+
+        if (studentId is null)
+            return new(null, "Student not found");
+
         var competition = await _repository.GetByIdAsync(dto.CompetitionId);
-        if (competition is null || !competition.IsOpen)
-            return null;
+        if (competition is null)
+            return new(null, "Competition not found");
 
-        var student = await _studentRepository.GetByIdWithFinancialStatusAsync(studentId);
+        if (!competition.IsOpen)
+            return new(null, "Competition is not open");
+
+        var student = await _studentRepository.GetByIdWithFinancialStatusAsync((int)studentId); //bilo je studentId
         if (student is null)
-            return null;
+            return new(null, "Student not found");
 
-        // Provera da li student ispunjava uslove
         if (!student.IsEligibleToApply)
-            return null;
+            return new(null, "Student is not eligible to apply");
 
-        // Provera opštine — ne sme biti ista kao opština doma
-        Dorm? dormitory = null;
+        // Provera opstine
         if (competition.CreatedByDormManagerId.HasValue)
         {
             var dormManager = await _context.DormManagers
                 .Include(dm => dm.Dorm)
                 .FirstOrDefaultAsync(dm => dm.Id == competition.CreatedByDormManagerId.Value);
-            dormitory = dormManager?.Dorm;
+
+            if (dormManager?.Dorm != null &&
+                student.MunicipalityOfResidence.Equals(
+                    dormManager.Dorm.Municipality, StringComparison.OrdinalIgnoreCase))
+                return new(null, "Student municipality matches dormitory municipality");
         }
 
-        if (dormitory != null &&
-            student.MunicipalityOfResidence.Equals(dormitory.Municipality, StringComparison.OrdinalIgnoreCase))
-            return null;
-
-        var existingApplication = await _repository.GetApplicationByStudentAndCompetitionAsync(studentId, dto.CompetitionId);
+        var existingApplication = await _repository
+            .GetApplicationByStudentAndCompetitionAsync(studentId.Value, dto.CompetitionId);
         if (existingApplication is not null)
-            return null;
+            return new(null, "Student has already applied to this competition");
 
         var application = new CompetitionApplication
         {
-            StudentId = studentId,
+            StudentId = studentId.Value,
             CompetitionId = dto.CompetitionId,
             Notes = dto.Notes,
             Status = ApplicationStatus.Pending,
@@ -192,17 +202,35 @@ public class CompetitionService : ICompetitionService
         };
 
         await _repository.AddApplicationAsync(application);
-
         var full = await _repository.GetApplicationByIdAsync(application.Id);
-        return MapToApplicationGetDto(full!);
+        return new(MapToApplicationGetDto(full!), null);
     }
     // public async Task<CompetitionApplicationGetDto?> ApplyAsync(int studentId, CompetitionApplicationCreateDto dto)
     // {
     //     var competition = await _repository.GetByIdAsync(dto.CompetitionId);
-    //     if (competition is null)
+    //     if (competition is null || !competition.IsOpen)
     //         return null;
 
-    //     if (!competition.IsOpen)
+    //     var student = await _studentRepository.GetByIdWithFinancialStatusAsync(studentId);
+    //     if (student is null)
+    //         return null;
+
+    //     // Provera da li student ispunjava uslove
+    //     if (!student.IsEligibleToApply)
+    //         return null;
+
+    //     // Provera opštine — ne sme biti ista kao opština doma
+    //     Dorm? dormitory = null;
+    //     if (competition.CreatedByDormManagerId.HasValue)
+    //     {
+    //         var dormManager = await _context.DormManagers
+    //             .Include(dm => dm.Dorm)
+    //             .FirstOrDefaultAsync(dm => dm.Id == competition.CreatedByDormManagerId.Value);
+    //         dormitory = dormManager?.Dorm;
+    //     }
+
+    //     if (dormitory != null &&
+    //         student.MunicipalityOfResidence.Equals(dormitory.Municipality, StringComparison.OrdinalIgnoreCase))
     //         return null;
 
     //     var existingApplication = await _repository.GetApplicationByStudentAndCompetitionAsync(studentId, dto.CompetitionId);
@@ -213,14 +241,16 @@ public class CompetitionService : ICompetitionService
     //     {
     //         StudentId = studentId,
     //         CompetitionId = dto.CompetitionId,
-    //         Notes = dto?.Notes,
-    //         Status = ApplicationStatus.Pending
+    //         Notes = dto.Notes,
+    //         Status = ApplicationStatus.Pending,
+    //         AppliedAt = DateTime.UtcNow
     //     };
 
     //     await _repository.AddApplicationAsync(application);
-    //     return MapToApplicationGetDto(application);
-    // }
 
+    //     var full = await _repository.GetApplicationByIdAsync(application.Id);
+    //     return MapToApplicationGetDto(full!);
+    // }
     public async Task<IEnumerable<CompetitionApplicationGetDto>> GetApplicationsByCompetitionIdAsync(int competitionId)
     {
         var applications = await _repository.GetApplicationsByCompetitionIdAsync(competitionId);

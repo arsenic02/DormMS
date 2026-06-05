@@ -8,4 +8,7 @@ public interface IStudentService
     Task<StudentGetDto?> CompleteProfileAsync(int userId, StudentProfileUpdateDto dto);
     Task<bool> DeleteAsync(int id);
     Task<StudentImportResultDto> ImportFromCsvAsync(IFormFile csvFile);
+    Task<StudentFinancialStatusGetDto?> SubmitFinancialStatusAsync(
+    int userId,
+    StudentFinancialStatusCreateDto dto);
 }

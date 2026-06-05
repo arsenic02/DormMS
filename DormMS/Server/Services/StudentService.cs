@@ -172,6 +172,48 @@ public class StudentService : IStudentService
         return result;
     }
 
+    public async Task<StudentFinancialStatusGetDto?> SubmitFinancialStatusAsync(
+    int userId,
+    StudentFinancialStatusCreateDto dto)
+    {
+        if (dto.FamilyMemberCount <= 0)
+            return null;
+
+        if (dto.TotalFamilyIncome < 0)
+            return null;
+
+        var student = await _repository.GetByIdTrackedByUserIdAsync(userId);
+
+        if (student is null)
+            return null;
+
+        var existingFinancialStatus =
+            await _repository.GetFinancialStatusByStudentIdAsync(student.Id);
+
+        if (existingFinancialStatus is not null)
+            return null;
+
+        var financialStatus = new StudentFinancialStatus
+        {
+            StudentId = student.Id,
+            TotalFamilyIncome = dto.TotalFamilyIncome,
+            FamilyMemberCount = dto.FamilyMemberCount,
+            IsVerified = false,
+            SubmittedAt = DateTime.UtcNow
+        };
+
+        await _repository.AddFinancialStatusAsync(financialStatus);
+
+        return new StudentFinancialStatusGetDto
+        {
+            TotalFamilyIncome = financialStatus.TotalFamilyIncome,
+            FamilyMemberCount = financialStatus.FamilyMemberCount,
+            IncomePerMember = financialStatus.IncomePerMember,
+            IsVerified = financialStatus.IsVerified,
+            SubmittedAt = financialStatus.SubmittedAt,
+            VerifiedAt = financialStatus.VerifiedAt
+        };
+    }
     private async Task<bool> IsDormitoryRoomValidAsync(int? dormitoryRoomId)
     {
         if (!dormitoryRoomId.HasValue)
@@ -179,6 +221,8 @@ public class StudentService : IStudentService
 
         return await _repository.DormitoryRoomExistsAsync(dormitoryRoomId.Value);
     }
+
+
 
     private static bool IsProfileValid(StudentProfileUpdateDto dto)
     {

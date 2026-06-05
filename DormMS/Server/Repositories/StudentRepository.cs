@@ -58,6 +58,18 @@ public class StudentRepository : IStudentRepository
             .FirstOrDefaultAsync(s => s.Id == id);
     }
 
+    public async Task<StudentFinancialStatus?> GetFinancialStatusByStudentIdAsync(int studentId)
+    {
+        return await _context.StudentFinancialStatuses
+            .FirstOrDefaultAsync(x => x.StudentId == studentId);
+    }
+
+    public async Task AddFinancialStatusAsync(StudentFinancialStatus financialStatus)
+    {
+        _context.StudentFinancialStatuses.Add(financialStatus);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task AddAsync(Student student)
     {
         _context.Students.Add(student);

@@ -12,4 +12,6 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Competition> Competitions { get; set; }
     public DbSet<CompetitionApplication> CompetitionApplications { get; set; }
+
+    public DbSet<StudentFinancialStatus> StudentFinancialStatuses { get; set; }
 }

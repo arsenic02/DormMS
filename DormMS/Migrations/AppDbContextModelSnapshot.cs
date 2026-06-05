@@ -330,7 +330,7 @@ namespace DormMS.Migrations
 
                     b.HasIndex("VerifiedByAdminId");
 
-                    b.ToTable("StudentFinancialStatus");
+                    b.ToTable("StudentFinancialStatuses");
                 });
 
             modelBuilder.Entity("User", b =>

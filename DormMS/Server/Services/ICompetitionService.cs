@@ -1,3 +1,4 @@
+public record ApplyResult(CompetitionApplicationGetDto? Application, string? Error);
 public interface ICompetitionService
 {
     Task<IEnumerable<CompetitionGetDto>> GetAllAsync();
@@ -6,12 +7,15 @@ public interface ICompetitionService
 
     Task<CompetitionGetDto?> OpenCompetitionAsync(int id);
 
-    Task<CompetitionGetDto?> ToggleCompetitionStatusAsync(int id); 
+    Task<CompetitionGetDto?> ToggleCompetitionStatusAsync(int id);
     Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int userId, string role);
     //Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int? adminId = null, int? dormManagerId = null);
     Task<CompetitionGetDto?> UpdateAsync(int id, CompetitionUpdateDto dto);
     Task<bool> DeleteAsync(int id);
-    Task<CompetitionApplicationGetDto?> ApplyAsync(int studentId, CompetitionApplicationCreateDto dto);
+
+    
+    Task<ApplyResult> ApplyAsync(int studentId, CompetitionApplicationCreateDto dto);
+    //Task<CompetitionApplicationGetDto?> ApplyAsync(int studentId, CompetitionApplicationCreateDto dto);
     Task<IEnumerable<CompetitionApplicationGetDto>> GetApplicationsByCompetitionIdAsync(int competitionId);
     Task<CompetitionApplicationGetDto?> UpdateApplicationAsync(int id, CompetitionApplicationUpdateDto dto);
     Task<bool> DeleteApplicationAsync(int id);

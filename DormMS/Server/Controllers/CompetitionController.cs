@@ -116,22 +116,44 @@ public class CompetitionController : ControllerBase
 
         return NoContent();
     }
-
     [Authorize(Roles = "Student")]
     [HttpPost("{competitionId}/apply")]
-    public async Task<ActionResult<CompetitionApplicationGetDto>> ApplyToCompetition(int competitionId, CompetitionApplicationCreateDto dto)
+    public async Task<ActionResult<CompetitionApplicationGetDto>> ApplyToCompetition(
+    int competitionId, CompetitionApplicationCreateDto dto)
     {
         var userId = GetCurrentUserId();
         if (userId is null)
             return Unauthorized();
+        
+        // var studentId = await _context.Users
+        // .Where(u => u.Id == userId)
+        // .Select(u => u.StudentId)
+        // .FirstOrDefaultAsync();
 
         dto.CompetitionId = competitionId;
-        var application = await _competitionService.ApplyAsync(userId.Value, dto);
-        if (application is null)
-            return BadRequest("Failed to apply to competition");
+        var result = await _competitionService.ApplyAsync(userId.Value, dto);
 
-        return Ok(application);
+        if (result.Error is not null)
+            return BadRequest(result.Error);
+
+        return Ok(result.Application);
     }
+
+    // [Authorize(Roles = "Student")]
+    // [HttpPost("{competitionId}/apply")]
+    // public async Task<ActionResult<CompetitionApplicationGetDto>> ApplyToCompetition(int competitionId, CompetitionApplicationCreateDto dto)
+    // {
+    //     var userId = GetCurrentUserId();
+    //     if (userId is null)
+    //         return Unauthorized();
+
+    //     dto.CompetitionId = competitionId;
+    //     var application = await _competitionService.ApplyAsync(userId.Value, dto);
+    //     if (application is null)
+    //         return BadRequest("Failed to apply to competition");
+
+    //     return Ok(application);
+    // }
 
     [Authorize(Roles = "Admin,DormManager")]
     [HttpGet("{competitionId}/applications")]

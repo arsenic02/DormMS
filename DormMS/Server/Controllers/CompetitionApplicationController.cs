@@ -41,6 +41,20 @@ public class CompetitionApplicationController : ControllerBase
     }
 
     [Authorize(Roles = "Admin,DormManager")]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<CompetitionApplicationGetDto>>> GetAllApplications()
+    {
+        return Ok(await _applicationService.GetAllAsync());
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpGet("verified")]
+    public async Task<ActionResult<IEnumerable<CompetitionApplicationGetDto>>> GetVerifiedApplications()
+    {
+        return Ok(await _applicationService.GetVerifiedApplicationsAsync());
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
     [HttpPut("applications/{id}")]
     public async Task<ActionResult<CompetitionApplicationGetDto>> UpdateApplication(int id, CompetitionApplicationUpdateDto dto)
     {
@@ -67,6 +81,14 @@ public class CompetitionApplicationController : ControllerBase
     public async Task<ActionResult<CompetitionImportResultDto>> BulkApply(BulkApplicationDto dto)
     {
         var result = await _applicationService.BulkApplyAsync(dto);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("bulk-verify")]
+    public async Task<ActionResult<BulkVerifyApplicationsResultDto>> BulkVerifyApplications(BulkVerifyApplicationsDto dto)
+    {
+        var result = await _applicationService.BulkVerifyApplicationsAsync(dto);
         return Ok(result);
     }
 

@@ -91,3 +91,18 @@ public class StudentImportResultDto
 }
 
 public record StudentProfileVerificationDto(StudentProfileStatus Status); // prima Verified ili Rejected
+
+public class BulkFinancialStatusImportDto
+{
+    public string StudentIDNumber { get; set; } = string.Empty;
+    public decimal TotalFamilyIncome { get; set; }
+    public int FamilyMemberCount { get; set; }
+}
+
+public class BulkFinancialStatusImportResultDto
+{
+    public int TotalProcessed { get; set; }
+    public int SuccessfullyImported { get; set; }
+    public int Failed { get; set; }
+    public List<string> Errors { get; set; } = new();
+}

@@ -64,3 +64,17 @@ public class BulkApplicationDto
     public List<int> StudentIds { get; set; } = new();
     public int CompetitionId { get; set; }
 }
+
+public class BulkVerifyApplicationsDto
+{
+    public List<int> ApplicationIds { get; set; } = new();
+    public ApplicationStatus Status { get; set; }
+}
+
+public class BulkVerifyApplicationsResultDto
+{
+    public int TotalProcessed { get; set; }
+    public int SuccessfullyVerified { get; set; }
+    public int Failed { get; set; }
+    public List<string> Errors { get; set; } = new();
+}

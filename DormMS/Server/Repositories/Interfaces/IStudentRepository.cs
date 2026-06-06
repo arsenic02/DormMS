@@ -11,6 +11,7 @@ public interface IStudentRepository
     Task<Student?> GetByIdWithFinancialStatusAsync(int id);
     Task<StudentFinancialStatus?> GetFinancialStatusByStudentIdAsync(int studentId);
     Task AddFinancialStatusAsync(StudentFinancialStatus financialStatus);
+    Task BulkAddFinancialStatusesAsync(List<StudentFinancialStatus> financialStatuses);
     Task AddAsync(Student student);
     Task UpdateAsync(Student student);
     Task UpdateProfileAsync(Student student);

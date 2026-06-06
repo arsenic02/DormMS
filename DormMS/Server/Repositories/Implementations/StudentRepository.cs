@@ -73,6 +73,12 @@ public class StudentRepository : IStudentRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task BulkAddFinancialStatusesAsync(List<StudentFinancialStatus> financialStatuses)
+    {
+        await _context.StudentFinancialStatuses.AddRangeAsync(financialStatuses);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task AddAsync(Student student)
     {
         _context.Students.Add(student);

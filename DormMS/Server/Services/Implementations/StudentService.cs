@@ -218,6 +218,88 @@ public class StudentService : IStudentService
             //VerifiedAt = financialStatus.VerifiedAt
         };
     }
+
+    public async Task<BulkFinancialStatusImportResultDto> BulkImportFinancialStatusAsync(IFormFile csvFile)
+    {
+        var result = new BulkFinancialStatusImportResultDto();
+
+        try
+        {
+            using var reader = new StreamReader(csvFile.OpenReadStream());
+            using var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+
+            var records = csv.GetRecords<BulkFinancialStatusImportDto>().ToList();
+            result.TotalProcessed = records.Count;
+
+            var financialStatusesToAdd = new List<StudentFinancialStatus>();
+
+            foreach (var record in records)
+            {
+                try
+                {
+                    var studentIdNumber = record.StudentIDNumber.Trim();
+
+                    var student = await _context.Students
+                        .FirstOrDefaultAsync(s => s.StudentIDNumber == studentIdNumber);
+
+                    if (student is null)
+                    {
+                        result.Errors.Add($"Student with ID {studentIdNumber} not found");
+                        result.Failed++;
+                        continue;
+                    }
+
+                    var existingFinancialStatus = await _repository.GetFinancialStatusByStudentIdAsync(student.Id);
+                    if (existingFinancialStatus is not null)
+                    {
+                        result.Errors.Add($"Student {studentIdNumber} already has financial status");
+                        result.Failed++;
+                        continue;
+                    }
+
+                    if (record.FamilyMemberCount <= 0)
+                    {
+                        result.Errors.Add($"Invalid family member count for student {studentIdNumber}");
+                        result.Failed++;
+                        continue;
+                    }
+
+                    if (record.TotalFamilyIncome < 0)
+                    {
+                        result.Errors.Add($"Invalid total family income for student {studentIdNumber}");
+                        result.Failed++;
+                        continue;
+                    }
+
+                    var financialStatus = new StudentFinancialStatus
+                    {
+                        StudentId = student.Id,
+                        TotalFamilyIncome = record.TotalFamilyIncome,
+                        FamilyMemberCount = record.FamilyMemberCount
+                    };
+
+                    financialStatusesToAdd.Add(financialStatus);
+                    result.SuccessfullyImported++;
+                }
+                catch (Exception ex)
+                {
+                    result.Errors.Add($"Error processing student {record.StudentIDNumber}: {ex.Message}");
+                    result.Failed++;
+                }
+            }
+
+            if (financialStatusesToAdd.Any())
+            {
+                await _repository.BulkAddFinancialStatusesAsync(financialStatusesToAdd);
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Errors.Add($"Import failed: {ex.Message} | Inner: {ex.InnerException?.Message}");
+        }
+
+        return result;
+    }
     private async Task<bool> IsDormitoryRoomValidAsync(int? dormitoryRoomId)
     {
         if (!dormitoryRoomId.HasValue)

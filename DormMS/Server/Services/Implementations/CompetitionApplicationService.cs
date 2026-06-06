@@ -85,6 +85,18 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         return applications.Select(MapToApplicationGetDto);
     }
 
+    public async Task<IEnumerable<CompetitionApplicationGetDto>> GetAllAsync()
+    {
+        var applications = await _repository.GetAllAsync();
+        return applications.Select(MapToApplicationGetDto);
+    }
+
+    public async Task<IEnumerable<CompetitionApplicationGetDto>> GetVerifiedApplicationsAsync()
+    {
+        var applications = await _repository.GetByStatusAsync(ApplicationStatus.Approved);
+        return applications.Select(MapToApplicationGetDto);
+    }
+
     public async Task<CompetitionApplicationGetDto?> UpdateApplicationAsync(int id, CompetitionApplicationUpdateDto dto)
     {
         var application = await _context.CompetitionApplications
@@ -152,6 +164,41 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             catch (Exception ex)
             {
                 result.Errors.Add($"Error applying student {studentId}: {ex.Message}");
+                result.Failed++;
+            }
+        }
+
+        return result;
+    }
+
+    public async Task<BulkVerifyApplicationsResultDto> BulkVerifyApplicationsAsync(BulkVerifyApplicationsDto dto)
+    {
+        var result = new BulkVerifyApplicationsResultDto();
+        result.TotalProcessed = dto.ApplicationIds.Count;
+
+        foreach (var applicationId in dto.ApplicationIds)
+        {
+            try
+            {
+                var application = await _context.CompetitionApplications
+                    .Include(a => a.Student)
+                    .Include(a => a.Competition)
+                    .FirstOrDefaultAsync(a => a.Id == applicationId);
+
+                if (application is null)
+                {
+                    result.Errors.Add($"Application {applicationId} not found");
+                    result.Failed++;
+                    continue;
+                }
+
+                application.Status = dto.Status;
+                await _repository.UpdateAsync(application);
+                result.SuccessfullyVerified++;
+            }
+            catch (Exception ex)
+            {
+                result.Errors.Add($"Error verifying application {applicationId}: {ex.Message}");
                 result.Failed++;
             }
         }

@@ -6,9 +6,12 @@ public interface ICompetitionApplicationService
 {
     Task<ApplyResult> ApplyAsync(int userId, CompetitionApplicationCreateDto dto);
     Task<IEnumerable<CompetitionApplicationGetDto>> GetApplicationsByCompetitionIdAsync(int competitionId);
+    Task<IEnumerable<CompetitionApplicationGetDto>> GetAllAsync();
+    Task<IEnumerable<CompetitionApplicationGetDto>> GetVerifiedApplicationsAsync();
     Task<CompetitionApplicationGetDto?> UpdateApplicationAsync(int id, CompetitionApplicationUpdateDto dto);
     Task<bool> DeleteApplicationAsync(int id);
     Task<CompetitionImportResultDto> BulkApplyAsync(BulkApplicationDto dto);
+    Task<BulkVerifyApplicationsResultDto> BulkVerifyApplicationsAsync(BulkVerifyApplicationsDto dto);
 }
 
 public class CompetitionImportResultDto

@@ -22,6 +22,25 @@ public class CompetitionApplicationRepository : ICompetitionApplicationRepositor
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<CompetitionApplication>> GetAllAsync()
+    {
+        return await _context.CompetitionApplications
+            .Include(a => a.Student)
+            .Include(a => a.Competition)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<CompetitionApplication>> GetByStatusAsync(ApplicationStatus status)
+    {
+        return await _context.CompetitionApplications
+            .Include(a => a.Student)
+            .Include(a => a.Competition)
+            .Where(a => a.Status == status)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
     public async Task<CompetitionApplication?> GetApplicationByIdAsync(int id)
     {
         return await _context.CompetitionApplications

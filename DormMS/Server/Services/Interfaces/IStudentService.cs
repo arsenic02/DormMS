@@ -13,5 +13,6 @@ public interface IStudentService
     Task<StudentFinancialStatusGetDto?> SubmitFinancialStatusAsync(
     int userId,
     StudentFinancialStatusCreateDto dto);
+    Task<BulkFinancialStatusImportResultDto> BulkImportFinancialStatusAsync(IFormFile csvFile);
     Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status);
 }

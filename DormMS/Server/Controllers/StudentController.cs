@@ -132,6 +132,20 @@ public class StudentController : ControllerBase
         if (result is null) return NotFound();
         return Ok(result);
     }
+
+    [HttpPost("import-financial-status")]
+    [Authorize(Roles = "Admin,DormManager")]
+    public async Task<ActionResult<BulkFinancialStatusImportResultDto>> ImportFinancialStatus(IFormFile csvFile)
+    {
+        if (csvFile == null || csvFile.Length == 0)
+            return BadRequest("No file uploaded");
+
+        if (!csvFile.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            return BadRequest("Only CSV files are allowed");
+
+        var result = await _studentService.BulkImportFinancialStatusAsync(csvFile);
+        return Ok(result);
+    }
     private int? GetCurrentUserId()
     {
         var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier)

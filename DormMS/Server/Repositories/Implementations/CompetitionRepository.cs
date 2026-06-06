@@ -48,50 +48,13 @@ public class CompetitionRepository : ICompetitionRepository
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<CompetitionApplication>> GetApplicationsByCompetitionIdAsync(int competitionId)
-    {
-        return await _context.CompetitionApplications
-            .Include(a => a.Student)
-            .Include(a => a.Competition)
-            .Where(a => a.CompetitionId == competitionId)
-            .AsNoTracking()
-            .ToListAsync();
-    }
-
-    public async Task<CompetitionApplication?> GetApplicationByIdAsync(int id)
-    {
-        return await _context.CompetitionApplications
-            .Include(a => a.Student)
-            .Include(a => a.Competition)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(a => a.Id == id);
-    }
-
-    public async Task<CompetitionApplication?> GetApplicationByStudentAndCompetitionAsync(int studentId, int competitionId)
-    {
-        return await _context.CompetitionApplications
-            .AsNoTracking()
-            .FirstOrDefaultAsync(a => a.StudentId == studentId && a.CompetitionId == competitionId);
-    }
-
     public async Task AddAsync(Competition competition)
     {
         _context.Competitions.Add(competition);
         await _context.SaveChangesAsync();
     }
 
-    public async Task AddApplicationAsync(CompetitionApplication application)
-    {
-        _context.CompetitionApplications.Add(application);
-        await _context.SaveChangesAsync();
-    }
-
     public async Task UpdateAsync(Competition competition)
-    {
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateApplicationAsync(CompetitionApplication application)
     {
         await _context.SaveChangesAsync();
     }
@@ -103,17 +66,6 @@ public class CompetitionRepository : ICompetitionRepository
             return false;
 
         _context.Competitions.Remove(competition);
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> DeleteApplicationAsync(int id)
-    {
-        var application = await _context.CompetitionApplications.FindAsync(id);
-        if (application is null)
-            return false;
-
-        _context.CompetitionApplications.Remove(application);
         await _context.SaveChangesAsync();
         return true;
     }

@@ -72,6 +72,8 @@ builder.Services.AddScoped<IDormitoryRoomService, DormitoryRoomService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICompetitionRepository, CompetitionRepository>();
 builder.Services.AddScoped<ICompetitionService, CompetitionService>();
+builder.Services.AddScoped<ICompetitionApplicationRepository, CompetitionApplicationRepository>();
+builder.Services.AddScoped<ICompetitionApplicationService, CompetitionApplicationService>();
 
 var app = builder.Build();
 

@@ -1,6 +1,5 @@
 namespace DormMS.Server.Services.Interfaces;
 
-public record ApplyResult(CompetitionApplicationGetDto? Application, string? Error);
 public interface ICompetitionService
 {
     Task<IEnumerable<CompetitionGetDto>> GetAllAsync();
@@ -11,23 +10,6 @@ public interface ICompetitionService
 
     Task<CompetitionGetDto?> ToggleCompetitionStatusAsync(int id);
     Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int userId, string role);
-    //Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int? adminId = null, int? dormManagerId = null);
     Task<CompetitionGetDto?> UpdateAsync(int id, CompetitionUpdateDto dto);
     Task<bool> DeleteAsync(int id);
-
-    
-    Task<ApplyResult> ApplyAsync(int studentId, CompetitionApplicationCreateDto dto);
-    //Task<CompetitionApplicationGetDto?> ApplyAsync(int studentId, CompetitionApplicationCreateDto dto);
-    Task<IEnumerable<CompetitionApplicationGetDto>> GetApplicationsByCompetitionIdAsync(int competitionId);
-    Task<CompetitionApplicationGetDto?> UpdateApplicationAsync(int id, CompetitionApplicationUpdateDto dto);
-    Task<bool> DeleteApplicationAsync(int id);
-    Task<CompetitionImportResultDto> BulkApplyAsync(BulkApplicationDto dto);
-}
-
-public class CompetitionImportResultDto
-{
-    public int TotalProcessed { get; set; }
-    public int SuccessfullyApplied { get; set; }
-    public int Failed { get; set; }
-    public List<string> Errors { get; set; } = new();
 }

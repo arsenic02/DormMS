@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using DormMS.Server.Services.Interfaces;
+
+namespace DormMS.Server.Services.Implementations;
 
 public class AuthService : IAuthService
 {

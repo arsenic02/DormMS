@@ -1,3 +1,5 @@
+namespace DormMS.Server.Services.Interfaces;
+
 public record ApplyResult(CompetitionApplicationGetDto? Application, string? Error);
 public interface ICompetitionService
 {

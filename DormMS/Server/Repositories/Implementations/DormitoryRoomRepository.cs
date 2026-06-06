@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using DormMS.Server.Repositories.Interfaces;
+
+namespace DormMS.Server.Repositories.Implementations;
 
 public class DormitoryRoomRepository : IDormitoryRoomRepository
 {

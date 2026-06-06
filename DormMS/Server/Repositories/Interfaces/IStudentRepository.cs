@@ -1,3 +1,5 @@
+namespace DormMS.Server.Repositories.Interfaces;
+
 public interface IStudentRepository
 {
 

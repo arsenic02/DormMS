@@ -1,3 +1,5 @@
+namespace DormMS.Server.Services.Interfaces;
+
 public interface IDormitoryRoomService
 {
     Task<IEnumerable<DormitoryRoom>> GetAllAsync();

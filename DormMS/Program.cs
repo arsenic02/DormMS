@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using DormMS.Server.Services.Interfaces;
+using DormMS.Server.Services.Implementations;
+using DormMS.Server.Repositories.Interfaces;
+using DormMS.Server.Repositories.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 

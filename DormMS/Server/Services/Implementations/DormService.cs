@@ -1,3 +1,8 @@
+using DormMS.Server.Services.Interfaces;
+using DormMS.Server.Repositories.Interfaces;
+
+namespace DormMS.Server.Services.Implementations;
+
 public class DormService : IDormService
 {
     private readonly IDormRepository _repository;

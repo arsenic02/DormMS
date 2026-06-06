@@ -1,4 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using DormMS.Server.Services.Interfaces;
+using DormMS.Server.Repositories.Interfaces;
+
+namespace DormMS.Server.Services.Implementations;
 
 public class CompetitionService : ICompetitionService
 {

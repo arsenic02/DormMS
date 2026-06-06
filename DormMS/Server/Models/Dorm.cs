@@ -1,3 +1,5 @@
+namespace DormMS.Server.Models;
+
 public class Dorm
 {
     public int Id { get; set; }

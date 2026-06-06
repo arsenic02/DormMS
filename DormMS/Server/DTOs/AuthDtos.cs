@@ -1,3 +1,5 @@
+namespace DormMS.Server.DTOs;
+
 public class RegisterRequestDto
 {
     public string Email { get; set; } = string.Empty;

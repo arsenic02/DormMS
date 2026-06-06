@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
+namespace DormMS.Server.Models;
+
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }

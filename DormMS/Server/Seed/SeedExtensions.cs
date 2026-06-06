@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using DormMS.Server.Models;
 
 public static class SeedExtensions
 {

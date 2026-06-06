@@ -1,3 +1,5 @@
+namespace DormMS.Server.Models;
+
 public class Competition
 {
     public int Id { get; set; }

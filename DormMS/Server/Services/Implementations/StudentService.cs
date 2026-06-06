@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DormMS.Server.Services.Interfaces;
 using DormMS.Server.Repositories.Interfaces;
+using DormMS.Server.Models;
+using DormMS.Server.DTOs;
 
 namespace DormMS.Server.Services.Implementations;
 

@@ -1,3 +1,7 @@
+namespace DormMS.Server.DTOs;
+
+using DormMS.Server.Models;
+
 public class CompetitionCreateDto
 {
     public string Name { get; set; } = string.Empty;

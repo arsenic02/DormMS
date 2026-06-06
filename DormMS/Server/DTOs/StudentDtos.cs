@@ -1,3 +1,7 @@
+namespace DormMS.Server.DTOs;
+
+using DormMS.Server.Models;
+
 public class StudentCreateUpdateDto
 {
     public string Name { get; set; } = string.Empty;
@@ -12,6 +16,7 @@ public class StudentCreateUpdateDto
     public StudentStatus Status { get; set; }
     public int FacultyId { get; set; }
     public int ESPB { get; set; }
+    public decimal AverageGrade { get; set; }
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; }
 }
@@ -27,6 +32,7 @@ public class StudentProfileUpdateDto
     public StudyLevel StudyLevel { get; set; }
     public int FacultyId { get; set; }
     public int ESPB { get; set; }
+    public decimal AverageGrade { get; set; }
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; }
 }
@@ -63,13 +69,14 @@ public class StudentGetDto
     public StudentStatus Status { get; set; }
     public int FacultyId { get; set; }
     public int ESPB { get; set; }
+    public decimal AverageGrade { get; set; }
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; }
     public int CurrentYearOfStudy { get; set; }
     public bool IsProfileComplete { get; set; }
 
-    public StudentProfileStatus ProfileStatus { get; set; }             
-    public bool IsEligibleToApply { get; set; }                        
+    public StudentProfileStatus ProfileStatus { get; set; }
+    public bool IsEligibleToApply { get; set; }
     public StudentFinancialStatusGetDto? FinancialStatus { get; set; }
 }
 

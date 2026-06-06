@@ -1,3 +1,5 @@
+namespace DormMS.Server.Models;
+
 public class Student
 {
     public int Id { get; set; }
@@ -17,6 +19,7 @@ public class Student
     public int FacultyId { get; set; }
     //public int YearOfStudy { get; set; }
     public int ESPB { get; set; }
+    public decimal AverageGrade { get; set; } // prosečna ocena (po)
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; } //FK
     public DormitoryRoom? DormitoryRoom { get; set; }

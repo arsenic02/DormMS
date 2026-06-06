@@ -1,3 +1,5 @@
+namespace DormMS.Server.DTOs;
+
 public class DormCreateUpdateDto
 {
     public string Name { get; set; } = string.Empty;

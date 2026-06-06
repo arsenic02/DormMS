@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DormMS.Server.Repositories.Interfaces;
+using DormMS.Server.Models;
 
 namespace DormMS.Server.Repositories.Implementations;
 

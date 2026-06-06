@@ -1,3 +1,5 @@
+using DormMS.Server.Models;
+
 namespace DormMS.Server.Repositories.Interfaces;
 
 public interface ICompetitionRepository

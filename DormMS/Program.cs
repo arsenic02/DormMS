@@ -8,6 +8,7 @@ using DormMS.Server.Services.Interfaces;
 using DormMS.Server.Services.Implementations;
 using DormMS.Server.Repositories.Interfaces;
 using DormMS.Server.Repositories.Implementations;
+using DormMS.Server.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +75,8 @@ builder.Services.AddScoped<ICompetitionRepository, CompetitionRepository>();
 builder.Services.AddScoped<ICompetitionService, CompetitionService>();
 builder.Services.AddScoped<ICompetitionApplicationRepository, CompetitionApplicationRepository>();
 builder.Services.AddScoped<ICompetitionApplicationService, CompetitionApplicationService>();
+builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 
 var app = builder.Build();
 

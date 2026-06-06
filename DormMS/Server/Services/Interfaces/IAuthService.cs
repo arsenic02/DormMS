@@ -1,3 +1,5 @@
+using DormMS.Server.DTOs;
+
 namespace DormMS.Server.Services.Interfaces;
 
 public interface IAuthService

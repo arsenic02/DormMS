@@ -1,3 +1,7 @@
+namespace DormMS.Server.DTOs;
+
+using DormMS.Server.Models;
+
 public class DormitoryRoomCreateUpdateDto
 {
     public string RoomNumber { get; set; } = string.Empty;

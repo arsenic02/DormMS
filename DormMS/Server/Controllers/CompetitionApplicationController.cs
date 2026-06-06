@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DormMS.Server.Services.Interfaces;
+using DormMS.Server.DTOs;
 
 [ApiController]
 [Route("api/[controller]")]

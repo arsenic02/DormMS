@@ -1,3 +1,6 @@
+using DormMS.Server.Models;
+using DormMS.Server.DTOs;
+
 namespace DormMS.Server.Services.Interfaces;
 
 public record ApplyResult(CompetitionApplicationGetDto? Application, string? Error);

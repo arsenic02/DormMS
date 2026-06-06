@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using DormMS.Server.Services.Interfaces;
+using DormMS.Server.Models;
+using DormMS.Server.DTOs;
 
 [ApiController]
 [Route("api/[controller]")]

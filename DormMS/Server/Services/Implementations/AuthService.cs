@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using DormMS.Server.Services.Interfaces;
+using DormMS.Server.Models;
+using DormMS.Server.DTOs;
 
 namespace DormMS.Server.Services.Implementations;
 

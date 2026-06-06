@@ -1,3 +1,5 @@
+namespace DormMS.Server.Models;
+
 public enum UserRole
 {
     Admin,

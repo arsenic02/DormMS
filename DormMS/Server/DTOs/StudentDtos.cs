@@ -87,6 +87,11 @@ public class StudentCsvImportDto
     public string Name { get; set; } = string.Empty;
     public string Surname { get; set; } = string.Empty;
     public string StudentIDNumber { get; set; } = string.Empty;
+    public decimal TotalFamilyIncome { get; set; }
+    public int FamilyMemberCount { get; set; }
+    public int ESPB { get; set; }
+    public decimal AverageGrade { get; set; }
+    public int YearOfEnrollment { get; set; }
 }
 
 public class StudentImportResultDto

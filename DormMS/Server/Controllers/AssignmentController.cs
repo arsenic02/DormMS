@@ -25,4 +25,24 @@ public class AssignmentController : ControllerBase
 
         return Ok(result);
     }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("rank")]
+    public async Task<ActionResult<List<StudentAssignmentDto>>> RankStudents(AssignmentRequestDto dto)
+    {
+        var rankedStudents = await _assignmentService.RankStudentsAsync(dto.CompetitionId);
+        return Ok(rankedStudents);
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("assign-ranked")]
+    public async Task<ActionResult<AssignmentResultDto>> AssignRankedStudents([FromBody] List<StudentAssignmentDto> rankedStudents)
+    {
+        var result = await _assignmentService.AssignRankedStudentsAsync(rankedStudents);
+        
+        if (result.Errors.Any() && result.SuccessfullyAssigned == 0)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
 }

@@ -19,37 +19,21 @@ public class AssignmentService : IAssignmentService
 
     public async Task<AssignmentResultDto> AssignStudentsToDormsAsync(int competitionId)
     {
-        var result = new AssignmentResultDto { CompetitionId = competitionId };
-        
+        var rankedStudents = await RankStudentsAsync(competitionId);
+        return await AssignRankedStudentsAsync(rankedStudents);
+    }
+
+    public async Task<List<StudentAssignmentDto>> RankStudentsAsync(int competitionId)
+    {
         var competition = await _assignmentRepository.GetCompetitionWithApplicationsAsync(competitionId);
         if (competition == null)
         {
-            result.Errors.Add("Competition not found");
-            return result;
+            return new List<StudentAssignmentDto>();
         }
-
-        result.CompetitionName = competition.Name;
 
         var approvedApplications = competition.Applications
             .Where(a => a.Status == ApplicationStatus.Approved)
             .ToList();
-
-        result.TotalStudents = approvedApplications.Count;
-
-        if (result.TotalStudents == 0)
-        {
-            result.Errors.Add("No approved applications found for this competition");
-            return result;
-        }
-
-        var dorms = await _assignmentRepository.GetAllDormsWithRoomsAsync();
-        var totalAvailableSpots = dorms.Sum(d => d.AvailableSpots);
-
-        if (totalAvailableSpots == 0)
-        {
-            result.Errors.Add("No available spots in any dormitory");
-            return result;
-        }
 
         var studentAssignments = new List<StudentAssignmentDto>();
 
@@ -59,20 +43,43 @@ public class AssignmentService : IAssignmentService
             
             if (student.IsFreshman)
             {
-                result.Errors.Add($"Student {student.StudentIDNumber} is a freshman - freshman competition logic not implemented");
-                result.Failed++;
+                var failedAssignment = new StudentAssignmentDto
+                {
+                    StudentId = student.Id,
+                    StudentName = student.Name,
+                    StudentSurname = student.Surname,
+                    StudentIDNumber = student.StudentIDNumber,
+                    AverageGrade = student.AverageGrade,
+                    ESPB = student.ESPB,
+                    YearsOfStudy = student.CurrentYearOfStudy,
+                    CalculatedPoints = 0,
+                    Status = AssignmentStatus.Error
+                };
+                studentAssignments.Add(failedAssignment);
                 continue;
             }
 
             var yearsOfStudy = student.CurrentYearOfStudy;
             if (yearsOfStudy <= 0)
             {
-                result.Errors.Add($"Student {student.StudentIDNumber} has invalid years of study");
-                result.Failed++;
+                var failedAssignment = new StudentAssignmentDto
+                {
+                    StudentId = student.Id,
+                    StudentName = student.Name,
+                    StudentSurname = student.Surname,
+                    StudentIDNumber = student.StudentIDNumber,
+                    AverageGrade = student.AverageGrade,
+                    ESPB = student.ESPB,
+                    YearsOfStudy = yearsOfStudy,
+                    CalculatedPoints = 0,
+                    Status = AssignmentStatus.Error
+                };
+                studentAssignments.Add(failedAssignment);
                 continue;
             }
 
-            var calculatedPoints = CalculatePoints(student.AverageGrade, student.ESPB, yearsOfStudy);
+            var calculatedPoints = CalculatePoints(student.AverageGrade, student.ESPB, yearsOfStudy, 
+                student.FinancialStatus?.IncomePerMember ?? 0);
 
             var assignment = new StudentAssignmentDto
             {
@@ -84,18 +91,44 @@ public class AssignmentService : IAssignmentService
                 ESPB = student.ESPB,
                 YearsOfStudy = yearsOfStudy,
                 CalculatedPoints = calculatedPoints,
+                TotalFamilyIncome = student.FinancialStatus?.TotalFamilyIncome ?? 0,
+                FamilyMemberCount = student.FinancialStatus?.FamilyMemberCount ?? 0,
+                IncomePerMember = student.FinancialStatus?.IncomePerMember ?? 0,
                 Status = AssignmentStatus.NotAssigned
             };
 
             studentAssignments.Add(assignment);
         }
 
-        studentAssignments = studentAssignments
+        return studentAssignments
             .OrderByDescending(s => s.CalculatedPoints)
             .ToList();
+    }
 
-        foreach (var assignment in studentAssignments)
+    public async Task<AssignmentResultDto> AssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents)
+    {
+        var result = new AssignmentResultDto();
+        
+        var dorms = await _assignmentRepository.GetAllDormsWithRoomsAsync();
+        var totalAvailableSpots = dorms.Sum(d => d.AvailableSpots);
+
+        if (totalAvailableSpots == 0)
         {
+            result.Errors.Add("No available spots in any dormitory");
+            return result;
+        }
+
+        result.TotalStudents = rankedStudents.Count;
+
+        foreach (var assignment in rankedStudents)
+        {
+            if (assignment.Status == AssignmentStatus.Error)
+            {
+                result.Failed++;
+                result.Assignments.Add(assignment);
+                continue;
+            }
+
             var assigned = await TryAssignStudentAsync(assignment, dorms);
             
             if (assigned)
@@ -115,13 +148,24 @@ public class AssignmentService : IAssignmentService
         return result;
     }
 
-    private decimal CalculatePoints(decimal averageGrade, int espb, int yearsOfStudy)
+    private decimal CalculatePoints(decimal averageGrade, int espb, int yearsOfStudy, decimal incomePerMember)
     {
         if (yearsOfStudy <= 0)
             return 0;
 
-        var points = (averageGrade * 5) + ((decimal)espb / yearsOfStudy * 0.8m);
-        return Math.Round(points, 2);
+        var academicPoints = (averageGrade * 5) + ((decimal)espb / yearsOfStudy * 0.8m);
+        
+        // Financial points: lower income per member = higher points
+        // Assuming average income per member is around 10000, we give bonus points for lower income
+        var financialPoints = 0m;
+        if (incomePerMember > 0)
+        {
+            // Max 2 points for financial status (income per member <= 5000 gets max points)
+            financialPoints = Math.Max(0, 2m - (incomePerMember / 5000m));
+        }
+        
+        var totalPoints = academicPoints + financialPoints;
+        return Math.Round(totalPoints, 2);
     }
 
     private async Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, List<Dorm> dorms)
@@ -132,6 +176,11 @@ public class AssignmentService : IAssignmentService
             if (room != null)
             {
                 await _assignmentRepository.AssignStudentToRoomAsync(assignment.StudentId, room.Id);
+                
+                // Increment room occupancy
+                room.CurrentOccupancy++;
+                await _context.SaveChangesAsync();
+                
                 assignment.AssignedDormId = dorm.Id;
                 assignment.AssignedDormName = dorm.Name;
                 assignment.AssignedRoomId = room.Id;

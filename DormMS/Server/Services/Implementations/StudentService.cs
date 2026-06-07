@@ -136,7 +136,12 @@ public class StudentService : IStudentService
                         StudentIDNumber = indexNumber,
                         Email = normalizedEmail,
                         Status = StudentStatus.Active,
-                        ProfileStatus = StudentProfileStatus.Incomplete
+                        ProfileStatus = StudentProfileStatus.Incomplete,
+                        ESPB = record.ESPB,
+                        AverageGrade = record.AverageGrade,
+                        YearOfEnrollment = record.YearOfEnrollment,
+                        StudyLevel = StudyLevel.Undergraduate,
+                        FacultyId = 1 // Default faculty ID
                     };
 
                     _context.Students.Add(student);
@@ -155,6 +160,19 @@ public class StudentService : IStudentService
 
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
+
+                    // Create financial status
+                    if (record.TotalFamilyIncome > 0 && record.FamilyMemberCount > 0)
+                    {
+                        var financialStatus = new StudentFinancialStatus
+                        {
+                            StudentId = student.Id,
+                            TotalFamilyIncome = record.TotalFamilyIncome,
+                            FamilyMemberCount = record.FamilyMemberCount
+                        };
+                        _context.StudentFinancialStatuses.Add(financialStatus);
+                        await _context.SaveChangesAsync();
+                    }
 
                     result.SuccessfullyImported++;
                 }

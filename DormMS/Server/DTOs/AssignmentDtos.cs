@@ -17,6 +17,9 @@ public class StudentAssignmentDto
     public int ESPB { get; set; }
     public int YearsOfStudy { get; set; }
     public decimal CalculatedPoints { get; set; }
+    public decimal TotalFamilyIncome { get; set; }
+    public int FamilyMemberCount { get; set; }
+    public decimal IncomePerMember { get; set; }
     public int? AssignedDormId { get; set; }
     public string? AssignedDormName { get; set; }
     public int? AssignedRoomId { get; set; }

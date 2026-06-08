@@ -45,4 +45,16 @@ public class AssignmentController : ControllerBase
 
         return Ok(result);
     }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("bulk-assign-ranked")]
+    public async Task<ActionResult<AssignmentResultDto>> BulkAssignRankedStudents([FromBody] List<StudentAssignmentDto> rankedStudents)
+    {
+        var result = await _assignmentService.BulkAssignRankedStudentsAsync(rankedStudents);
+        
+        if (result.Errors.Any() && result.SuccessfullyAssigned == 0)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
 }

@@ -11,4 +11,5 @@ public interface IDormitoryRoomRepository
     Task UpdateAsync(DormitoryRoom room);
     Task<bool> DeleteAsync(int id);
     Task<bool> DormExistsAsync(int dormId);
+    Task<bool> RoomNumberExistsAsync(int dormId, string roomNumber, int? excludeId = null);
 }

@@ -34,7 +34,7 @@ public class DormitoryRoomService : IDormitoryRoomService
         if (room is null)
             return null;
 
-        if (!await IsValidAsync(dto))
+        if (!await IsValidAsync(dto, id))
             return false;
 
         MapToEntity(dto, room);
@@ -44,7 +44,7 @@ public class DormitoryRoomService : IDormitoryRoomService
 
     public Task<bool> DeleteAsync(int id) => _repository.DeleteAsync(id);
 
-    private async Task<bool> IsValidAsync(DormitoryRoomCreateUpdateDto dto)
+    private async Task<bool> IsValidAsync(DormitoryRoomCreateUpdateDto dto, int? excludeId = null)
     {
         if (dto.Capacity <= 0)
             return false;
@@ -52,7 +52,14 @@ public class DormitoryRoomService : IDormitoryRoomService
         if (string.IsNullOrWhiteSpace(dto.RoomNumber))
             return false;
 
-        return await _repository.DormExistsAsync(dto.DormId);
+        if (!await _repository.DormExistsAsync(dto.DormId))
+            return false;
+
+        // Provera da li soba sa istim brojem vec postoji u tom domu
+        if (await _repository.RoomNumberExistsAsync(dto.DormId, dto.RoomNumber, excludeId))
+            return false;
+
+        return true;
     }
 
     private static DormitoryRoom MapToEntity(DormitoryRoomCreateUpdateDto dto, DormitoryRoom? existing = null)

@@ -19,8 +19,17 @@ public class AssignmentService : IAssignmentService
 
     public async Task<AssignmentResultDto> AssignStudentsToDormsAsync(int competitionId)
     {
+        var competition = await _assignmentRepository.GetCompetitionWithApplicationsAsync(competitionId);
         var rankedStudents = await RankStudentsAsync(competitionId);
-        return await AssignRankedStudentsAsync(rankedStudents);
+        var result = await AssignRankedStudentsAsync(rankedStudents);
+
+        if (competition != null)
+        {
+            result.CompetitionId = competition.Id;
+            result.CompetitionName = competition.Name;
+        }
+
+        return result;
     }
 
     public async Task<List<StudentAssignmentDto>> RankStudentsAsync(int competitionId)
@@ -32,7 +41,7 @@ public class AssignmentService : IAssignmentService
         }
 
         var approvedApplications = competition.Applications
-            .Where(a => a.Status == ApplicationStatus.Approved)
+            .Where(a => a.Status == ApplicationStatus.Approved || a.Status == ApplicationStatus.Pending)
             .ToList();
 
         var studentAssignments = new List<StudentAssignmentDto>();
@@ -146,6 +155,74 @@ public class AssignmentService : IAssignmentService
         }
 
         return result;
+    }
+
+    public async Task<AssignmentResultDto> BulkAssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents)
+    {
+        var result = new AssignmentResultDto();
+        var dorms = await _assignmentRepository.GetAllDormsWithRoomsAsync();
+        
+        var studentIds = rankedStudents.Where(s => s.Status != AssignmentStatus.Error).Select(s => s.StudentId).ToList();
+        var students = await _assignmentRepository.GetStudentsByIdsAsync(studentIds);
+        var studentsDict = students.ToDictionary(s => s.Id);
+
+        result.TotalStudents = rankedStudents.Count;
+
+        foreach (var assignment in rankedStudents)
+        {
+            if (assignment.Status == AssignmentStatus.Error)
+            {
+                result.Failed++;
+                result.Assignments.Add(assignment);
+                continue;
+            }
+
+            if (!studentsDict.TryGetValue(assignment.StudentId, out var student))
+            {
+                assignment.Status = AssignmentStatus.Error;
+                result.Errors.Add($"Student with ID {assignment.StudentId} not found in database.");
+                result.Failed++;
+                result.Assignments.Add(assignment);
+                continue;
+            }
+
+            var assigned = TryAssignStudentInMemory(assignment, student, dorms);
+
+            if (assigned)
+            {
+                result.SuccessfullyAssigned++;
+                assignment.Status = AssignmentStatus.Assigned;
+            }
+            else
+            {
+                result.Waitlisted++;
+                assignment.Status = AssignmentStatus.Waitlisted;
+            }
+
+            result.Assignments.Add(assignment);
+        }
+
+        await _assignmentRepository.SaveChangesAsync();
+        return result;
+    }
+
+    private bool TryAssignStudentInMemory(StudentAssignmentDto assignment, Student student, List<Dorm> dorms)
+    {
+        foreach (var dorm in dorms.Where(d => !d.IsFull))
+        {
+            var room = dorm.Rooms.FirstOrDefault(r => r.CurrentOccupancy < r.Capacity);
+            if (room != null)
+            {
+                student.DormitoryRoomId = room.Id;
+                room.CurrentOccupancy++;
+                
+                assignment.AssignedDormId = dorm.Id;
+                assignment.AssignedDormName = dorm.Name;
+                assignment.AssignedRoomId = room.Id;
+                return true;
+            }
+        }
+        return false;
     }
 
     private decimal CalculatePoints(decimal averageGrade, int espb, int yearsOfStudy, decimal incomePerMember)

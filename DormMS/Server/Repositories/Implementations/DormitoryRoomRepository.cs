@@ -54,4 +54,17 @@ public class DormitoryRoomRepository : IDormitoryRoomRepository
     {
         return await _context.Dorms.AnyAsync(d => d.Id == dormId);
     }
+
+    public async Task<bool> RoomNumberExistsAsync(int dormId, string roomNumber, int? excludeId = null)
+    {
+        var query = _context.DormitoryRooms
+            .Where(r => r.DormId == dormId && r.RoomNumber == roomNumber);
+
+        if (excludeId.HasValue)
+        {
+            query = query.Where(r => r.Id != excludeId.Value);
+        }
+
+        return await query.AnyAsync();
+    }
 }

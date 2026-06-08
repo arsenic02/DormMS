@@ -11,4 +11,6 @@ public interface IAssignmentRepository
     Task AssignStudentToRoomAsync(int studentId, int roomId);
     Task UpdateApplicationStatusAsync(int applicationId, ApplicationStatus status);
     Task<int?> GetStudentCurrentRoomIdAsync(int studentId);
+    Task<List<Student>> GetStudentsByIdsAsync(List<int> studentIds);
+    Task SaveChangesAsync();
 }

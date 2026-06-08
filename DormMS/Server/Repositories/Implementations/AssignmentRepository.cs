@@ -71,4 +71,16 @@ public class AssignmentRepository : IAssignmentRepository
             .Select(s => s.DormitoryRoomId)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<List<Student>> GetStudentsByIdsAsync(List<int> studentIds)
+    {
+        return await _context.Students
+            .Where(s => studentIds.Contains(s.Id))
+            .ToListAsync();
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
 }

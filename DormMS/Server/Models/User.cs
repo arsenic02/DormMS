@@ -2,9 +2,9 @@ namespace DormMS.Server.Models;
 
 public enum UserRole
 {
-    Admin,
-    DormManager,
-    Student
+    Admin=0,
+    DormManager=1,
+    Student=2
 }
 
 public class User

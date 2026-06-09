@@ -24,8 +24,8 @@ public class Competition
 
 public enum CompetitionStatus
 {
-    Draft,
-    Open,
-    Closed,
-    Completed
+    Draft=0,
+    Open=1,
+    Closed=2,
+    Completed=3
 }

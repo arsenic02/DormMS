@@ -17,6 +17,7 @@ public class Student
     public StudyLevel StudyLevel { get; set; }
     public StudentStatus Status { get; set; }
     public int FacultyId { get; set; }
+    public string? FacultyName { get; set; }
     //public int YearOfStudy { get; set; }
     public int ESPB { get; set; }
     public decimal AverageGrade { get; set; } // prosečna ocena (po)
@@ -24,7 +25,7 @@ public class Student
     public int? DormitoryRoomId { get; set; } //FK
     public DormitoryRoom? DormitoryRoom { get; set; }
 
-    public StudentProfileStatus ProfileStatus { get; set; } = StudentProfileStatus.Incomplete; // NOVO
+    public StudentProfileStatus ProfileStatus { get; set; } = StudentProfileStatus.Incomplete; 
     public StudentFinancialStatus? FinancialStatus { get; set; }
 
     //public bool IsProfileComplete { get; set; }
@@ -41,29 +42,29 @@ public class Student
 
 public enum StudyLevel
 {
-    Undergraduate,   // Osnovne studije
-    Postgraduate,    // Master studije
-    Doctoral         // Doktorske studije
+    Undergraduate=0,   
+    Postgraduate=1,    
+    Doctoral=2,         
+    Integrated=3         
 }
 
 public enum StudentStatus
 {
-    Active,
-    Inactive,
-    Graduated,
-    //Suspended
+    Active=0,
+    Inactive=1,
+    Graduated=2,
 }
 
 public enum Gender
 {
-    Male,
-    Female
+    Male=0,
+    Female=1
 }
 
 public enum StudentProfileStatus
 {
-    Incomplete, // Tek registrovan
-    PendingVerification,  // Popunio podatke, čeka verifikaciju od admina
-    Verified, // Admin potvrdio podatke
-    Rejected // Admin odbio podatke, student treba da ih ispravi
+    Incomplete=0, // Tek registrovan
+    PendingVerification=1,  // Popunio podatke, čeka verifikaciju od admina
+    Verified=2, // Admin potvrdio podatke
+    Rejected=3 // Admin odbio podatke, student treba da ih ispravi
 }

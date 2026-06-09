@@ -17,8 +17,8 @@ public class CompetitionApplication
 
 public enum ApplicationStatus
 {
-    Pending,
-    Approved,
-    Rejected,
-    Waitlisted
+    Pending=0,
+    Approved=1,
+    Rejected=2,
+    Waitlisted=3
 }

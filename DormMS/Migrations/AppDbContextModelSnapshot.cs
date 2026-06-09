@@ -249,6 +249,9 @@ namespace DormMS.Migrations
                     b.Property<int>("FacultyId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("FacultyName")
+                        .HasColumnType("text");
+
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
 

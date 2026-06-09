@@ -20,14 +20,14 @@ public class DormitoryRoom
 
 public enum GenderType
 {
-    Male,
-    Female
+    Male=0,
+    Female=1
 }
 
 public enum RoomStatus
 {
-    Available,
-    FullyOccupied,
-    Maintenance,
-    Closed
+    Available=0,
+    FullyOccupied=1,
+    Maintenance=2,
+    Closed=3
 }

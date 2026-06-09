@@ -20,7 +20,10 @@ public class StudentRepository : IStudentRepository
 
     public async Task<Student?> GetByIdAsync(int id)
     {
-        return await _context.Students.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id);
+        return await _context.Students
+            .Include(s => s.FinancialStatus)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == id);
     }
 
     public async Task<Student?> GetByUserIdAsync(int userId)
@@ -33,7 +36,10 @@ public class StudentRepository : IStudentRepository
         if (!studentId.HasValue)
             return null;
 
-        return await GetByIdAsync(studentId.Value);
+        return await _context.Students
+            .Include(s => s.FinancialStatus)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == studentId.Value);
     }
 
     public async Task<Student?> GetByIdTrackedAsync(int id)

@@ -139,9 +139,10 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             return result;
         }
 
-        result.TotalProcessed = dto.StudentIds.Count;
+        var studentIds = GetIdsFromDto(dto.StudentIds, dto.StartId, dto.EndId);
+        result.TotalProcessed = studentIds.Count;
 
-        foreach (var studentId in dto.StudentIds)
+        foreach (var studentId in studentIds)
         {
             try
             {
@@ -176,9 +177,10 @@ public class CompetitionApplicationService : ICompetitionApplicationService
     public async Task<BulkVerifyApplicationsResultDto> BulkVerifyApplicationsAsync(BulkVerifyApplicationsDto dto)
     {
         var result = new BulkVerifyApplicationsResultDto();
-        result.TotalProcessed = dto.ApplicationIds.Count;
+        var applicationIds = GetIdsFromDto(dto.ApplicationIds, dto.StartId, dto.EndId);
+        result.TotalProcessed = applicationIds.Count;
 
-        foreach (var applicationId in dto.ApplicationIds)
+        foreach (var applicationId in applicationIds)
         {
             try
             {
@@ -206,6 +208,18 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         }
 
         return result;
+    }
+
+    private List<int> GetIdsFromDto(List<int>? ids, int? startId, int? endId)
+    {
+        if (ids != null && ids.Any()) return ids;
+        if (startId.HasValue && endId.HasValue)
+        {
+            var start = Math.Min(startId.Value, endId.Value);
+            var end = Math.Max(startId.Value, endId.Value);
+            return Enumerable.Range(start, end - start + 1).ToList();
+        }
+        return new List<int>();
     }
 
     private static CompetitionApplicationGetDto MapToApplicationGetDto(CompetitionApplication application) => new()

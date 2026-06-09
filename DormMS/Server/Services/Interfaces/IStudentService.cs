@@ -18,4 +18,8 @@ public interface IStudentService
     StudentFinancialStatusCreateDto dto);
     Task<BulkFinancialStatusImportResultDto> BulkImportFinancialStatusAsync(IFormFile csvFile);
     Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status);
+    Task<bool> VerifyFinancialStatusAsync(int studentId, bool isVerified);
+    Task<int> FixBulkImportedStudentsAsync();
+    Task<int> ClearAllStudentsAsync();
+    Task<int> BulkVerifyProfilesAsync(BulkVerifyProfilesDto dto);
 }

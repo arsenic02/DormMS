@@ -79,26 +79,12 @@ public class StudentService : IStudentService
     public async Task<StudentImportResultDto> ImportFromCsvAsync(IFormFile csvFile)
     {
         var result = new StudentImportResultDto();
+        var random = new Random();
 
         try
         {
             using var reader = new StreamReader(csvFile.OpenReadStream());
             using var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
-
-            /////za slucaj da nece
-            // using var reader = new StreamReader(csvFile.OpenReadStream());
-
-            // var config = new CsvHelper.Configuration.CsvConfiguration(
-            //     System.Globalization.CultureInfo.InvariantCulture)
-            // {
-            //     HeaderValidated = null,
-            //     MissingFieldFound = null,
-            //     PrepareHeaderForMatch = args => args.Header.ToLower()
-            // };
-
-            // using var csv = new CsvHelper.CsvReader(reader, config);
-            /////// za slucaj da nece
-            /// 
 
             var records = csv.GetRecords<StudentCsvImportDto>().ToList();
             result.TotalProcessed = records.Count;
@@ -139,10 +125,12 @@ public class StudentService : IStudentService
                         ProfileStatus = StudentProfileStatus.Incomplete,
                         ESPB = record.ESPB,
                         AverageGrade = record.AverageGrade,
-                        YearOfEnrollment = record.YearOfEnrollment,
+                        YearOfEnrollment = record.YearOfEnrollment > 0 ? record.YearOfEnrollment : DateTime.Now.Year - random.Next(1, 5),
                         StudyLevel = StudyLevel.Undergraduate,
-                        FacultyId = 1 // Default faculty ID
+                        FacultyId = 1
                     };
+
+                    ApplyRealisticData(student, random);
 
                     _context.Students.Add(student);
                     await _context.SaveChangesAsync();
@@ -168,7 +156,9 @@ public class StudentService : IStudentService
                         {
                             StudentId = student.Id,
                             TotalFamilyIncome = record.TotalFamilyIncome,
-                            FamilyMemberCount = record.FamilyMemberCount
+                            FamilyMemberCount = record.FamilyMemberCount,
+                            IsVerified = true,
+                            VerifiedAt = DateTime.UtcNow
                         };
                         _context.StudentFinancialStatuses.Add(financialStatus);
                         await _context.SaveChangesAsync();
@@ -178,22 +168,132 @@ public class StudentService : IStudentService
                 }
                 catch (Exception ex)
                 {
-                    result.Errors.Add($"Error importing {record.Email}: {ex.Message} | Inner: {ex.InnerException?.Message}");
+                    result.Errors.Add($"Error importing {record.Email}: {ex.Message}");
                     result.Failed++;
                 }
             }
-            //await _context.SaveChangesAsync(); // ovde ne treba save changesAsync
-
         }
         catch (Exception ex)
         {
-            result.Errors.Add(
-                $"Import failed: {ex.Message} | Inner: {ex.InnerException?.Message}"
-    );
-            //result.Errors.Add($"CSV parsing error: {ex.Message}");
+            result.Errors.Add($"Import failed: {ex.Message}");
         }
 
         return result;
+    }
+
+    private void ApplyRealisticData(Student student, Random random)
+    {
+        var faculties = new[]
+        {
+            "Građevinsko-arhitektonski fakultet (GAF)",
+            "Elektronski fakultet",
+            "Mašinski fakultet",
+            "Pravni fakultet",
+            "Filozofski fakultet",
+            "Fakultet sporta i fizičkog vaspitanja (DIF)",
+            "Fakultet zaštite na radu",
+            "Ekonomski fakultet",
+            "Medicinski fakultet",
+            "Prirodno-matematički fakultet (PMF)",
+            "Fakultet umetnosti"
+        };
+
+        var cities = new[]
+        {
+            "Leskovac", "Vranje", "Pirot", "Aleksinac", "Prokuplje", "Knjaževac", 
+            "Zaječar", "Kruševac", "Jagodina", "Paraćin", "Ćuprija", "Bor", 
+            "Negotin", "Surdulica", "Vladičin Han", "Bela Palanka", "Svrljig", 
+            "Doljevac", "Merošina", "Gadžin Han", "Sokobanja"
+        };
+
+        var streets = new[]
+        {
+            "Njegoševa", "Knjaževačka", "Dušanova", "Nikole Pašića", 
+            "Skopska", "Sremska", "Vojvode Mišića", "Jadranska", 
+            "Prvomajska", "Kosovska"
+        };
+
+        var facultyIndex = random.Next(faculties.Length);
+        student.FacultyName = faculties[facultyIndex];
+        student.FacultyId = facultyIndex + 1;
+        
+        if (int.TryParse(student.StudentIDNumber, out _))
+        {
+            if (student.FacultyName.Contains("Elektronski"))
+                student.StudentIDNumber = random.Next(10000, 19999).ToString();
+            else if (student.FacultyName.Contains("GAF"))
+                student.StudentIDNumber = (random.Next(2) == 0 ? "pa-" : "rg-") + random.Next(1000, 9999);
+            else if (student.FacultyName.Contains("Mašinski"))
+                student.StudentIDNumber = random.Next(1000, 9999).ToString();
+            else
+                student.StudentIDNumber = random.Next(1000, 99999).ToString();
+        }
+
+        if (student.Age == 0) student.Age = random.Next(19, 27);
+        student.Gender = (Gender)random.Next(2);
+
+        var day = random.Next(1, 29).ToString("D2");
+        var month = random.Next(1, 13).ToString("D2");
+        var yearPart = (DateTime.Now.Year - student.Age).ToString().Substring(1);
+        var genderPart = random.Next(student.Gender == Gender.Male ? 0 : 500, student.Gender == Gender.Male ? 500 : 1000).ToString("D3");
+        student.JMBG = day + month + yearPart + "91" + genderPart + random.Next(0, 10);
+
+        student.MunicipalityOfResidence = random.Next(100) < 90 ? cities[random.Next(cities.Length)] : "Niš";
+        student.HomeAddress = $"{streets[random.Next(streets.Length)]} {random.Next(1, 150)}";
+
+        if (student.ESPB == 0) student.ESPB = random.Next(30, 241);
+        student.StudyLevel = random.Next(100) < 90 ? StudyLevel.Undergraduate : StudyLevel.Postgraduate;
+        if (student.AverageGrade == 0) student.AverageGrade = Math.Round((decimal)(random.NextDouble() * 3.5 + 6.5), 2);
+        
+        student.ProfileStatus = StudentProfileStatus.Verified;
+
+        if (student.FinancialStatus != null)
+        {
+            student.FinancialStatus.IsVerified = true;
+            student.FinancialStatus.VerifiedAt = DateTime.UtcNow;
+        }
+    }
+
+    public async Task<int> FixBulkImportedStudentsAsync()
+    {
+        var students = await _context.Students
+            .Include(s => s.FinancialStatus)
+            .ToListAsync();
+        var random = new Random();
+        foreach (var student in students) ApplyRealisticData(student, random);
+        await _context.SaveChangesAsync();
+        return students.Count;
+    }
+
+    public async Task<int> ClearAllStudentsAsync()
+    {
+        var students = await _context.Students.ToListAsync();
+        var users = await _context.Users.Where(u => u.Role == UserRole.Student).ToListAsync();
+        _context.Users.RemoveRange(users);
+        _context.Students.RemoveRange(students);
+        await _context.SaveChangesAsync();
+        return students.Count;
+    }
+
+    public async Task<int> BulkVerifyProfilesAsync(BulkVerifyProfilesDto dto)
+    {
+        var studentIds = GetIdsFromDto(dto.StudentIds, dto.StartId, dto.EndId);
+        var students = await _context.Students.Where(s => studentIds.Contains(s.Id)).ToListAsync();
+        foreach (var student in students) student.ProfileStatus = dto.Status;
+        await _context.SaveChangesAsync();
+        return students.Count;
+    }
+
+    private List<int> GetIdsFromDto(List<int>? ids, int? startId, int? endId)
+    {
+        if (ids != null && ids.Any()) return ids;
+        if (startId.HasValue && endId.HasValue)
+        {
+            var start = Math.Min(startId.Value, endId.Value);
+            var end = Math.Max(startId.Value, endId.Value);
+            return Enumerable.Range(start, end - start + 1).ToList();
+        }
+        return new List<int>();
     }
 
     public async Task<StudentFinancialStatusGetDto?> SubmitFinancialStatusAsync(
@@ -295,7 +395,9 @@ public class StudentService : IStudentService
                     {
                         StudentId = student.Id,
                         TotalFamilyIncome = record.TotalFamilyIncome,
-                        FamilyMemberCount = record.FamilyMemberCount
+                        FamilyMemberCount = record.FamilyMemberCount,
+                        IsVerified = true,
+                        VerifiedAt = DateTime.UtcNow
                     };
 
                     financialStatusesToAdd.Add(financialStatus);
@@ -341,8 +443,8 @@ public class StudentService : IStudentService
         if (dto.YearOfEnrollment <= 0)
             return false;
 
-        if (dto.FacultyId <= 0)
-            return false;
+        // if (dto.FacultyId <= 0)
+        //     return false;
 
         if (dto.ESPB < 0)
             return false;
@@ -359,15 +461,75 @@ public class StudentService : IStudentService
         student.Gender = dto.Gender;
         student.YearOfEnrollment = dto.YearOfEnrollment;
         student.StudyLevel = dto.StudyLevel;
-        student.FacultyId = dto.FacultyId;
+        student.FacultyName = dto.FacultyName.Trim();
+        student.FacultyId = GetFacultyIdByName(student.FacultyName);
         student.ESPB = dto.ESPB;
+        student.AverageGrade = dto.AverageGrade;
         student.IsBudgetStudent = dto.IsBudgetStudent;
         student.DormitoryRoomId = dto.DormitoryRoomId;
     }
 
+    private static int GetFacultyIdByName(string? facultyName)
+    {
+        if (string.IsNullOrWhiteSpace(facultyName)) return 0;
+
+        var faculties = new[]
+        {
+            "Građevinsko-arhitektonski fakultet (GAF)",
+            "Elektronski fakultet",
+            "Mašinski fakultet",
+            "Pravni fakultet",
+            "Filozofski fakultet",
+            "Fakultet sporta i fizičkog vaspitanja (DIF)",
+            "Fakultet zaštite na radu",
+            "Ekonomski fakultet",
+            "Medicinski fakultet",
+            "Prirodno-matematički fakultet (PMF)",
+            "Fakultet umetnosti"
+        };
+
+        for (int i = 0; i < faculties.Length; i++)
+        {
+            if (faculties[i].Equals(facultyName, StringComparison.OrdinalIgnoreCase))
+            {
+                return i + 1;
+            }
+        }
+
+        return 0;
+    }
+
+    private static string? GetFacultyNameById(int facultyId)
+    {
+        var faculties = new[]
+        {
+            "Građevinsko-arhitektonski fakultet (GAF)",
+            "Elektronski fakultet",
+            "Mašinski fakultet",
+            "Pravni fakultet",
+            "Filozofski fakultet",
+            "Fakultet sporta i fizičkog vaspitanja (DIF)",
+            "Fakultet zaštite na radu",
+            "Ekonomski fakultet",
+            "Medicinski fakultet",
+            "Prirodno-matematički fakultet (PMF)",
+            "Fakultet umetnosti"
+        };
+
+        if (facultyId >= 1 && facultyId <= faculties.Length)
+        {
+            return faculties[facultyId - 1];
+        }
+
+        return null;
+    }
+
     public async Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status)
     {
-        var student = await _repository.GetByIdTrackedAsync(studentId);
+        var student = await _context.Students
+            .Include(s => s.FinancialStatus)
+            .FirstOrDefaultAsync(s => s.Id == studentId);
+            
         if (student is null) return null;
 
         // Dozvoli samo prelaze koji imaju smisla
@@ -379,6 +541,20 @@ public class StudentService : IStudentService
         return MapToGetDto(student);
     }
 
+    public async Task<bool> VerifyFinancialStatusAsync(int studentId, bool isVerified)
+    {
+        var financialStatus = await _context.StudentFinancialStatuses
+            .FirstOrDefaultAsync(fs => fs.StudentId == studentId);
+
+        if (financialStatus == null) return false;
+
+        financialStatus.IsVerified = isVerified;
+        financialStatus.VerifiedAt = isVerified ? DateTime.UtcNow : null;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     private static Student MapToEntity(StudentCreateUpdateDto dto, Student? existing = null)
     {
         var student = existing ?? new Student();
@@ -386,6 +562,8 @@ public class StudentService : IStudentService
         student.Name = dto.Name;
         student.Surname = dto.Surname;
         student.HomeAddress = dto.HomeAddress;
+        student.MunicipalityOfResidence = dto.MunicipalityOfResidence;
+        student.JMBG = dto.JMBG;
         student.StudentIDNumber = dto.StudentIDNumber;
         student.Email = dto.Email;
         student.Age = dto.Age;
@@ -393,8 +571,10 @@ public class StudentService : IStudentService
         student.YearOfEnrollment = dto.YearOfEnrollment;
         student.StudyLevel = dto.StudyLevel;
         student.Status = dto.Status;
-        student.FacultyId = dto.FacultyId;
+        student.FacultyName = dto.FacultyName.Trim();
+        student.FacultyId = GetFacultyIdByName(student.FacultyName);
         student.ESPB = dto.ESPB;
+        student.AverageGrade = dto.AverageGrade;
         student.IsBudgetStudent = dto.IsBudgetStudent;
         student.DormitoryRoomId = dto.DormitoryRoomId;
 
@@ -407,18 +587,33 @@ public class StudentService : IStudentService
         Name = student.Name,
         Surname = student.Surname,
         Email = student.Email,
+        JMBG = student.JMBG,
         StudentIDNumber = student.StudentIDNumber,
         HomeAddress = student.HomeAddress,
+        MunicipalityOfResidence = student.MunicipalityOfResidence,
         Age = student.Age,
         Gender = student.Gender,
         YearOfEnrollment = student.YearOfEnrollment,
         StudyLevel = student.StudyLevel,
         Status = student.Status,
         FacultyId = student.FacultyId,
+        FacultyName = student.FacultyName,
         ESPB = student.ESPB,
+        AverageGrade = student.AverageGrade,
         IsBudgetStudent = student.IsBudgetStudent,
         DormitoryRoomId = student.DormitoryRoomId,
         CurrentYearOfStudy = student.CurrentYearOfStudy,
-        ProfileStatus = student.ProfileStatus
+        ProfileStatus = student.ProfileStatus,
+        IsEligibleToApply = student.IsEligibleToApply,
+        IsProfileComplete = student.ProfileStatus == StudentProfileStatus.Verified,
+        FinancialStatus = student.FinancialStatus == null ? null : new StudentFinancialStatusGetDto
+        {
+            TotalFamilyIncome = student.FinancialStatus.TotalFamilyIncome,
+            FamilyMemberCount = student.FinancialStatus.FamilyMemberCount,
+            IncomePerMember = student.FinancialStatus.IncomePerMember,
+            IsVerified = student.FinancialStatus.IsVerified,
+            SubmittedAt = student.FinancialStatus.SubmittedAt,
+            VerifiedAt = student.FinancialStatus.VerifiedAt
+        }
     };
 }

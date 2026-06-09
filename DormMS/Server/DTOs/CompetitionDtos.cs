@@ -65,13 +65,17 @@ public class CompetitionApplicationGetDto
 
 public class BulkApplicationDto
 {
-    public List<int> StudentIds { get; set; } = new();
+    public List<int>? StudentIds { get; set; }
+    public int? StartId { get; set; }
+    public int? EndId { get; set; }
     public int CompetitionId { get; set; }
 }
 
 public class BulkVerifyApplicationsDto
 {
-    public List<int> ApplicationIds { get; set; } = new();
+    public List<int>? ApplicationIds { get; set; }
+    public int? StartId { get; set; }
+    public int? EndId { get; set; }
     public ApplicationStatus Status { get; set; }
 }
 

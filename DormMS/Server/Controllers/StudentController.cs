@@ -135,6 +135,15 @@ public class StudentController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPatch("{studentId}/verify-financial-status")]
+    [Authorize(Roles = "Admin,DormManager")]
+    public async Task<IActionResult> VerifyFinancialStatus(int studentId, [FromBody] bool isVerified)
+    {
+        var result = await _studentService.VerifyFinancialStatusAsync(studentId, isVerified);
+        if (!result) return NotFound();
+        return Ok(new { Message = $"Financial status for student {studentId} has been {(isVerified ? "verified" : "unverified")}." });
+    }
+
     [HttpPost("import-financial-status")]
     [Authorize(Roles = "Admin,DormManager")]
     public async Task<ActionResult<BulkFinancialStatusImportResultDto>> ImportFinancialStatus(IFormFile csvFile)
@@ -148,6 +157,31 @@ public class StudentController : ControllerBase
         var result = await _studentService.BulkImportFinancialStatusAsync(csvFile);
         return Ok(result);
     }
+
+    [HttpPost("fix-bulk-data")]
+    [Authorize(Roles = "Admin,DormManager")]
+    public async Task<ActionResult<int>> FixBulkData()
+    {
+        var count = await _studentService.FixBulkImportedStudentsAsync();
+        return Ok(new { Message = $"Successfully updated {count} students with realistic data.", Count = count });
+    }
+
+    [HttpDelete("all")]
+    [Authorize(Roles = "Admin,DormManager")]
+    public async Task<ActionResult<int>> ClearAllStudents()
+    {
+        var count = await _studentService.ClearAllStudentsAsync();
+        return Ok(new { Message = $"Successfully deleted {count} students and their user accounts.", Count = count });
+    }
+
+    [HttpPost("bulk-verify-profiles")]
+    [Authorize(Roles = "Admin,DormManager")]
+    public async Task<ActionResult<int>> BulkVerifyProfiles([FromBody] BulkVerifyProfilesDto dto)
+    {
+        var count = await _studentService.BulkVerifyProfilesAsync(dto);
+        return Ok(new { Message = $"Successfully updated {count} student profiles to {dto.Status}.", Count = count });
+    }
+
     private int? GetCurrentUserId()
     {
         var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier)

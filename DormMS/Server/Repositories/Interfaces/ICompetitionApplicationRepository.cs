@@ -12,4 +12,5 @@ public interface ICompetitionApplicationRepository
     Task AddAsync(CompetitionApplication application);
     Task UpdateAsync(CompetitionApplication application);
     Task<bool> DeleteAsync(int id);
+    Task<int> DeleteByCompetitionIdAsync(int competitionId);
 }

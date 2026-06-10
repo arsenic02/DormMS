@@ -5,8 +5,8 @@ namespace DormMS.Server.Services.Interfaces;
 
 public interface IStudentService
 {
-    Task<IEnumerable<Student>> GetAllAsync();
-    Task<Student?> GetByIdAsync(int id);
+    Task<IEnumerable<StudentGetDto>> GetAllAsync();
+    Task<StudentGetDto?> GetByIdAsync(int id);
     Task<StudentGetDto?> GetByUserIdAsync(int userId);
     Task<Student?> CreateAsync(StudentCreateUpdateDto dto);
     Task<bool?> UpdateAsync(int id, StudentCreateUpdateDto dto);

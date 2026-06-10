@@ -28,18 +28,10 @@ public class StudentRepository : IStudentRepository
 
     public async Task<Student?> GetByUserIdAsync(int userId)
     {
-        var studentId = await _context.Users
-            .Where(u => u.Id == userId)
-            .Select(u => u.StudentId)
-            .FirstOrDefaultAsync();
-
-        if (!studentId.HasValue)
-            return null;
-
         return await _context.Students
             .Include(s => s.FinancialStatus)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(s => s.Id == studentId.Value);
+            .FirstOrDefaultAsync(s => _context.Users
+                .Any(u => u.Id == userId && u.StudentId == s.Id));
     }
 
     public async Task<Student?> GetByIdTrackedAsync(int id)

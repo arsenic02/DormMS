@@ -79,4 +79,16 @@ public class CompetitionApplicationRepository : ICompetitionApplicationRepositor
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<int> DeleteByCompetitionIdAsync(int competitionId)
+    {
+        var applications = await _context.CompetitionApplications
+            .Where(a => a.CompetitionId == competitionId)
+            .ToListAsync();
+
+        var count = applications.Count;
+        _context.CompetitionApplications.RemoveRange(applications);
+        await _context.SaveChangesAsync();
+        return count;
+    }
 }

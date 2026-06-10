@@ -78,6 +78,14 @@ public class CompetitionApplicationController : ControllerBase
     }
 
     [Authorize(Roles = "Admin,DormManager")]
+    [HttpDelete("competition/{competitionId}/applications")]
+    public async Task<ActionResult<int>> DeleteApplicationsByCompetition(int competitionId)
+    {
+        var count = await _applicationService.DeleteApplicationsByCompetitionIdAsync(competitionId);
+        return Ok(new { Message = $"Successfully deleted {count} applications for competition {competitionId}.", Count = count });
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
     [HttpPost("bulk-apply")]
     public async Task<ActionResult<CompetitionImportResultDto>> BulkApply(BulkApplicationDto dto)
     {

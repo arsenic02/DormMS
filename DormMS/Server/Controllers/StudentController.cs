@@ -18,13 +18,13 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
+    public async Task<ActionResult<IEnumerable<StudentGetDto>>> GetStudents()
     {
         return Ok(await _studentService.GetAllAsync());
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Student>> GetStudent(int id)
+    public async Task<ActionResult<StudentGetDto>> GetStudent(int id)
     {
         var student = await _studentService.GetByIdAsync(id);
         if (student is null)
@@ -184,8 +184,10 @@ public class StudentController : ControllerBase
 
     private int? GetCurrentUserId()
     {
-        var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        // Kada je MapInboundClaims = false, tipovi claim-ova su identični onima u JWT (npr. "sub", "role")
+        var idValue = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+            ?? User.FindFirstValue("sub")
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         return int.TryParse(idValue, out var userId) ? userId : null;
     }

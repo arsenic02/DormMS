@@ -13,6 +13,7 @@ public interface ICompetitionApplicationService
     Task<IEnumerable<CompetitionApplicationGetDto>> GetVerifiedApplicationsAsync();
     Task<CompetitionApplicationGetDto?> UpdateApplicationAsync(int id, CompetitionApplicationUpdateDto dto);
     Task<bool> DeleteApplicationAsync(int id);
+    Task<int> DeleteApplicationsByCompetitionIdAsync(int competitionId);
     Task<CompetitionImportResultDto> BulkApplyAsync(BulkApplicationDto dto);
     Task<BulkVerifyApplicationsResultDto> BulkVerifyApplicationsAsync(BulkVerifyApplicationsDto dto);
 }

@@ -47,7 +47,7 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             return new(null, "Student not found");
 
         if (!student.IsEligibleToApply)
-            return new(null, "Student is not eligible to apply");
+            return new(null, "Student is not eligible to apply. Check profile verification, financial status and budget status.");
 
         // Provera opstine
         if (competition.CreatedByDormManagerId.HasValue)
@@ -122,6 +122,11 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         return await _repository.DeleteAsync(id);
     }
 
+    public async Task<int> DeleteApplicationsByCompetitionIdAsync(int competitionId)
+    {
+        return await _repository.DeleteByCompetitionIdAsync(competitionId);
+    }
+
     public async Task<CompetitionImportResultDto> BulkApplyAsync(BulkApplicationDto dto)
     {
         var result = new CompetitionImportResultDto();
@@ -142,10 +147,31 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         var studentIds = GetIdsFromDto(dto.StudentIds, dto.StartId, dto.EndId);
         result.TotalProcessed = studentIds.Count;
 
+        var students = await _context.Students
+            .Include(s => s.FinancialStatus)
+            .Where(s => studentIds.Contains(s.Id))
+            .ToListAsync();
+
+        var studentsDict = students.ToDictionary(s => s.Id);
+
         foreach (var studentId in studentIds)
         {
             try
             {
+                if (!studentsDict.TryGetValue(studentId, out var student))
+                {
+                    result.Errors.Add($"Student {studentId} not found");
+                    result.Failed++;
+                    continue;
+                }
+
+                if (!student.IsEligibleToApply)
+                {
+                    result.Errors.Add($"Student {studentId} ({student.Name} {student.Surname}) is not eligible to apply. Check budget status, profile verification and financial status.");
+                    result.Failed++;
+                    continue;
+                }
+
                 var existingApplication = await _repository.GetApplicationByStudentAndCompetitionAsync(studentId, dto.CompetitionId);
                 if (existingApplication is not null)
                 {

@@ -8,4 +8,5 @@ public interface IAssignmentService
     Task<List<StudentAssignmentDto>> RankStudentsAsync(int competitionId);
     Task<AssignmentResultDto> AssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents);
     Task<AssignmentResultDto> BulkAssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents);
+    Task<bool> ResetAssignmentsAsync();
 }

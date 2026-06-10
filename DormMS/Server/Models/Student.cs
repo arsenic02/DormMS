@@ -33,7 +33,8 @@ public class Student
     public bool IsEligibleToApply => 
         ProfileStatus == StudentProfileStatus.Verified && 
         FinancialStatus != null && 
-        FinancialStatus.IsVerified;
+        FinancialStatus.IsVerified &&
+        IsBudgetStudent;
 
     //bolje da se racuna nego da se cuva u bazi, jer se menja svake godine
     public int CurrentYearOfStudy => DateTime.Now.Year - YearOfEnrollment + 1;

@@ -20,9 +20,17 @@ public class StudentService : IStudentService
         _passwordHasher = new PasswordHasher<User>();
     }
 
-    public Task<IEnumerable<Student>> GetAllAsync() => _repository.GetAllAsync();
+    public async Task<IEnumerable<StudentGetDto>> GetAllAsync()
+    {
+        var students = await _repository.GetAllAsync();
+        return students.Select(MapToGetDto);
+    }
 
-    public Task<Student?> GetByIdAsync(int id) => _repository.GetByIdAsync(id);
+    public async Task<StudentGetDto?> GetByIdAsync(int id)
+    {
+        var student = await _repository.GetByIdAsync(id);
+        return student is null ? null : MapToGetDto(student);
+    }
 
     public async Task<StudentGetDto?> GetByUserIdAsync(int userId)
     {
@@ -245,6 +253,7 @@ public class StudentService : IStudentService
         student.StudyLevel = random.Next(100) < 90 ? StudyLevel.Undergraduate : StudyLevel.Postgraduate;
         if (student.AverageGrade == 0) student.AverageGrade = Math.Round((decimal)(random.NextDouble() * 3.5 + 6.5), 2);
         
+        student.IsBudgetStudent = true;
         student.ProfileStatus = StudentProfileStatus.Verified;
 
         if (student.FinancialStatus != null)
@@ -322,8 +331,8 @@ public class StudentService : IStudentService
             StudentId = student.Id,
             TotalFamilyIncome = dto.TotalFamilyIncome,
             FamilyMemberCount = dto.FamilyMemberCount,
-            //IsVerified = false,
-            //SubmittedAt = DateTime.UtcNow
+            IsVerified = false,
+            SubmittedAt = DateTime.UtcNow
         };
 
         await _repository.AddFinancialStatusAsync(financialStatus);
@@ -333,9 +342,9 @@ public class StudentService : IStudentService
             TotalFamilyIncome = financialStatus.TotalFamilyIncome,
             FamilyMemberCount = financialStatus.FamilyMemberCount,
             IncomePerMember = financialStatus.IncomePerMember,
-            // IsVerified = financialStatus.IsVerified,
-            //SubmittedAt = financialStatus.SubmittedAt,
-            //VerifiedAt = financialStatus.VerifiedAt
+            IsVerified = financialStatus.IsVerified,
+            SubmittedAt = financialStatus.SubmittedAt,
+            VerifiedAt = financialStatus.VerifiedAt
         };
     }
 
@@ -526,19 +535,23 @@ public class StudentService : IStudentService
 
     public async Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status)
     {
-        var student = await _context.Students
-            .Include(s => s.FinancialStatus)
-            .FirstOrDefaultAsync(s => s.Id == studentId);
+        var student = await _repository.GetByIdTrackedAsync(studentId);
             
-        if (student is null) return null;
-
-        // Dozvoli samo prelaze koji imaju smisla
-        if (status != StudentProfileStatus.Verified && status != StudentProfileStatus.Rejected)
-            return null;
+        if (student is null)
+        {
+            
+            var untrackedStudent = await _repository.GetByIdAsync(studentId);
+            if (untrackedStudent is null) return null;
+            
+            student = untrackedStudent;
+            _context.Students.Update(student);
+        }
 
         student.ProfileStatus = status;
         await _repository.UpdateProfileAsync(student);
-        return MapToGetDto(student);
+        
+        var updated = await _repository.GetByIdAsync(studentId);
+        return updated != null ? MapToGetDto(updated) : null;
     }
 
     public async Task<bool> VerifyFinancialStatusAsync(int studentId, bool isVerified)

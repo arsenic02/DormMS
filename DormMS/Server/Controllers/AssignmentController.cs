@@ -57,4 +57,12 @@ public class AssignmentController : ControllerBase
 
         return Ok(result);
     }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("reset")]
+    public async Task<IActionResult> ResetAssignments()
+    {
+        await _assignmentService.ResetAssignmentsAsync();
+        return Ok(new { Message = "All room assignments have been cleared and room occupancy reset to 0." });
+    }
 }

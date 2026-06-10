@@ -41,7 +41,7 @@ public class AssignmentService : IAssignmentService
         }
 
         var approvedApplications = competition.Applications
-            .Where(a => a.Status == ApplicationStatus.Approved || a.Status == ApplicationStatus.Pending)
+            .Where(a => (a.Status == ApplicationStatus.Approved || a.Status == ApplicationStatus.Pending) && a.Student.IsBudgetStudent)
             .ToList();
 
         var studentAssignments = new List<StudentAssignmentDto>();
@@ -111,6 +111,10 @@ public class AssignmentService : IAssignmentService
 
         return studentAssignments
             .OrderByDescending(s => s.CalculatedPoints)
+            .ThenByDescending(s => s.ESPB)                
+            .ThenBy(s => s.YearsOfStudy)                 
+            .ThenByDescending(s => s.AverageGrade)       
+            .ThenBy(s => s.IncomePerMember)             
             .ToList();
     }
 
@@ -210,7 +214,10 @@ public class AssignmentService : IAssignmentService
     {
         foreach (var dorm in dorms.Where(d => !d.IsFull))
         {
-            var room = dorm.Rooms.FirstOrDefault(r => r.CurrentOccupancy < r.Capacity);
+            var room = dorm.Rooms.FirstOrDefault(r => 
+                r.CurrentOccupancy < r.Capacity && 
+                (int)r.Gender == (int)student.Gender); 
+
             if (room != null)
             {
                 student.DormitoryRoomId = room.Id;
@@ -225,6 +232,27 @@ public class AssignmentService : IAssignmentService
         return false;
     }
 
+    public async Task<bool> ResetAssignmentsAsync()
+    {
+        var studentsWithRooms = await _context.Students
+            .Where(s => s.DormitoryRoomId != null)
+            .ToListAsync();
+
+        foreach (var student in studentsWithRooms)
+        {
+            student.DormitoryRoomId = null;
+        }
+
+        var rooms = await _context.DormitoryRooms.ToListAsync();
+        foreach (var room in rooms)
+        {
+            room.CurrentOccupancy = 0;
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     private decimal CalculatePoints(decimal averageGrade, int espb, int yearsOfStudy, decimal incomePerMember)
     {
         if (yearsOfStudy <= 0)
@@ -232,16 +260,20 @@ public class AssignmentService : IAssignmentService
 
         var academicPoints = (averageGrade * 5) + ((decimal)espb / yearsOfStudy * 0.8m);
         
-        // Financial points: lower income per member = higher points
-        // Assuming average income per member is around 10000, we give bonus points for lower income
-        var financialPoints = 0m;
-        if (incomePerMember > 0)
+        var espbBonus = 0m;
+        if (espb >= 120 && espb <= 240)
+            espbBonus = 1m;
+        else if (espb > 240)
+            espbBonus = 2m;
+
+        const decimal averageSalary = 121650m;
+        var financialBonus = 0m;
+        if (incomePerMember > 0 && incomePerMember < (averageSalary * 0.5m))
         {
-            // Max 2 points for financial status (income per member <= 5000 gets max points)
-            financialPoints = Math.Max(0, 2m - (incomePerMember / 5000m));
+            financialBonus = 1m;
         }
         
-        var totalPoints = academicPoints + financialPoints;
+        var totalPoints = academicPoints + espbBonus + financialBonus;
         return Math.Round(totalPoints, 2);
     }
 

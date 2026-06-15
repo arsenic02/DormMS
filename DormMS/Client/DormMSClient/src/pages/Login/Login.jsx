@@ -51,7 +51,15 @@ function Login() {
             const data = await loginUser(formData.email, formData.password)
             console.log('Uspešna prijava:', data)
             login(data)
-            navigate('/dashboard')
+            
+            if (data.role === 'Admin') {
+                navigate('/admin')
+            } else if(data.role==='DormManager'){
+                navigate('/dorm-manager')
+            } else{
+                navigate('/student')
+            }
+            //navigate('/dashboard')
         } catch (err) {
             setErrors({ general: err.message })
         }

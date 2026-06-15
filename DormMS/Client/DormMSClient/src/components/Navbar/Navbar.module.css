@@ -45,3 +45,9 @@
 .loginBtn:hover {
   background-color: #d4920a;
 }
+.logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}

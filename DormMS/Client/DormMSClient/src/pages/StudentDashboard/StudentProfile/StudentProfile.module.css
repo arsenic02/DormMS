@@ -10,7 +10,7 @@
   background: white;
   padding: 2.5rem;
   border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 600px;
   height: fit-content;
@@ -34,7 +34,8 @@
   color: #555;
 }
 
-.field input, .field select {
+.field input,
+.field select {
   padding: 0.6rem 0.9rem;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -42,7 +43,8 @@
   outline: none;
 }
 
-.field input:focus, .field select:focus {
+.field input:focus,
+.field select:focus {
   border-color: #1a3a5c;
 }
 
@@ -82,4 +84,83 @@
 
 .btn:hover {
   background-color: #15304d;
+}
+
+.success {
+  color: #2f855a;
+  background-color: #c6f6d5;
+  padding: 0.75rem;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.viewMode {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.statusBadge {
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.95rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background-color: #f7fafc;
+}
+
+.viewGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.viewItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.viewLabel {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.viewValue {
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.editBtn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #1a3a5c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.editBtn:hover {
+  background-color: #15304d;
+}
+
+.cancelBtn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #e2e8f0;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.cancelBtn:hover {
+  background-color: #cbd5e0;
 }

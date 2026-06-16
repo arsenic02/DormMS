@@ -21,3 +21,20 @@ export async function updateStudentProfile(profileData, token) {
 
     return data//text ? JSON.parse(text) : {}
 }
+
+export async function getStudentProfile(token) {
+  const response = await fetch(`${BASE_URL}/student/me`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Greška pri učitavanju profila')
+  }
+
+  return data
+}

@@ -10,7 +10,7 @@ import StudentRoom from './pages/StudentDashboard/StudentRoom/StudentRoom'
 import StudentProfile from './pages/StudentDashboard/StudentProfile/StudentProfile'
 import StudentNotifications from './pages/StudentDashboard/StudentNotifications/StudentNotifications'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
-
+import DormManagerCompetition from './pages/DormManagerDashBoard/DormManagerCompetitions/DormManagerCompetitions'
 function App() {
   return (
     <BrowserRouter>
@@ -33,6 +33,7 @@ function App() {
 
         <Route element={<ProtectedRoute allowedRoles={['DormManager']} />}>
           <Route path="/dorm-manager" element={<DormManagerDashboard />} />
+          <Route path="/dorm-manager/competitions" element={<DormManagerCompetition />} />
         </Route>
 
       </Routes>

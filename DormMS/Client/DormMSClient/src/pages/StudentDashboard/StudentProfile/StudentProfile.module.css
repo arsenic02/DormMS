@@ -1,63 +1,199 @@
 .container {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 1.5rem;
+  align-items: start;
   padding: 2rem;
-  background-color: #f5f5f5;
+  background-color: #f5f7fb;
   min-height: calc(100vh - 64px);
 }
 
+.loading {
+  padding: 2rem;
+  color: #1a3a5c;
+  font-weight: 600;
+}
+
 .card {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 600px;
-  height: fit-content;
+  background: #fff;
+  padding: 1.75rem;
+  border: 1px solid #e4e9f0;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(26, 58, 92, 0.08);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .card h2 {
-  margin-bottom: 1.5rem;
+  margin: 0;
   color: #1a3a5c;
-  text-align: center;
+  font-size: 1.35rem;
+}
+
+.statusBadge,
+.verifiedBadge,
+.unverifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background-color: #f7fafc;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.verifiedBadge {
+  color: #2f855a;
+  background-color: #e6f4ea;
+}
+
+.unverifiedBadge {
+  color: #b7791f;
+  background-color: #fff7df;
+}
+
+.viewMode {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.viewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.viewItem {
+  min-width: 0;
+  padding: 0.85rem;
+  border: 1px solid #e8edf3;
+  border-radius: 8px;
+  background-color: #fbfcfe;
+}
+
+.viewLabel {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #6b7280;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.viewValue {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #1f2937;
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
+  gap: 0.4rem;
 }
 
-.field label {
-  margin-bottom: 0.4rem;
-  font-size: 0.9rem;
-  color: #555;
+.field label,
+.checkboxField {
+  color: #4b5563;
+  font-size: 0.92rem;
+  font-weight: 600;
 }
 
 .field input,
 .field select {
-  padding: 0.6rem 0.9rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  width: 100%;
+  padding: 0.72rem 0.85rem;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  background: #fff;
+  color: #1f2937;
   font-size: 0.95rem;
   outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .field input:focus,
 .field select:focus {
   border-color: #1a3a5c;
+  box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.12);
 }
 
 .checkboxField {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.55rem;
 }
 
-.checkboxField label {
-  font-size: 0.95rem;
-  color: #555;
+.checkboxField input {
+  width: 1rem;
+  height: 1rem;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.btn,
+.editBtn,
+.cancelBtn {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn,
+.editBtn {
+  background-color: #1a3a5c;
+  color: #fff;
+}
+
+.btn:hover,
+.editBtn:hover {
+  background-color: #15304d;
+  transform: translateY(-1px);
+}
+
+.cancelBtn {
+  background-color: #e8edf3;
+  color: #263444;
+}
+
+.cancelBtn:hover {
+  background-color: #d8e0ea;
+  transform: translateY(-1px);
 }
 
 .inputError {
@@ -65,102 +201,51 @@
 }
 
 .error {
-  color: #e53e3e;
-  font-size: 0.8rem;
-  margin-top: 0.3rem;
-}
-
-.btn {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #1a3a5c;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
-
-.btn:hover {
-  background-color: #15304d;
+  color: #c53030;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .success {
-  color: #2f855a;
-  background-color: #c6f6d5;
+  color: #276749;
+  background-color: #e6f4ea;
   padding: 0.75rem;
-  border-radius: 6px;
-  text-align: center;
-  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
-.viewMode {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.muted {
+  color: #6b7280;
+  font-weight: 600;
 }
 
-.statusBadge {
-  text-align: center;
-  font-weight: bold;
-  font-size: 0.95rem;
-  padding: 0.5rem;
-  border-radius: 6px;
-  background-color: #f7fafc;
+@media (max-width: 980px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
 }
 
-.viewGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
+@media (max-width: 620px) {
+  .container {
+    padding: 1rem;
+  }
 
-.viewItem {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
+  .card {
+    padding: 1.25rem;
+  }
 
-.viewLabel {
-  font-size: 0.8rem;
-  color: #888;
-}
+  .cardHeader,
+  .actions {
+    grid-template-columns: 1fr;
+  }
 
-.viewValue {
-  font-size: 0.95rem;
-  color: #333;
-  font-weight: 500;
-}
+  .cardHeader {
+    flex-direction: column;
+  }
 
-.editBtn {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #1a3a5c;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
-
-.editBtn:hover {
-  background-color: #15304d;
-}
-
-.cancelBtn {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #e2e8f0;
-  color: #333;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
-
-.cancelBtn:hover {
-  background-color: #cbd5e0;
+  .viewGrid,
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
 }

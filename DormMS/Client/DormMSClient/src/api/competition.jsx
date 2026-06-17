@@ -10,6 +10,14 @@ export const getCompetitions = async () => {
     return res.json()
 }
 
+export const getOpenCompetitions = async () => {
+    const res = await fetch(`${API_URL}/open`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+    })
+    if (!res.ok) throw new Error('Greška prilikom učitavanja otvorenih konkursa.')
+    return res.json()
+}
+
 export const createCompetition = async (form) => {
     const res = await fetch(API_URL, {
         method: 'POST',
@@ -44,23 +52,3 @@ export const toggleCompetition = async (id) => {
 
     return response.json()
 }
-
-// export const openCompetition = async (id) => {
-//     const response = await fetch(`${API_URL}/${id}/open`, {
-//         method: 'PUT',
-//     })
-
-//     if (!response.ok) {
-//         throw new Error('Greška prilikom otvaranja konkursa.')
-//     }
-// }
-
-// export const closeCompetition = async (id) => {
-//     const response = await fetch(`${API_URL}/${id}/close`, {
-//         method: 'PUT',
-//     })
-
-//     if (!response.ok) {
-//         throw new Error('Greška prilikom zatvaranja konkursa.')
-//     }
-// }

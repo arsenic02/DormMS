@@ -30,6 +30,7 @@ function Navbar() {
                 <ul className={styles.navLinks}>
                     <li><Link to="/student">Početna</Link></li>
                     <li><Link to="/student/room">Soba</Link></li>
+                    <li><Link to="/student/competitions">Konkursi</Link></li>
                     <li><Link to="/student/profile">Profil</Link></li>
                     <li><Link to="/student/notifications">Obaveštenja</Link></li>
                 </ul>

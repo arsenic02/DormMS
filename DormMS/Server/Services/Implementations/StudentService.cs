@@ -324,7 +324,25 @@ public class StudentService : IStudentService
             await _repository.GetFinancialStatusByStudentIdAsync(student.Id);
 
         if (existingFinancialStatus is not null)
-            return null;
+        {
+            existingFinancialStatus.TotalFamilyIncome = dto.TotalFamilyIncome;
+            existingFinancialStatus.FamilyMemberCount = dto.FamilyMemberCount;
+            existingFinancialStatus.IsVerified = false;
+            existingFinancialStatus.SubmittedAt = DateTime.UtcNow;
+            existingFinancialStatus.VerifiedAt = null;
+
+            await _context.SaveChangesAsync();
+
+            return new StudentFinancialStatusGetDto
+            {
+                TotalFamilyIncome = existingFinancialStatus.TotalFamilyIncome,
+                FamilyMemberCount = existingFinancialStatus.FamilyMemberCount,
+                IncomePerMember = existingFinancialStatus.IncomePerMember,
+                IsVerified = existingFinancialStatus.IsVerified,
+                SubmittedAt = existingFinancialStatus.SubmittedAt,
+                VerifiedAt = existingFinancialStatus.VerifiedAt
+            };
+        }
 
         var financialStatus = new StudentFinancialStatus
         {

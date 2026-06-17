@@ -38,3 +38,37 @@ export async function getStudentProfile(token) {
 
   return data
 }
+
+export async function submitFinancialStatus(financialData, token) {
+  const response = await fetch(`${BASE_URL}/student/me/financial-status`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(financialData)
+  })
+ 
+  const data = await response.json().catch(() => null)
+ 
+  if (!response.ok) {
+    throw new Error(data?.message || 'Greška pri čuvanju finansijskog statusa')
+  }
+ 
+  return data
+}
+
+export async function getFinancialStatus(token) {
+    const response = await fetch(
+        `${BASE_URL}/student/me`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+    const data = await response.json()
+
+    return data.financialStatus
+}

@@ -1,11 +1,14 @@
 import styles from './StudentProfile.module.css'
 import { useAuth } from '../../../context/AuthContext'
-import { useEffect, useState } from 'react'
-import { updateStudentProfile, getStudentProfile } from '../../../api/student'
+import { useState } from 'react'
+import { submitFinancialStatus, updateStudentProfile } from '../../../api/student'
+
+import { useStudentProfile } from '../../../hooks/useStudentProfile'
+import { useFinancialStatus } from '../../../hooks/useFinancialStatus'
 
 const genderOptions = [
-    { value: 0, label: 'Muški' },
-    { value: 1, label: 'Ženski' }
+    { value: 0, label: 'Muski' },
+    { value: 1, label: 'Zenski' }
 ]
 
 const studyLevelOptions = [
@@ -27,255 +30,420 @@ const facultyOptions = [
     'Ekonomski fakultet',
     'Medicinski fakultet',
     'Filozofski fakultet',
-    'Prirodno-matematički fakultet',
-    'Građevinsko-arhitektonski fakultet',
-    'Mašinski fakultet',
+    'Prirodno-matematicki fakultet',
+    'Gradjevinsko-arhitektonski fakultet',
+    'Masinski fakultet',
     'Fakultet umetnosti',
-    'Fakultet sporta i fizičkog vaspitanja',
-    'Fakultet zaštite na radu'
+    'Fakultet sporta i fizickog vaspitanja',
+    'Fakultet zastite na radu'
 ]
+
+const formatValue = (value) => {
+    if (value === null || value === undefined || value === '') return '-'
+    return value
+}
+
+function ViewItem({ label, value }) {
+    return (
+        <div className={styles.viewItem}>
+            <span className={styles.viewLabel}>{label}</span>
+            <span className={styles.viewValue}>{formatValue(value)}</span>
+        </div>
+    )
+}
 
 function StudentProfile() {
     const { auth } = useAuth()
-    const [formData, setFormData] = useState({
-        homeAddress: '',
-        municipalityOfResidence: '',
-        jmbg: '',
-        age: '',
-        gender: 0,
-        yearOfEnrollment: '',
-        studyLevel: 0,
-        facultyName: '',
-        espb: '',
-        averageGrade: '',
-        isBudgetStudent: true
-    })
+
+    const {
+        formData,
+        setFormData,
+        profileStatus,
+        loading: profileLoading,
+        error: profileError
+    } = useStudentProfile(auth?.token)
+
+    const {
+        financialData,
+        setFinancialData,
+        loading: financialLoading,
+        error: financialError
+    } = useFinancialStatus(auth?.token)
+
     const [errors, setErrors] = useState({})
+    const [financialErrors, setFinancialErrors] = useState({})
     const [successMessage, setSuccessMessage] = useState('')
-    const [profileStatus, setProfileStatus] = useState(null)
+    const [financialSuccessMessage, setFinancialSuccessMessage] = useState('')
+    const [submitError, setSubmitError] = useState('')
+    const [financialSubmitError, setFinancialSubmitError] = useState('')
     const [isEditing, setIsEditing] = useState(false)
+    const [isFinancialEditing, setIsFinancialEditing] = useState(false)
 
-    useEffect(() => {
-        getStudentProfile(auth.token)
-            .then(data => {
-                setFormData({
-                    homeAddress: data.homeAddress || '',
-                    municipalityOfResidence: data.municipalityOfResidence || '',
-                    jmbg: data.jmbg || '',
-                    age: data.age || '',
-                    gender: data.gender ?? 0,
-                    yearOfEnrollment: data.yearOfEnrollment || '',
-                    studyLevel: data.studyLevel ?? 0,
-                    facultyName: data.facultyName || '',
-                    espb: data.espb || '',
-                    averageGrade: data.averageGrade || '',
-                    isBudgetStudent: data.isBudgetStudent ?? true
-                })
-                setProfileStatus(data.profileStatus)
-            })
-            .catch(err => console.error('Greška pri učitavanju profila:', err))
-    }, [])
-
-    const validate = () => {
-        const newErrors = {}
-        if (!formData.homeAddress) newErrors.homeAddress = 'Adresa je obavezna'
-        if (!formData.municipalityOfResidence) newErrors.municipalityOfResidence = 'Opština je obavezna'
-        if (!formData.jmbg) {
-            newErrors.jmbg = 'JMBG je obavezan'
-        } else if (!/^\d{13}$/.test(formData.jmbg)) {
-            newErrors.jmbg = 'JMBG mora imati tačno 13 cifara'
-        }
-        if (!formData.age) {
-            newErrors.age = 'Godine su obavezne'
-        } else if (isNaN(formData.age) || formData.age < 16 || formData.age > 100) {
-            newErrors.age = 'Unesite ispravne godine'
-        }
-        if (!formData.yearOfEnrollment) {
-            newErrors.yearOfEnrollment = 'Godina upisa je obavezna'
-        } else if (!/^\d{4}$/.test(formData.yearOfEnrollment)) {
-            newErrors.yearOfEnrollment = 'Unesite ispravnu godinu (npr. 2021)'
-        }
-        if (!formData.facultyName) newErrors.facultyName = 'Naziv fakulteta je obavezan'
-        if (!formData.espb) {
-            newErrors.espb = 'ESPB je obavezan'
-        } else if (isNaN(formData.espb) || formData.espb < 0) {
-            newErrors.espb = 'Unesite ispravan broj ESPB'
-        }
-        if (!formData.averageGrade) {
-            newErrors.averageGrade = 'Prosečna ocena je obavezna'
-        } else if (isNaN(formData.averageGrade) || formData.averageGrade < 6 || formData.averageGrade > 10) {
-            newErrors.averageGrade = 'Ocena mora biti između 6 i 10'
-        }
-        return newErrors
-    }
+    const selectedGender = genderOptions.find(g => Number(g.value) === Number(formData.gender))?.label
+    const selectedStudyLevel = studyLevelOptions.find(s => Number(s.value) === Number(formData.studyLevel))?.label
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target
-        setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value })
-        setErrors({ ...errors, [name]: '' })
+
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }))
+
+        setErrors(prev => ({
+            ...prev,
+            [name]: ''
+        }))
+    }
+
+    const handleFinancialChange = (e) => {
+        const { name, value } = e.target
+
+        setFinancialData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+
+        setFinancialErrors(prev => ({
+            ...prev,
+            [name]: ''
+        }))
+    }
+
+    const validate = () => {
+        const err = {}
+
+        if (!formData.homeAddress) err.homeAddress = 'Adresa je obavezna'
+        if (!formData.municipalityOfResidence) err.municipalityOfResidence = 'Opstina je obavezna'
+
+        if (!/^\d{13}$/.test(formData.jmbg)) {
+            err.jmbg = 'JMBG mora imati 13 cifara'
+        }
+
+        if (!formData.yearOfEnrollment || !/^\d{4}$/.test(formData.yearOfEnrollment)) {
+            err.yearOfEnrollment = 'Godina mora biti 4 cifre'
+        }
+
+        return err
+    }
+
+    const validateFinancial = () => {
+        const err = {}
+
+        if (!financialData.totalFamilyIncome && financialData.totalFamilyIncome !== 0) {
+            err.totalFamilyIncome = 'Ukupan prihod je obavezan'
+        }
+
+        if (!financialData.familyMemberCount && financialData.familyMemberCount !== 0) {
+            err.familyMemberCount = 'Broj clanova porodice je obavezan'
+        }
+
+        if (Number(financialData.familyMemberCount) <= 0) {
+            err.familyMemberCount = 'Broj clanova mora biti veci od 0'
+        }
+
+        return err
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const newErrors = validate()
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors)
+        setSubmitError('')
+
+        const validationErrors = validate()
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors)
             return
         }
-        setErrors({})
+
+        const payload = {
+            ...formData,
+            age: Number(formData.age),
+            espb: Number(formData.espb),
+            averageGrade: Number(formData.averageGrade),
+            yearOfEnrollment: Number(formData.yearOfEnrollment),
+            gender: Number(formData.gender),
+            studyLevel: Number(formData.studyLevel)
+        }
+
         try {
-            const payload = {
-                ...formData,
-                age: Number(formData.age),
-                espb: Number(formData.espb),
-                averageGrade: Number(formData.averageGrade),
-                yearOfEnrollment: Number(formData.yearOfEnrollment),
-                gender: Number(formData.gender),
-                studyLevel: Number(formData.studyLevel)
-            }
             await updateStudentProfile(payload, auth.token)
-            setSuccessMessage('Profil uspešno ažuriran!')
-            setTimeout(() => setSuccessMessage(''), 3000)
-            setProfileStatus(1)
+            setSuccessMessage('Profil uspesno azuriran!')
             setIsEditing(false)
+            setTimeout(() => setSuccessMessage(''), 3000)
         } catch (err) {
-            setErrors({ general: err.message })
+            setSubmitError(err.message)
         }
     }
 
-    const renderViewMode = () => (
-        <div className={styles.viewMode}>
-            <div className={styles.statusBadge} style={{ color: profileStatusLabel[profileStatus]?.color }}>
-                {profileStatusLabel[profileStatus]?.text}
-            </div>
-            <div className={styles.viewGrid}>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>Adresa stanovanja</span>
-                    <span className={styles.viewValue}>{formData.homeAddress}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>Opština</span>
-                    <span className={styles.viewValue}>{formData.municipalityOfResidence}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>JMBG</span>
-                    <span className={styles.viewValue}>{formData.jmbg}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>Godine</span>
-                    <span className={styles.viewValue}>{formData.age}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>Pol</span>
-                    <span className={styles.viewValue}>{genderOptions.find(g => g.value === Number(formData.gender))?.label}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>Godina upisa</span>
-                    <span className={styles.viewValue}>{formData.yearOfEnrollment}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>Nivo studija</span>
-                    <span className={styles.viewValue}>{studyLevelOptions.find(s => s.value === Number(formData.studyLevel))?.label}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>Fakultet</span>
-                    <span className={styles.viewValue}>{formData.facultyName}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>ESPB</span>
-                    <span className={styles.viewValue}>{formData.espb}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>Prosečna ocena</span>
-                    <span className={styles.viewValue}>{formData.averageGrade}</span>
-                </div>
-                <div className={styles.viewItem}>
-                    <span className={styles.viewLabel}>Budžetski student</span>
-                    <span className={styles.viewValue}>{formData.isBudgetStudent ? 'Da' : 'Ne'}</span>
-                </div>
-            </div>
-            <button onClick={() => setIsEditing(true)} className={styles.editBtn}>
-                ✏️ Izmeni profil
-            </button>
-        </div>
-    )
+    const handleFinancialSubmit = async (e) => {
+        e.preventDefault()
+        setFinancialSubmitError('')
+
+        const validationErrors = validateFinancial()
+        if (Object.keys(validationErrors).length > 0) {
+            setFinancialErrors(validationErrors)
+            return
+        }
+
+        const payload = {
+            totalFamilyIncome: Number(financialData.totalFamilyIncome),
+            familyMemberCount: Number(financialData.familyMemberCount)
+        }
+
+        try {
+            const savedFinancialStatus = await submitFinancialStatus(payload, auth.token)
+            const nextFinancialData = savedFinancialStatus || {
+                ...financialData,
+                incomePerMember: payload.totalFamilyIncome / payload.familyMemberCount
+            }
+
+            setFinancialData(nextFinancialData)
+            setFinancialSuccessMessage('Finansijski status uspesno azuriran!')
+            setIsFinancialEditing(false)
+            setTimeout(() => setFinancialSuccessMessage(''), 3000)
+        } catch (err) {
+            setFinancialSubmitError(err.message)
+        }
+    }
+
+    if (profileLoading) return <div className={styles.loading}>Ucitavanje profila...</div>
 
     return (
         <div className={styles.container}>
             <div className={styles.card}>
-                <h2>Moj profil</h2>
-                {profileStatus === 0 || profileStatus === null || isEditing ? (
-                    <form onSubmit={handleSubmit}>
-                        <div className={styles.field}>
-                            <label>Adresa stanovanja</label>
-                            <input type="text" name="homeAddress" value={formData.homeAddress} onChange={handleChange} placeholder="Unesite adresu" className={errors.homeAddress ? styles.inputError : ''} />
-                            {errors.homeAddress && <span className={styles.error}>{errors.homeAddress}</span>}
+                <div className={styles.cardHeader}>
+                    <h2>Moj profil</h2>
+                    <div
+                        className={styles.statusBadge}
+                        style={{ color: profileStatusLabel[profileStatus]?.color }}
+                    >
+                        {profileStatusLabel[profileStatus]?.text || 'Status nije poznat'}
+                    </div>
+                </div>
+
+                {profileError && <p className={styles.error}>{profileError.message}</p>}
+                {submitError && <p className={styles.error}>{submitError}</p>}
+                {successMessage && <p className={styles.success}>{successMessage}</p>}
+
+                {!isEditing ? (
+                    <div className={styles.viewMode}>
+                        <div className={styles.viewGrid}>
+                            <ViewItem label="Adresa" value={formData.homeAddress} />
+                            <ViewItem label="Opstina" value={formData.municipalityOfResidence} />
+                            <ViewItem label="JMBG" value={formData.jmbg} />
+                            <ViewItem label="Godine" value={formData.age} />
+                            <ViewItem label="Pol" value={selectedGender} />
+                            <ViewItem label="Godina upisa" value={formData.yearOfEnrollment} />
+                            <ViewItem label="Nivo studija" value={selectedStudyLevel} />
+                            <ViewItem label="Fakultet" value={formData.facultyName} />
+                            <ViewItem label="ESPB" value={formData.espb} />
+                            <ViewItem label="Prosecna ocena" value={formData.averageGrade} />
+                            <ViewItem label="Finansiranje" value={formData.isBudgetStudent ? 'Budzet' : 'Samofinansiranje'} />
                         </div>
-                        <div className={styles.field}>
-                            <label>Opština prebivališta</label>
-                            <input type="text" name="municipalityOfResidence" value={formData.municipalityOfResidence} onChange={handleChange} onKeyDown={(e) => /\d/.test(e.key) && e.preventDefault()} placeholder="Unesite opštinu" className={errors.municipalityOfResidence ? styles.inputError : ''} />
-                            {errors.municipalityOfResidence && <span className={styles.error}>{errors.municipalityOfResidence}</span>}
-                        </div>
-                        <div className={styles.field}>
-                            <label>JMBG</label>
-                            <input type="text" name="jmbg" value={formData.jmbg} onChange={(e) => { const value = e.target.value.replace(/\D/g, '').slice(0, 13); setFormData({ ...formData, jmbg: value }); setErrors({ ...errors, jmbg: '' }) }} placeholder="13 cifara" maxLength={13} className={errors.jmbg ? styles.inputError : ''} />
-                            {errors.jmbg && <span className={styles.error}>{errors.jmbg}</span>}
-                        </div>
-                        <div className={styles.field}>
-                            <label>Godine</label>
-                            <input type="number" name="age" value={formData.age} onChange={handleChange} min="18" onKeyDown={(e) => ['e', 'E', '+', '-', '.'].includes(e.key) && e.preventDefault()} placeholder="Unesite godine" className={errors.age ? styles.inputError : ''} />
-                            {errors.age && <span className={styles.error}>{errors.age}</span>}
-                        </div>
-                        <div className={styles.field}>
-                            <label>Pol</label>
-                            <select name="gender" value={formData.gender} onChange={handleChange}>
-                                {genderOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                            </select>
-                        </div>
-                        <div className={styles.field}>
-                            <label>Godina upisa</label>
-                            <input type="text" name="yearOfEnrollment" value={formData.yearOfEnrollment} onChange={(e) => { const value = e.target.value.replace(/\D/g, '').slice(0, 4); setFormData({ ...formData, yearOfEnrollment: value }); setErrors({ ...errors, yearOfEnrollment: '' }) }} placeholder="npr. 2021" maxLength={4} className={errors.yearOfEnrollment ? styles.inputError : ''} />
-                            {errors.yearOfEnrollment && <span className={styles.error}>{errors.yearOfEnrollment}</span>}
-                        </div>
-                        <div className={styles.field}>
-                            <label>Nivo studija</label>
-                            <select name="studyLevel" value={formData.studyLevel} onChange={handleChange}>
-                                {studyLevelOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                            </select>
-                        </div>
-                        <div className={styles.field}>
-                            <label>Naziv fakulteta</label>
-                            <select name="facultyName" value={formData.facultyName} onChange={handleChange} className={errors.facultyName ? styles.inputError : ''}>
-                                <option value="">-- Izaberite fakultet --</option>
-                                {facultyOptions.map(f => <option key={f} value={f}>{f}</option>)}
-                            </select>
-                            {errors.facultyName && <span className={styles.error}>{errors.facultyName}</span>}
-                        </div>
-                        <div className={styles.field}>
-                            <label>Broj ESPB</label>
-                            <input type="number" name="espb" value={formData.espb} onChange={handleChange} min="0" onKeyDown={(e) => ['e', 'E', '+', '-', '.'].includes(e.key) && e.preventDefault()} placeholder="Unesite broj ESPB" className={errors.espb ? styles.inputError : ''} />
-                            {errors.espb && <span className={styles.error}>{errors.espb}</span>}
-                        </div>
-                        <div className={styles.field}>
-                            <label>Prosečna ocena</label>
-                            <input type="number" name="averageGrade" value={formData.averageGrade} onChange={handleChange} min="6" max="10" step="0.01" onKeyDown={(e) => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()} placeholder="npr. 8.50" className={errors.averageGrade ? styles.inputError : ''} />
-                            {errors.averageGrade && <span className={styles.error}>{errors.averageGrade}</span>}
-                        </div>
-                        <div className={styles.checkboxField}>
-                            <input type="checkbox" name="isBudgetStudent" checked={formData.isBudgetStudent} onChange={handleChange} id="isBudgetStudent" />
-                            <label htmlFor="isBudgetStudent">Budžetski student</label>
-                        </div>
-                        {errors.general && <p className={styles.error}>{errors.general}</p>}
-                        {successMessage && <p className={styles.success}>{successMessage}</p>}
-                        <button type="submit" className={styles.btn}>Sačuvaj profil</button>
-                        {isEditing && (
-                            <button type="button" onClick={() => setIsEditing(false)} className={styles.cancelBtn}>
-                                Otkaži
-                            </button>
-                        )}
-                    </form>
+
+                        <button type="button" className={styles.editBtn} onClick={() => setIsEditing(true)}>
+                            Izmeni profil
+                        </button>
+                    </div>
                 ) : (
-                    renderViewMode()
+                    <form onSubmit={handleSubmit} className={styles.form}>
+                        <div className={styles.formGrid}>
+                            <div className={styles.field}>
+                                <label htmlFor="homeAddress">Adresa</label>
+                                <input
+                                    id="homeAddress"
+                                    name="homeAddress"
+                                    value={formData.homeAddress}
+                                    onChange={handleChange}
+                                    className={errors.homeAddress ? styles.inputError : ''}
+                                />
+                                {errors.homeAddress && <span className={styles.error}>{errors.homeAddress}</span>}
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="municipalityOfResidence">Opstina</label>
+                                <input
+                                    id="municipalityOfResidence"
+                                    name="municipalityOfResidence"
+                                    value={formData.municipalityOfResidence}
+                                    onChange={handleChange}
+                                    className={errors.municipalityOfResidence ? styles.inputError : ''}
+                                />
+                                {errors.municipalityOfResidence && <span className={styles.error}>{errors.municipalityOfResidence}</span>}
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="jmbg">JMBG</label>
+                                <input
+                                    id="jmbg"
+                                    name="jmbg"
+                                    value={formData.jmbg}
+                                    onChange={handleChange}
+                                    className={errors.jmbg ? styles.inputError : ''}
+                                />
+                                {errors.jmbg && <span className={styles.error}>{errors.jmbg}</span>}
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="age">Godine</label>
+                                <input
+                                    id="age"
+                                    name="age"
+                                    value={formData.age}
+                                    onChange={handleChange}
+                                    type="number"
+                                />
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="gender">Pol</label>
+                                <select id="gender" name="gender" value={formData.gender} onChange={handleChange}>
+                                    {genderOptions.map(g => (
+                                        <option key={g.value} value={g.value}>{g.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="yearOfEnrollment">Godina upisa</label>
+                                <input
+                                    id="yearOfEnrollment"
+                                    name="yearOfEnrollment"
+                                    value={formData.yearOfEnrollment}
+                                    onChange={handleChange}
+                                    className={errors.yearOfEnrollment ? styles.inputError : ''}
+                                />
+                                {errors.yearOfEnrollment && <span className={styles.error}>{errors.yearOfEnrollment}</span>}
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="studyLevel">Nivo studija</label>
+                                <select id="studyLevel" name="studyLevel" value={formData.studyLevel} onChange={handleChange}>
+                                    {studyLevelOptions.map(s => (
+                                        <option key={s.value} value={s.value}>{s.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="facultyName">Fakultet</label>
+                                <select id="facultyName" name="facultyName" value={formData.facultyName} onChange={handleChange}>
+                                    <option value="">Izaberi fakultet</option>
+                                    {facultyOptions.map(f => (
+                                        <option key={f} value={f}>{f}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="espb">ESPB</label>
+                                <input
+                                    id="espb"
+                                    name="espb"
+                                    value={formData.espb}
+                                    onChange={handleChange}
+                                    type="number"
+                                />
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="averageGrade">Prosecna ocena</label>
+                                <input
+                                    id="averageGrade"
+                                    name="averageGrade"
+                                    value={formData.averageGrade}
+                                    onChange={handleChange}
+                                    type="number"
+                                    step="0.01"
+                                />
+                            </div>
+                        </div>
+
+                        <label className={styles.checkboxField}>
+                            <input
+                                type="checkbox"
+                                name="isBudgetStudent"
+                                checked={formData.isBudgetStudent}
+                                onChange={handleChange}
+                            />
+                            <span>Budzet student</span>
+                        </label>
+
+                        <div className={styles.actions}>
+                            <button type="submit" className={styles.btn}>Sacuvaj</button>
+                            <button type="button" className={styles.cancelBtn} onClick={() => setIsEditing(false)}>
+                                Odustani
+                            </button>
+                        </div>
+                    </form>
+                )}
+            </div>
+
+            <div className={styles.card}>
+                <div className={styles.cardHeader}>
+                    <h2>Finansijski status</h2>
+                    <div className={financialData.isVerified ? styles.verifiedBadge : styles.unverifiedBadge}>
+                        {financialData.isVerified ? 'Verifikovan' : 'Nije verifikovan'}
+                    </div>
+                </div>
+
+                {financialLoading && <p className={styles.muted}>Ucitavanje finansija...</p>}
+                {financialError && <p className={styles.error}>{financialError.message}</p>}
+                {financialSubmitError && <p className={styles.error}>{financialSubmitError}</p>}
+                {financialSuccessMessage && <p className={styles.success}>{financialSuccessMessage}</p>}
+
+                {!isFinancialEditing ? (
+                    <div className={styles.viewMode}>
+                        <div className={styles.viewGrid}>
+                            <ViewItem label="Ukupan prihod" value={financialData.totalFamilyIncome} />
+                            <ViewItem label="Clanovi porodice" value={financialData.familyMemberCount} />
+                            <ViewItem label="Po clanu" value={financialData.incomePerMember} />
+                            <ViewItem label="Status" value={financialData.isVerified ? 'Verifikovan' : 'Nije verifikovan'} />
+                        </div>
+
+                        <button type="button" className={styles.editBtn} onClick={() => setIsFinancialEditing(true)}>
+                            Izmeni finansije
+                        </button>
+                    </div>
+                ) : (
+                    <form onSubmit={handleFinancialSubmit} className={styles.form}>
+                        <div className={styles.formGrid}>
+                            <div className={styles.field}>
+                                <label htmlFor="totalFamilyIncome">Ukupan prihod</label>
+                                <input
+                                    id="totalFamilyIncome"
+                                    name="totalFamilyIncome"
+                                    value={financialData.totalFamilyIncome}
+                                    onChange={handleFinancialChange}
+                                    type="number"
+                                    min="0"
+                                    className={financialErrors.totalFamilyIncome ? styles.inputError : ''}
+                                />
+                                {financialErrors.totalFamilyIncome && <span className={styles.error}>{financialErrors.totalFamilyIncome}</span>}
+                            </div>
+
+                            <div className={styles.field}>
+                                <label htmlFor="familyMemberCount">Clanovi porodice</label>
+                                <input
+                                    id="familyMemberCount"
+                                    name="familyMemberCount"
+                                    value={financialData.familyMemberCount}
+                                    onChange={handleFinancialChange}
+                                    type="number"
+                                    min="1"
+                                    className={financialErrors.familyMemberCount ? styles.inputError : ''}
+                                />
+                                {financialErrors.familyMemberCount && <span className={styles.error}>{financialErrors.familyMemberCount}</span>}
+                            </div>
+                        </div>
+
+                        <div className={styles.actions}>
+                            <button type="submit" className={styles.btn}>Sacuvaj</button>
+                            <button type="button" className={styles.cancelBtn} onClick={() => setIsFinancialEditing(false)}>
+                                Odustani
+                            </button>
+                        </div>
+                    </form>
                 )}
             </div>
         </div>

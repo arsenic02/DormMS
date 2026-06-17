@@ -11,6 +11,7 @@ import StudentProfile from './pages/StudentDashboard/StudentProfile/StudentProfi
 import StudentNotifications from './pages/StudentDashboard/StudentNotifications/StudentNotifications'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import DormManagerCompetition from './pages/DormManagerDashBoard/DormManagerCompetitions/DormManagerCompetitions'
+import StudentCompetitions from './pages/StudentDashboard/StudentCompetitions/StudentCompetitions'
 function App() {
   return (
     <BrowserRouter>
@@ -25,6 +26,7 @@ function App() {
           <Route path="/student/room" element={<StudentRoom />} />
           <Route path="/student/profile" element={<StudentProfile />} />
           <Route path="/student/notifications" element={<StudentNotifications />} />
+          <Route path="/student/competitions" element={<StudentCompetitions />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import styles from './DormManagerCompetition.module.css'
-import { getCompetitions, createCompetition } from '../../../api/competition'
+import { getCompetitions, createCompetition, toggleCompetition } from '../../../api/competition'
 
 const statusLabel = {
     0: 'Nacrt',
@@ -122,6 +122,32 @@ function DormManagerCompetition() {
         // }
     }
 
+    const handleToggleCompetition = async (id) => {
+        try {
+            await toggleCompetition(id)
+            fetchCompetitions()
+        } catch (err) {
+            setError(err.message)
+        }
+    }
+    // const handleOpenCompetition = async (id) => {
+    //     try {
+    //         await openCompetition(id)
+    //         fetchCompetitions()
+    //     } catch (err) {
+    //         setError(err.message)
+    //     }
+    // }
+
+    // const handleCloseCompetition = async (id) => {
+    //     try {
+    //         await closeCompetition(id)
+    //         fetchCompetitions()
+    //     } catch (err) {
+    //         setError(err.message)
+    //     }
+    // }
+
     const formatDate = (dateStr) => {
         if (!dateStr) return '-'
         return new Date(dateStr).toLocaleDateString('sr-RS')
@@ -205,14 +231,33 @@ function DormManagerCompetition() {
                         <div key={comp.id} className={styles.card}>
                             <div className={styles.cardHeader}>
                                 <span className={styles.cardName}>{comp.name}</span>
-                                    <span className={`${styles.badge} ${styles[comp.status?.toString().toLowerCase() ?? '']}`}>
-                                        {statusLabel[comp.status] ?? 'N/A'}
+                                <span className={`${styles.badge} ${styles[comp.status?.toString().toLowerCase() ?? '']}`}>
+                                    {statusLabel[comp.status] ?? 'N/A'}
                                 </span>
                             </div>
                             <p className={styles.cardDesc}>{comp.description}</p>
                             <div className={styles.cardDates}>
                                 <span>Početak: {formatDate(comp.startDate)}</span>
                                 <span>Završetak: {formatDate(comp.endDate)}</span>
+                            </div>
+                            <div className={styles.cardActions}>
+                                {comp.status === 0 && (
+                                    <button
+                                        className={styles.openBtn}
+                                        onClick={() => handleToggleCompetition(comp.id)}
+                                    >
+                                        Otvori konkurs
+                                    </button>
+                                )}
+
+                                {comp.status === 1 && (
+                                    <button
+                                        className={styles.closeBtn}
+                                        onClick={() => handleToggleCompetition(comp.id)}
+                                    >
+                                        Zatvori konkurs
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}

@@ -175,3 +175,33 @@
     background: #fef9ec;
     color: #d4a017;
 }
+
+.cardActions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.openBtn,
+.closeBtn {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.openBtn {
+    background-color: #16a34a;
+    color: white;
+}
+
+.closeBtn {
+    background-color: #dc2626;
+    color: white;
+}
+
+.openBtn:hover,
+.closeBtn:hover {
+    opacity: 0.9;
+}

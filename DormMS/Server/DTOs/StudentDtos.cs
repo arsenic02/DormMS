@@ -18,7 +18,8 @@ public class StudentCreateUpdateDto
     public StudentStatus Status { get; set; }
     public string FacultyName { get; set; } = string.Empty;
     public int ESPB { get; set; }
-    public decimal AverageGrade { get; set; }
+    public decimal? AverageGrade { get; set; }
+    public decimal? HighSchoolAverageGrade { get; set; }
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; }
 }
@@ -34,7 +35,8 @@ public class StudentProfileUpdateDto
     public StudyLevel StudyLevel { get; set; }
     public string FacultyName { get; set; } = string.Empty;
     public int ESPB { get; set; }
-    public decimal AverageGrade { get; set; }
+    public decimal? AverageGrade { get; set; }
+    public decimal? HighSchoolAverageGrade { get; set; }
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; }
 }
@@ -73,11 +75,13 @@ public class StudentGetDto
     public int FacultyId { get; set; }
     public string? FacultyName { get; set; }
     public int ESPB { get; set; }
-    public decimal AverageGrade { get; set; }
+    public decimal? AverageGrade { get; set; }
+    public decimal? HighSchoolAverageGrade { get; set; }
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; }
     public int CurrentYearOfStudy { get; set; }
     public bool IsProfileComplete { get; set; }
+    public bool IsFreshman { get; set; }
 
     public StudentProfileStatus ProfileStatus { get; set; }
     public bool IsEligibleToApply { get; set; }
@@ -94,7 +98,7 @@ public class StudentCsvImportDto
     public decimal TotalFamilyIncome { get; set; }
     public int FamilyMemberCount { get; set; }
     public int ESPB { get; set; }
-    public decimal AverageGrade { get; set; }
+    public decimal? AverageGrade { get; set; }
     public int YearOfEnrollment { get; set; }
 }
 

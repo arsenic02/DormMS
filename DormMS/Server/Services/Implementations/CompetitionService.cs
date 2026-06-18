@@ -34,7 +34,7 @@ public class CompetitionService : ICompetitionService
     public async Task<IEnumerable<CompetitionGetDto>> GetOpenCompetitionsAsync(int studentId)
     {
         var competitions = await _repository.GetOpenCompetitionsAsync();
-         return competitions.Select(c => MapToGetDto(c, studentId));
+        return competitions.Select(c => MapToGetDto(c, studentId));
         //return competitions.Select(MapToGetDto);
 
     }
@@ -75,6 +75,16 @@ public class CompetitionService : ICompetitionService
         int? adminId = null;
         int? dormManagerId = null;
 
+        if (dto.MaxStudents.HasValue)
+        {
+            var dorm = await _context.Dorms
+                .Include(d => d.Rooms)
+                .FirstOrDefaultAsync();
+
+            if (dorm != null && dto.MaxStudents.Value > dorm.AvailableSpots)
+                return null;
+        }
+
         if (role == "Admin")
         {
             adminId = await _context.Users
@@ -103,33 +113,15 @@ public class CompetitionService : ICompetitionService
             StartDate = dto.StartDate.ToUniversalTime(),
             EndDate = dto.EndDate.ToUniversalTime(),
             Status = CompetitionStatus.Draft,
+            Type = dto.Type,
             CreatedByAdminId = adminId,
-            CreatedByDormManagerId = dormManagerId
+            CreatedByDormManagerId = dormManagerId,
+            MaxStudents = dto.MaxStudents
         };
 
         await _repository.AddAsync(competition);
         return MapToGetDto(competition);
     }
-
-    // public async Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int? adminId = null, int? dormManagerId = null)
-    // {
-    //     if (adminId is null && dormManagerId is null)
-    //         return null;
-
-    //     var competition = new Competition
-    //     {
-    //         Name = dto.Name.Trim(),
-    //         Description = dto.Description.Trim(),
-    //         StartDate = dto.StartDate.ToUniversalTime(),
-    //         EndDate = dto.EndDate.ToUniversalTime(),
-    //         Status = CompetitionStatus.Draft,
-    //         CreatedByAdminId = adminId,
-    //         CreatedByDormManagerId = dormManagerId
-    //     };
-
-    //     await _repository.AddAsync(competition);
-    //     return MapToGetDto(competition);
-    // }
 
     public async Task<CompetitionGetDto?> UpdateAsync(int id, CompetitionUpdateDto dto)
     {
@@ -137,12 +129,23 @@ public class CompetitionService : ICompetitionService
         if (competition is null)
             return null;
 
+        if (dto.MaxStudents.HasValue)
+        {
+            var dorm = await _context.Dorms
+                .Include(d => d.Rooms)
+                .FirstOrDefaultAsync();
+
+            if (dorm != null && dto.MaxStudents.Value > dorm.AvailableSpots)
+                return null; 
+        }
+
         competition.Name = dto.Name.Trim();
         competition.Description = dto.Description.Trim();
         competition.StartDate = dto.StartDate;
         competition.EndDate = dto.EndDate;
         competition.Status = dto.Status;
-
+        competition.Type = dto.Type;
+        competition.MaxStudents = dto.MaxStudents;
         await _repository.UpdateAsync(competition);
         return MapToGetDto(competition);
     }
@@ -160,18 +163,20 @@ public class CompetitionService : ICompetitionService
         StartDate = competition.StartDate,
         EndDate = competition.EndDate,
         Status = competition.Status,
+        Type = competition.Type,
         CreatedAt = competition.CreatedAt,
         IsOpen = competition.IsOpen,
         CreatedByAdminId = competition.CreatedByAdminId,
         CreatedByDormManagerId = competition.CreatedByDormManagerId,
         ApplicationCount = competition.Applications.Count,
+        MaxStudents = competition.MaxStudents,
         HasApplied = false
     };
 
     private static CompetitionGetDto MapToGetDto(Competition competition, int studentId)
-{
-    var dto = MapToGetDto(competition);
-    dto.HasApplied = competition.Applications.Any(a => a.StudentId == studentId);
-    return dto;
-}
+    {
+        var dto = MapToGetDto(competition);
+        dto.HasApplied = competition.Applications.Any(a => a.StudentId == studentId);
+        return dto;
+    }
 }

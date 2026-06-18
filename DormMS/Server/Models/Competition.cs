@@ -8,6 +8,7 @@ public class Competition
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public CompetitionStatus Status { get; set; }
+    public CompetitionType Type { get; set; } = CompetitionType.General;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public int? CreatedByAdminId { get; set; }
@@ -17,6 +18,7 @@ public class Competition
     public DormManager? CreatedByDormManager { get; set; }
 
     public List<CompetitionApplication> Applications { get; set; } = new();
+    public int? MaxStudents{get;set;}
 
     public bool IsOpen => Status == CompetitionStatus.Open && DateTime.UtcNow >= StartDate && DateTime.UtcNow <= EndDate;
     public bool IsClosed => Status == CompetitionStatus.Closed || DateTime.UtcNow > EndDate;
@@ -28,4 +30,10 @@ public enum CompetitionStatus
     Open=1,
     Closed=2,
     Completed=3
+}
+
+public enum CompetitionType
+{
+    General=0,    // stariji studenti
+    Freshmen=1    // brucosi
 }

@@ -492,6 +492,7 @@ public class StudentService : IStudentService
         student.FacultyId = GetFacultyIdByName(student.FacultyName);
         student.ESPB = dto.ESPB;
         student.AverageGrade = dto.AverageGrade;
+        student.HighSchoolAverageGrade = dto.HighSchoolAverageGrade;
         student.IsBudgetStudent = dto.IsBudgetStudent;
         student.DormitoryRoomId = dto.DormitoryRoomId;
     }
@@ -606,6 +607,7 @@ public class StudentService : IStudentService
         student.FacultyId = GetFacultyIdByName(student.FacultyName);
         student.ESPB = dto.ESPB;
         student.AverageGrade = dto.AverageGrade;
+        student.HighSchoolAverageGrade = dto.HighSchoolAverageGrade;
         student.IsBudgetStudent = dto.IsBudgetStudent;
         student.DormitoryRoomId = dto.DormitoryRoomId;
 
@@ -631,9 +633,11 @@ public class StudentService : IStudentService
         FacultyName = student.FacultyName,
         ESPB = student.ESPB,
         AverageGrade = student.AverageGrade,
+        HighSchoolAverageGrade = student.HighSchoolAverageGrade,
         IsBudgetStudent = student.IsBudgetStudent,
         DormitoryRoomId = student.DormitoryRoomId,
         CurrentYearOfStudy = student.CurrentYearOfStudy,
+        IsFreshman = student.IsFreshman,
         ProfileStatus = student.ProfileStatus,
         IsEligibleToApply = student.IsEligibleToApply,
         IsProfileComplete = student.ProfileStatus == StudentProfileStatus.Verified,

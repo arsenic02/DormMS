@@ -8,6 +8,8 @@ public class CompetitionCreateDto
     public string Description { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public CompetitionType Type { get; set; } = CompetitionType.General;
+    public int? MaxStudents { get; set; }
 }
 
 public class CompetitionUpdateDto
@@ -17,6 +19,8 @@ public class CompetitionUpdateDto
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public CompetitionStatus Status { get; set; }
+    public CompetitionType Type { get; set; } = CompetitionType.General;
+    public int? MaxStudents { get; set; }   
 }
 
 public class CompetitionGetDto
@@ -27,11 +31,13 @@ public class CompetitionGetDto
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public CompetitionStatus Status { get; set; }
+    public CompetitionType Type { get; set; }
     public DateTime CreatedAt { get; set; }
     public bool IsOpen { get; set; }
     public int? CreatedByAdminId { get; set; }
     public int? CreatedByDormManagerId { get; set; }
     public int ApplicationCount { get; set; }
+    public int? MaxStudents { get; set; }
     public bool HasApplied { get; set; } 
 }
 
@@ -39,6 +45,7 @@ public class CompetitionApplicationCreateDto
 {
     public int CompetitionId { get; set; }
     public string? Notes { get; set; }
+    public string? DocumentUrl { get; set; }
 }
 
 public class CompetitionApplicationUpdateDto
@@ -46,6 +53,7 @@ public class CompetitionApplicationUpdateDto
     public ApplicationStatus Status { get; set; }
     public int? PriorityScore { get; set; }
     public string? Notes { get; set; }
+    public string? DocumentUrl { get; set; }
 }
 
 public class CompetitionApplicationGetDto
@@ -62,6 +70,7 @@ public class CompetitionApplicationGetDto
     public ApplicationStatus Status { get; set; }
     public int? PriorityScore { get; set; }
     public string? Notes { get; set; }
+    public string? DocumentUrl { get; set; }
 }
 
 public class BulkApplicationDto

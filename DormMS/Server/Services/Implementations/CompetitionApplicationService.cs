@@ -72,6 +72,7 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             StudentId = studentId.Value,
             CompetitionId = dto.CompetitionId,
             Notes = dto.Notes,
+            DocumentUrl = dto.DocumentUrl,
             Status = ApplicationStatus.Pending,
             AppliedAt = DateTime.UtcNow
         };
@@ -112,6 +113,7 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         application.Status = dto.Status;
         application.PriorityScore = dto.PriorityScore;
         application.Notes = dto.Notes ?? application.Notes;
+        application.DocumentUrl = dto.DocumentUrl ?? application.DocumentUrl;
 
         await _repository.UpdateAsync(application);
         return MapToApplicationGetDto(application);
@@ -261,6 +263,7 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         AppliedAt = application.AppliedAt,
         Status = application.Status,
         PriorityScore = application.PriorityScore,
-        Notes = application.Notes
+        Notes = application.Notes,
+        DocumentUrl = application.DocumentUrl
     };
 }

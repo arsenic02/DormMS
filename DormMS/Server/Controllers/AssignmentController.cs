@@ -26,12 +26,44 @@ public class AssignmentController : ControllerBase
         return Ok(result);
     }
 
+//mislim da mi nece trebati, stara metoda, jer sam napravio novu za starije i brucose
+    // [Authorize(Roles = "Admin,DormManager")]
+    // [HttpPost("rank")]
+    // public async Task<ActionResult<List<StudentAssignmentDto>>> RankStudents(AssignmentRequestDto dto)
+    // {
+    //     var rankedStudents = await _assignmentService.RankStudentsAsync(dto.CompetitionId);
+    //     return Ok(rankedStudents);
+    // }
+
+    /// <summary>
+    /// Rangira starije studente (ne brucose) za konkurs - grupisano po fakultetima
+    /// </summary>
     [Authorize(Roles = "Admin,DormManager")]
-    [HttpPost("rank")]
-    public async Task<ActionResult<List<StudentAssignmentDto>>> RankStudents(AssignmentRequestDto dto)
+    [HttpPost("rank-older")]
+    public async Task<ActionResult<OlderStudentsRankingResultDto>> RankOlderStudents(AssignmentRequestDto dto)
     {
-        var rankedStudents = await _assignmentService.RankStudentsAsync(dto.CompetitionId);
-        return Ok(rankedStudents);
+        var result = await _assignmentService.RankOlderStudentsAsync(dto.CompetitionId);
+
+        if (result.Errors.Any())
+            return BadRequest(result);
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Rangira brucose za konkurs - grupisano po fakultetima
+    /// Formula: bb = po * 8 + socijalni bonus (1 bod ako je prihod < 50% prosecne plate)
+    /// </summary>
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("rank-freshmen")]
+    public async Task<ActionResult<FreshmanRankingResultDto>> RankFreshmen(AssignmentRequestDto dto)
+    {
+        var result = await _assignmentService.RankFreshmenAsync(dto.CompetitionId);
+
+        if (result.Errors.Any())
+            return BadRequest(result);
+
+        return Ok(result);
     }
 
     [Authorize(Roles = "Admin,DormManager")]

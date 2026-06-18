@@ -75,6 +75,9 @@ namespace DormMS.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("MaxStudents")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -83,6 +86,9 @@ namespace DormMS.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -107,6 +113,9 @@ namespace DormMS.Migrations
 
                     b.Property<int>("CompetitionId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("DocumentUrl")
+                        .HasColumnType("text");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -233,7 +242,7 @@ namespace DormMS.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("AverageGrade")
+                    b.Property<decimal?>("AverageGrade")
                         .HasColumnType("numeric");
 
                     b.Property<int?>("DormitoryRoomId")
@@ -254,6 +263,9 @@ namespace DormMS.Migrations
 
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
+
+                    b.Property<decimal?>("HighSchoolAverageGrade")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("HomeAddress")
                         .IsRequired()

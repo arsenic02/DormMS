@@ -20,7 +20,8 @@ public class Student
     public string? FacultyName { get; set; }
     //public int YearOfStudy { get; set; }
     public int ESPB { get; set; }
-    public decimal AverageGrade { get; set; } // prosečna ocena (po)
+    public decimal? AverageGrade { get; set; } // prosečna ocena na fakultetu
+    public decimal? HighSchoolAverageGrade { get; set; } // prosecna ocena iz srednje skole (za brucose)
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; } //FK
     public DormitoryRoom? DormitoryRoom { get; set; }

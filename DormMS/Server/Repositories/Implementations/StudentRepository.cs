@@ -15,7 +15,10 @@ public class StudentRepository : IStudentRepository
 
     public async Task<IEnumerable<Student>> GetAllAsync()
     {
-        return await _context.Students.AsNoTracking().ToListAsync();
+        return await _context.Students
+        .Include(s => s.FinancialStatus)
+        .AsNoTracking()
+        .ToListAsync();
     }
 
     public async Task<Student?> GetByIdAsync(int id)

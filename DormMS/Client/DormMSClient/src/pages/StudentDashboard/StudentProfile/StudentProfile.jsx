@@ -241,9 +241,15 @@ function StudentProfile() {
                             <ViewItem label="Finansiranje" value={formData.isBudgetStudent ? 'Budzet' : 'Samofinansiranje'} />
                         </div>
 
-                        <button type="button" className={styles.editBtn} onClick={() => setIsEditing(true)}>
-                            Izmeni profil
-                        </button>
+                        {profileStatus !== 2 ? (
+                            <button type="button" className={styles.editBtn} onClick={() => setIsEditing(true)}>
+                                Izmeni profil
+                            </button>
+                        ) : (
+                            <p className={styles.muted}>
+                                Profil je verifikovan i ne može se menjati.
+                            </p>
+                        )}
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className={styles.form}>
@@ -401,9 +407,16 @@ function StudentProfile() {
                             <ViewItem label="Status" value={financialData.isVerified ? 'Verifikovan' : 'Nije verifikovan'} />
                         </div>
 
-                        <button type="button" className={styles.editBtn} onClick={() => setIsFinancialEditing(true)}>
-                            Izmeni finansije
-                        </button>
+                        {!financialData.isVerified ? (
+                            <button type="button" className={styles.editBtn} onClick={() => setIsFinancialEditing(true)}>
+                                Izmeni finansije
+                            </button>
+                        ) : (
+                            <p className={styles.muted}>
+                                Finansijski status je verifikovan i ne može se menjati.
+                            </p>
+                        )}
+
                     </div>
                 ) : (
                     <form onSubmit={handleFinancialSubmit} className={styles.form}>

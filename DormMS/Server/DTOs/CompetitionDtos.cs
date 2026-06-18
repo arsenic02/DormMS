@@ -32,6 +32,7 @@ public class CompetitionGetDto
     public int? CreatedByAdminId { get; set; }
     public int? CreatedByDormManagerId { get; set; }
     public int ApplicationCount { get; set; }
+    public bool HasApplied { get; set; } 
 }
 
 public class CompetitionApplicationCreateDto

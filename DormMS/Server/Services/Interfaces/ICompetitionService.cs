@@ -7,7 +7,7 @@ public interface ICompetitionService
 {
     Task<IEnumerable<CompetitionGetDto>> GetAllAsync();
     Task<CompetitionGetDto?> GetByIdAsync(int id);
-    Task<IEnumerable<CompetitionGetDto>> GetOpenCompetitionsAsync();
+    Task<IEnumerable<CompetitionGetDto>> GetOpenCompetitionsAsync(int studentId);
 
     Task<CompetitionGetDto?> OpenCompetitionAsync(int id);
 

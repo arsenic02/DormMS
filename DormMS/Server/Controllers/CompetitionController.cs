@@ -10,10 +10,12 @@ using DormMS.Server.DTOs;
 public class CompetitionController : ControllerBase
 {
     private readonly ICompetitionService _competitionService;
+    private readonly IStudentService _studentService;
 
-    public CompetitionController(ICompetitionService competitionService)
+    public CompetitionController(ICompetitionService competitionService, IStudentService studentService)
     {
         _competitionService = competitionService;
+        _studentService = studentService;
     }
 
     [HttpGet]
@@ -47,7 +49,15 @@ public class CompetitionController : ControllerBase
     [HttpGet("open")]
     public async Task<ActionResult<IEnumerable<CompetitionGetDto>>> GetOpenCompetitions()
     {
-        return Ok(await _competitionService.GetOpenCompetitionsAsync());
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        var student = await _studentService.GetByUserIdAsync(userId.Value);
+        if (student is null)
+            return NotFound("Student nije pronađen");
+
+        return Ok(await _competitionService.GetOpenCompetitionsAsync(student.Id));
     }
 
     [HttpGet("{id}")]

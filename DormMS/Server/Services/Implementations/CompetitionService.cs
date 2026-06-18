@@ -22,7 +22,7 @@ public class CompetitionService : ICompetitionService
     public async Task<IEnumerable<CompetitionGetDto>> GetAllAsync()
     {
         var competitions = await _repository.GetAllAsync();
-        return competitions.Select(MapToGetDto);
+        return competitions.Select(c => MapToGetDto(c));
     }
 
     public async Task<CompetitionGetDto?> GetByIdAsync(int id)
@@ -31,10 +31,12 @@ public class CompetitionService : ICompetitionService
         return competition is null ? null : MapToGetDto(competition);
     }
 
-    public async Task<IEnumerable<CompetitionGetDto>> GetOpenCompetitionsAsync()
+    public async Task<IEnumerable<CompetitionGetDto>> GetOpenCompetitionsAsync(int studentId)
     {
         var competitions = await _repository.GetOpenCompetitionsAsync();
-        return competitions.Select(MapToGetDto);
+         return competitions.Select(c => MapToGetDto(c, studentId));
+        //return competitions.Select(MapToGetDto);
+
     }
 
     public async Task<CompetitionGetDto?> OpenCompetitionAsync(int id)
@@ -162,6 +164,14 @@ public class CompetitionService : ICompetitionService
         IsOpen = competition.IsOpen,
         CreatedByAdminId = competition.CreatedByAdminId,
         CreatedByDormManagerId = competition.CreatedByDormManagerId,
-        ApplicationCount = competition.Applications.Count
+        ApplicationCount = competition.Applications.Count,
+        HasApplied = false
     };
+
+    private static CompetitionGetDto MapToGetDto(Competition competition, int studentId)
+{
+    var dto = MapToGetDto(competition);
+    dto.HasApplied = competition.Applications.Any(a => a.StudentId == studentId);
+    return dto;
+}
 }

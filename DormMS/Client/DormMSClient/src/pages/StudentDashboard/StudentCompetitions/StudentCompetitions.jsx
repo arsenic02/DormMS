@@ -16,7 +16,6 @@ function StudentCompetitions() {
     const [listError, setListError] = useState(null)
 
     const [applyingId, setApplyingId] = useState(null)
-    const [appliedIds, setAppliedIds] = useState([])
     const [applyError, setApplyError] = useState(null)
     const [applyErrorId, setApplyErrorId] = useState(null)
     const [applySuccessId, setApplySuccessId] = useState(null)
@@ -46,7 +45,11 @@ function StudentCompetitions() {
 
         try {
             await applyToCompetition(competitionId)
-            setAppliedIds((prev) => [...prev, competitionId])
+            setCompetitions((prev) =>
+                prev.map((c) =>
+                    c.id === competitionId ? { ...c, hasApplied: true } : c
+                )
+            )
             setApplySuccessId(competitionId)
         } catch (err) {
             setApplyError(err.message)
@@ -54,19 +57,6 @@ function StudentCompetitions() {
         } finally {
             setApplyingId(null)
         }
-        // setApplyError(null)
-        // setApplySuccessId(null)
-        // setApplyingId(competitionId)
-
-        // try {
-        //     await applyToCompetition(competitionId)
-        //     setAppliedIds((prev) => [...prev, competitionId])
-        //     setApplySuccessId(competitionId)
-        // } catch (err) {
-        //     setApplyError(err.message)
-        // } finally {
-        //     setApplyingId(null)
-        // }
     }
 
     const formatDate = (dateStr) => {
@@ -88,7 +78,6 @@ function StudentCompetitions() {
             {!listLoading && !listError && competitions.length > 0 && (
                 <div className={styles.list}>
                     {competitions.map((comp) => {
-                        const alreadyApplied = appliedIds.includes(comp.id)
                         const isApplying = applyingId === comp.id
 
                         return (
@@ -116,10 +105,10 @@ function StudentCompetitions() {
 
                                 <button
                                     className={styles.btn}
-                                    disabled={isApplying || alreadyApplied}
+                                    disabled={isApplying || comp.hasApplied}
                                     onClick={() => handleApply(comp.id)}
                                 >
-                                    {alreadyApplied
+                                    {comp.hasApplied
                                         ? 'Prijavljen'
                                         : isApplying
                                             ? 'Prijavljivanje...'

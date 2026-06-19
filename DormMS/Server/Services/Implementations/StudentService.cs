@@ -135,7 +135,9 @@ public class StudentService : IStudentService
                         AverageGrade = record.AverageGrade,
                         YearOfEnrollment = record.YearOfEnrollment > 0 ? record.YearOfEnrollment : DateTime.Now.Year - random.Next(1, 5),
                         StudyLevel = StudyLevel.Undergraduate,
-                        FacultyId = 1
+                        FacultyId = 1,
+                        HighSchoolAverageGrade = record.HighSchoolAverageGrade,
+                        FacultyName = record.FacultyName.Trim(),
                     };
 
                     ApplyRealisticData(student, random);
@@ -208,23 +210,37 @@ public class StudentService : IStudentService
 
         var cities = new[]
         {
-            "Leskovac", "Vranje", "Pirot", "Aleksinac", "Prokuplje", "Knjaževac", 
-            "Zaječar", "Kruševac", "Jagodina", "Paraćin", "Ćuprija", "Bor", 
-            "Negotin", "Surdulica", "Vladičin Han", "Bela Palanka", "Svrljig", 
+            "Leskovac", "Vranje", "Pirot", "Aleksinac", "Prokuplje", "Knjaževac",
+            "Zaječar", "Kruševac", "Jagodina", "Paraćin", "Ćuprija", "Bor",
+            "Negotin", "Surdulica", "Vladičin Han", "Bela Palanka", "Svrljig",
             "Doljevac", "Merošina", "Gadžin Han", "Sokobanja"
         };
 
         var streets = new[]
         {
-            "Njegoševa", "Knjaževačka", "Dušanova", "Nikole Pašića", 
-            "Skopska", "Sremska", "Vojvode Mišića", "Jadranska", 
+            "Njegoševa", "Knjaževačka", "Dušanova", "Nikole Pašića",
+            "Skopska", "Sremska", "Vojvode Mišića", "Jadranska",
             "Prvomajska", "Kosovska"
         };
 
-        var facultyIndex = random.Next(faculties.Length);
+        var facultyIndex = -1;
+        if (!string.IsNullOrWhiteSpace(student.FacultyName))
+        {
+            facultyIndex = Array.IndexOf(faculties, student.FacultyName.Trim());
+        }
+
+        if (facultyIndex == -1)
+        {
+            facultyIndex = random.Next(faculties.Length);
+        }
+
         student.FacultyName = faculties[facultyIndex];
         student.FacultyId = facultyIndex + 1;
-        
+
+        // var facultyIndex = random.Next(faculties.Length);
+        // student.FacultyName = faculties[facultyIndex];
+        // student.FacultyId = facultyIndex + 1;
+
         if (int.TryParse(student.StudentIDNumber, out _))
         {
             if (student.FacultyName.Contains("Elektronski"))
@@ -249,10 +265,11 @@ public class StudentService : IStudentService
         student.MunicipalityOfResidence = random.Next(100) < 90 ? cities[random.Next(cities.Length)] : "Niš";
         student.HomeAddress = $"{streets[random.Next(streets.Length)]} {random.Next(1, 150)}";
 
-        if (student.ESPB == 0) student.ESPB = random.Next(30, 241);
+        //if (student.ESPB == 0) student.ESPB = random.Next(30, 241);
+        if (student.ESPB == 0 && !student.IsFreshman) student.ESPB = random.Next(30, 241);
         student.StudyLevel = random.Next(100) < 90 ? StudyLevel.Undergraduate : StudyLevel.Postgraduate;
         if (student.AverageGrade == 0) student.AverageGrade = Math.Round((decimal)(random.NextDouble() * 3.5 + 6.5), 2);
-        
+
         student.IsBudgetStudent = true;
         student.ProfileStatus = StudentProfileStatus.Verified;
 
@@ -555,20 +572,20 @@ public class StudentService : IStudentService
     public async Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status)
     {
         var student = await _repository.GetByIdTrackedAsync(studentId);
-            
+
         if (student is null)
         {
-            
+
             var untrackedStudent = await _repository.GetByIdAsync(studentId);
             if (untrackedStudent is null) return null;
-            
+
             student = untrackedStudent;
             _context.Students.Update(student);
         }
 
         student.ProfileStatus = status;
         await _repository.UpdateProfileAsync(student);
-        
+
         var updated = await _repository.GetByIdAsync(studentId);
         return updated != null ? MapToGetDto(updated) : null;
     }
@@ -587,6 +604,27 @@ public class StudentService : IStudentService
         return true;
     }
 
+    public async Task<List<StudentSummaryDto>> GetByFreshmanStatusAsync(bool? isFreshman)
+    {
+        var students = await _repository.GetAllAsync();
+
+        var filtered = isFreshman.HasValue
+            ? students.Where(s => s.IsFreshman == isFreshman.Value)
+            : students;
+
+        return filtered
+            .Select(s => new StudentSummaryDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Surname = s.Surname,
+                FacultyName = s.FacultyName,
+                IsFreshman = s.IsFreshman
+            })
+            .ToList();
+    }
+
+   
     private static Student MapToEntity(StudentCreateUpdateDto dto, Student? existing = null)
     {
         var student = existing ?? new Student();

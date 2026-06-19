@@ -182,6 +182,15 @@ public class StudentController : ControllerBase
         return Ok(new { Message = $"Successfully updated {count} student profiles to {dto.Status}.", Count = count });
     }
 
+    [HttpGet("by-freshman-status")]
+    public async Task<ActionResult<List<StudentSummaryDto>>> GetByFreshmanStatus([FromQuery] bool? isFreshman)
+    {
+        var students = await _studentService.GetByFreshmanStatusAsync(isFreshman);
+        return Ok(students);
+    }
+
+    
+
     private int? GetCurrentUserId()
     {
         // Kada je MapInboundClaims = false, tipovi claim-ova su identični onima u JWT (npr. "sub", "role")

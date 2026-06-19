@@ -115,6 +115,13 @@ public class CompetitionApplicationController : ControllerBase
         return Ok(result);
     }
 
+    // [HttpPost("bulk-apply-by-freshman-status")]
+    // public async Task<ActionResult<CompetitionImportResultDto>> BulkApplyByFreshmanStatus(ApplyByFreshmanStatusDto dto)
+    // {
+    //     var result = await _applicationService.BulkApplyByFreshmanStatusAsync(dto);
+    //     return Ok(result);
+    // }
+
     [Authorize(Roles = "Admin,DormManager")]
     [HttpPost("bulk-verify")]
     public async Task<ActionResult<BulkVerifyApplicationsResultDto>> BulkVerifyApplications(BulkVerifyApplicationsDto dto)

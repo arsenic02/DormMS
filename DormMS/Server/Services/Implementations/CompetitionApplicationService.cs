@@ -192,6 +192,20 @@ public class CompetitionApplicationService : ICompetitionApplicationService
                     continue;
                 }
 
+                if (competition.Type == CompetitionType.Freshmen && !student.IsFreshman)
+                {
+                    result.Errors.Add($"Student {studentId} ({student.Name} {student.Surname}) is not a freshman and cannot apply to this competition.");
+                    result.Failed++;
+                    continue;
+                }
+
+                if (competition.Type == CompetitionType.General && student.IsFreshman)
+                {
+                    result.Errors.Add($"Student {studentId} ({student.Name} {student.Surname}) is a freshman and cannot apply to this general competition.");
+                    result.Failed++;
+                    continue;
+                }
+
                 var existingApplication = await _repository.GetApplicationByStudentAndCompetitionAsync(studentId, dto.CompetitionId);
                 if (existingApplication is not null)
                 {
@@ -219,6 +233,24 @@ public class CompetitionApplicationService : ICompetitionApplicationService
 
         return result;
     }
+
+    // public async Task<CompetitionImportResultDto> BulkApplyByFreshmanStatusAsync(ApplyByFreshmanStatusDto dto)
+    // {
+    //     var students = await _studentRepository.GetAllAsync();
+
+    //     var studentIds = students
+    //         .Where(s => s.IsFreshman == dto.IsFreshman)
+    //         .Select(s => s.Id)
+    //         .ToList();
+
+    //     var bulkDto = new BulkApplicationDto
+    //     {
+    //         CompetitionId = dto.CompetitionId,
+    //         StudentIds = studentIds
+    //     };
+
+    //     return await BulkApplyAsync(bulkDto); // poziva postojecu metodu iz istog servisa
+    // }
 
     public async Task<BulkVerifyApplicationsResultDto> BulkVerifyApplicationsAsync(BulkVerifyApplicationsDto dto)
     {

@@ -22,4 +22,6 @@ public interface IStudentService
     Task<int> FixBulkImportedStudentsAsync();
     Task<int> ClearAllStudentsAsync();
     Task<int> BulkVerifyProfilesAsync(BulkVerifyProfilesDto dto);
+    Task<List<StudentSummaryDto>> GetByFreshmanStatusAsync(bool? isFreshman);
+    
 }

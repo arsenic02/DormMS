@@ -1,0 +1,501 @@
+Email,Password,Name,Surname,StudentIDNumber,TotalFamilyIncome,FamilyMemberCount,ESPB,AverageGrade,HighSchoolAverageGrade,YearOfEnrollment,FacultyName
+milica.todorovic275@gmail.com,MiTo75!,Milica,Todorovic,275,59205,4,300,9.23,,2021,Elektronski fakultet
+ivan.stojanovic151@gmail.com,IvSt51!,Ivan,Stojanovic,151,58405,5,0,,4.79,2026,Prirodno-matematički fakultet (PMF)
+sara.stevanovic344@gmail.com,SaSt44!,Sara,Stevanovic,344,45384,6,184,8.09,,2023,Građevinsko-arhitektonski fakultet (GAF)
+marina.bozic94@gmail.com,MaBo94!,Marina,Bozic,94,55082,5,0,,4.48,2026,Mašinski fakultet
+teodora.maksimovic160@gmail.com,TeMa60!,Teodora,Maksimovic,160,48288,3,0,,4.82,2026,Fakultet sporta i fizičkog vaspitanja (DIF)
+luka.zivkovic318@gmail.com,LuZi18!,Luka,Zivkovic,318,69760,3,109,8.44,,2024,Elektronski fakultet
+milos.markovic496@gmail.com,MiMa96!,Milos,Markovic,496,32369,6,293,9.17,,2021,Građevinsko-arhitektonski fakultet (GAF)
+nikola.markovic394@gmail.com,NiMa94!,Nikola,Markovic,394,55023,5,300,8.0,,2021,Pravni fakultet
+mila.petrovic84@gmail.com,MiPe84!,Mila,Petrovic,84,43719,3,0,,4.99,2026,Pravni fakultet
+stefan.petrovic255@gmail.com,StPe55!,Stefan,Petrovic,255,52855,5,140,7.68,,2024,Mašinski fakultet
+dunja.markovic379@gmail.com,DuMa79!,Dunja,Markovic,379,57118,5,112,9.41,,2024,Pravni fakultet
+zoran.radic339@gmail.com,ZoRa39!,Zoran,Radic,339,69693,3,300,9.9,,2021,Fakultet sporta i fizičkog vaspitanja (DIF)
+sandra.milosevic348@gmail.com,SaMi48!,Sandra,Milosevic,348,37904,2,290,9.04,,2021,Elektronski fakultet
+dragan.zivkovic211@gmail.com,DrZi11!,Dragan,Zivkovic,211,62887,6,141,8.66,,2024,Mašinski fakultet
+petar.bozic314@gmail.com,PeBo14!,Petar,Bozic,314,28522,5,177,7.76,,2023,Mašinski fakultet
+dunja.stevanovic473@gmail.com,DuSt73!,Dunja,Stevanovic,473,41800,3,250,9.51,,2022,Fakultet umetnosti
+ksenija.nikolic171@gmail.com,KsNi71!,Ksenija,Nikolic,171,30510,3,0,,4.53,2026,Fakultet zaštite na radu
+dragan.ristic455@gmail.com,DrRi55!,Dragan,Ristic,455,58193,5,46,8.88,,2025,Elektronski fakultet
+andrija.arsic209@gmail.com,AnAr09!,Andrija,Arsic,209,54305,6,47,7.94,,2025,Mašinski fakultet
+jovana.arsic15@gmail.com,JoAr15!,Jovana,Arsic,15,38016,4,0,,4.71,2026,Mašinski fakultet
+maja.nikolic150@gmail.com,MaNi50!,Maja,Nikolic,150,34737,4,0,,4.57,2026,Pravni fakultet
+miroslav.popovic3@gmail.com,MiPo03!,Miroslav,Popovic,3,66618,5,0,,4.73,2026,Elektronski fakultet
+milan.sekulic65@gmail.com,MiSe65!,Milan,Sekulic,65,58822,3,0,,4.37,2026,Pravni fakultet
+vladan.lazic24@gmail.com,VlLa24!,Vladan,Lazic,24,34416,6,0,,4.13,2026,Fakultet umetnosti
+sofija.vasic241@gmail.com,SoVa41!,Sofija,Vasic,241,60481,6,300,9.2,,2021,Mašinski fakultet
+vesna.maksimovic481@gmail.com,VeMa81!,Vesna,Maksimovic,481,46656,4,62,9.23,,2025,Pravni fakultet
+marko.ilic383@gmail.com,MaIl83!,Marko,Ilic,383,35237,3,76,8.01,,2025,Građevinsko-arhitektonski fakultet (GAF)
+marina.sekulic493@gmail.com,MaSe93!,Marina,Sekulic,493,38508,6,300,8.62,,2021,Građevinsko-arhitektonski fakultet (GAF)
+mila.todorovic215@gmail.com,MiTo15!,Mila,Todorovic,215,52695,6,176,8.51,,2023,Fakultet zaštite na radu
+goran.cvetkovic464@gmail.com,GoCv64!,Goran,Cvetkovic,464,46325,5,116,8.35,,2024,Fakultet zaštite na radu
+maja.ristic286@gmail.com,MaRi86!,Maja,Ristic,286,56925,2,58,9.43,,2025,Mašinski fakultet
+jelena.ristic17@gmail.com,JeRi17!,Jelena,Ristic,17,36414,3,0,,4.9,2026,Pravni fakultet
+biljana.lazic352@gmail.com,BiLa52!,Biljana,Lazic,352,33703,3,140,8.99,,2024,Građevinsko-arhitektonski fakultet (GAF)
+sofija.jankovic388@gmail.com,SoJa88!,Sofija,Jankovic,388,68063,3,127,7.72,,2024,Građevinsko-arhitektonski fakultet (GAF)
+goran.jankovic484@gmail.com,GoJa84!,Goran,Jankovic,484,49643,2,294,9.01,,2021,Elektronski fakultet
+aleksandar.stojanovic201@gmail.com,AlSt01!,Aleksandar,Stojanovic,201,55238,5,134,8.61,,2024,Medicinski fakultet
+bojana.lazic218@gmail.com,BoLa18!,Bojana,Lazic,218,47035,3,300,8.89,,2021,Građevinsko-arhitektonski fakultet (GAF)
+katarina.stevanovic300@gmail.com,KaSt00!,Katarina,Stevanovic,300,54981,3,73,7.66,,2025,Mašinski fakultet
+aleksandar.todorovic130@gmail.com,AlTo30!,Aleksandar,Todorovic,130,55936,5,0,,4.94,2026,Građevinsko-arhitektonski fakultet (GAF)
+jovan.antic195@gmail.com,JoAn95!,Jovan,Antic,195,69929,6,0,,4.91,2026,Građevinsko-arhitektonski fakultet (GAF)
+katarina.petrovic310@gmail.com,KaPe10!,Katarina,Petrovic,310,57831,5,68,8.54,,2025,Fakultet umetnosti
+tijana.ristic113@gmail.com,TiRi13!,Tijana,Ristic,113,69172,3,0,,4.93,2026,Građevinsko-arhitektonski fakultet (GAF)
+jovan.stevanovic367@gmail.com,JoSt67!,Jovan,Stevanovic,367,60595,2,181,9.24,,2023,Fakultet sporta i fizičkog vaspitanja (DIF)
+andrija.pavlovic500@gmail.com,AnPa00!,Andrija,Pavlovic,500,44302,6,85,8.1,,2025,Filozofski fakultet
+petar.petrovic449@gmail.com,PePe49!,Petar,Petrovic,449,42533,4,170,8.48,,2023,Pravni fakultet
+ksenija.stankovic336@gmail.com,KsSt36!,Ksenija,Stankovic,336,48793,5,260,8.75,,2022,Elektronski fakultet
+tijana.todorovic432@gmail.com,TiTo32!,Tijana,Todorovic,432,30648,4,256,8.86,,2022,Ekonomski fakultet
+vladan.markovic156@gmail.com,VlMa56!,Vladan,Markovic,156,33526,4,0,,4.85,2026,Mašinski fakultet
+milan.nikolic33@gmail.com,MiNi33!,Milan,Nikolic,33,32508,4,0,,4.92,2026,Fakultet zaštite na radu
+nikola.radic356@gmail.com,NiRa56!,Nikola,Radic,356,48378,4,196,9.46,,2023,Mašinski fakultet
+ivan.stojanovic410@gmail.com,IvSt10!,Ivan,Stojanovic,410,61675,3,300,8.09,,2021,Elektronski fakultet
+marina.radic116@gmail.com,MaRa16!,Marina,Radic,116,58692,3,0,,4.72,2026,Prirodno-matematički fakultet (PMF)
+nina.petrovic104@gmail.com,NiPe04!,Nina,Petrovic,104,62971,4,0,,4.53,2026,Prirodno-matematički fakultet (PMF)
+mila.bozic495@gmail.com,MiBo95!,Mila,Bozic,495,40443,5,76,9.37,,2025,Mašinski fakultet
+bogdan.peric30@gmail.com,BoPe30!,Bogdan,Peric,30,68591,2,0,,4.56,2026,Elektronski fakultet
+tamara.cvetkovic256@gmail.com,TaCv56!,Tamara,Cvetkovic,256,62613,3,299,8.05,,2021,Mašinski fakultet
+vladimir.djokovic267@gmail.com,VlDj67!,Vladimir,Djokovic,267,65740,5,245,8.72,,2022,Prirodno-matematički fakultet (PMF)
+stefan.maksimovic45@gmail.com,StMa45!,Stefan,Maksimovic,45,28110,5,0,,4.6,2026,Medicinski fakultet
+luka.vasic444@gmail.com,LuVa44!,Luka,Vasic,444,44680,3,119,8.75,,2024,Mašinski fakultet
+dunja.petrovic233@gmail.com,DuPe33!,Dunja,Petrovic,233,31948,6,300,6.86,,2021,Medicinski fakultet
+jovana.lazic186@gmail.com,JoLa86!,Jovana,Lazic,186,30040,3,0,,4.91,2026,Mašinski fakultet
+vladan.markovic19@gmail.com,VlMa19!,Vladan,Markovic,19,42725,4,0,,4.98,2026,Građevinsko-arhitektonski fakultet (GAF)
+katarina.bozic197@gmail.com,KaBo97!,Katarina,Bozic,197,36203,4,0,,4.93,2026,Prirodno-matematički fakultet (PMF)
+marija.lazic373@gmail.com,MaLa73!,Marija,Lazic,373,36480,3,72,9.76,,2025,Mašinski fakultet
+petar.stevanovic140@gmail.com,PeSt40!,Petar,Stevanovic,140,42098,6,0,,4.88,2026,Mašinski fakultet
+milos.ilic323@gmail.com,MiIl23!,Milos,Ilic,323,42567,2,237,8.9,,2022,Prirodno-matematički fakultet (PMF)
+zoran.popovic175@gmail.com,ZoPo75!,Zoran,Popovic,175,40275,5,0,,4.74,2026,Ekonomski fakultet
+sofija.sekulic90@gmail.com,SoSe90!,Sofija,Sekulic,90,65764,4,0,,4.6,2026,Elektronski fakultet
+marina.milosevic460@gmail.com,MaMi60!,Marina,Milosevic,460,39984,5,62,9.35,,2025,Mašinski fakultet
+tamara.popovic273@gmail.com,TaPo73!,Tamara,Popovic,273,52518,5,134,9.04,,2024,Građevinsko-arhitektonski fakultet (GAF)
+miroslav.vasic243@gmail.com,MiVa43!,Miroslav,Vasic,243,62733,6,249,7.91,,2022,Mašinski fakultet
+ivan.djokovic194@gmail.com,IvDj94!,Ivan,Djokovic,194,59369,5,0,,4.76,2026,Mašinski fakultet
+sanja.bozic138@gmail.com,SaBo38!,Sanja,Bozic,138,29720,6,0,,4.85,2026,Mašinski fakultet
+nemanja.mitrovic50@gmail.com,NeMi50!,Nemanja,Mitrovic,50,46598,3,0,,4.81,2026,Fakultet umetnosti
+ivan.simic340@gmail.com,IvSi40!,Ivan,Simic,340,35080,4,288,8.52,,2021,Prirodno-matematički fakultet (PMF)
+nina.bozic347@gmail.com,NiBo47!,Nina,Bozic,347,40116,5,189,8.99,,2023,Elektronski fakultet
+sandra.popovic409@gmail.com,SaPo09!,Sandra,Popovic,409,66560,4,83,8.91,,2025,Fakultet sporta i fizičkog vaspitanja (DIF)
+vladimir.arsic279@gmail.com,VlAr79!,Vladimir,Arsic,279,68062,5,142,8.02,,2024,Filozofski fakultet
+bojana.markovic459@gmail.com,BoMa59!,Bojana,Markovic,459,33143,3,144,7.16,,2024,Prirodno-matematički fakultet (PMF)
+stefan.petrovic333@gmail.com,StPe33!,Stefan,Petrovic,333,43245,2,59,7.63,,2025,Građevinsko-arhitektonski fakultet (GAF)
+nina.jovanovic251@gmail.com,NiJo51!,Nina,Jovanovic,251,30216,6,288,9.02,,2021,Pravni fakultet
+milan.djokovic447@gmail.com,MiDj47!,Milan,Djokovic,447,54091,4,232,8.6,,2022,Elektronski fakultet
+vesna.zivkovic454@gmail.com,VeZi54!,Vesna,Zivkovic,454,63252,4,61,8.81,,2025,Fakultet umetnosti
+radovan.ilic14@gmail.com,RaIl14!,Radovan,Ilic,14,60806,4,0,,4.93,2026,Pravni fakultet
+milica.markovic487@gmail.com,MiMa87!,Milica,Markovic,487,59537,4,177,8.08,,2023,Elektronski fakultet
+sandra.peric400@gmail.com,SaPe00!,Sandra,Peric,400,61314,5,262,9.18,,2022,Pravni fakultet
+sasa.cvetkovic83@gmail.com,SaCv83!,Sasa,Cvetkovic,83,48013,5,0,,4.53,2026,Elektronski fakultet
+petar.kovacevic350@gmail.com,PeKo50!,Petar,Kovacevic,350,60905,2,78,8.87,,2025,Fakultet umetnosti
+lazar.arsic440@gmail.com,LaAr40!,Lazar,Arsic,440,45335,6,246,7.66,,2022,Fakultet sporta i fizičkog vaspitanja (DIF)
+tijana.lazic369@gmail.com,TiLa69!,Tijana,Lazic,369,39997,6,170,8.02,,2023,Građevinsko-arhitektonski fakultet (GAF)
+dragan.milosevic74@gmail.com,DrMi74!,Dragan,Milosevic,74,64424,4,0,,4.85,2026,Ekonomski fakultet
+lazar.todorovic189@gmail.com,LaTo89!,Lazar,Todorovic,189,53361,6,0,,4.89,2026,Fakultet sporta i fizičkog vaspitanja (DIF)
+natasa.markovic237@gmail.com,NaMa37!,Natasa,Markovic,237,55475,2,46,8.04,,2025,Filozofski fakultet
+luka.antic311@gmail.com,LuAn11!,Luka,Antic,311,42968,3,45,8.18,,2025,Mašinski fakultet
+anja.jankovic492@gmail.com,AnJa92!,Anja,Jankovic,492,47314,6,76,8.5,,2025,Elektronski fakultet
+marija.nikolic291@gmail.com,MaNi91!,Marija,Nikolic,291,69144,4,129,8.57,,2024,Mašinski fakultet
+natasa.jovanovic95@gmail.com,NaJo95!,Natasa,Jovanovic,95,45501,4,0,,4.77,2026,Građevinsko-arhitektonski fakultet (GAF)
+nina.stankovic152@gmail.com,NiSt52!,Nina,Stankovic,152,69105,4,0,,4.71,2026,Elektronski fakultet
+uros.todorovic245@gmail.com,UrTo45!,Uros,Todorovic,245,49821,4,165,7.59,,2023,Fakultet umetnosti
+sara.jovanovic349@gmail.com,SaJo49!,Sara,Jovanovic,349,62247,5,139,8.78,,2024,Elektronski fakultet
+teodora.radic55@gmail.com,TeRa55!,Teodora,Radic,55,68150,5,0,,4.81,2026,Mašinski fakultet
+gordana.petrovic32@gmail.com,GoPe32!,Gordana,Petrovic,32,58034,2,0,,4.92,2026,Ekonomski fakultet
+biljana.todorovic190@gmail.com,BiTo90!,Biljana,Todorovic,190,36037,4,0,,4.85,2026,Građevinsko-arhitektonski fakultet (GAF)
+zoran.djokovic42@gmail.com,ZoDj42!,Zoran,Djokovic,42,42609,4,0,,4.59,2026,Prirodno-matematički fakultet (PMF)
+sasa.sekulic321@gmail.com,SaSe21!,Sasa,Sekulic,321,42091,2,174,8.17,,2023,Filozofski fakultet
+tamara.mitrovic63@gmail.com,TaMi63!,Tamara,Mitrovic,63,33501,2,0,,4.77,2026,Mašinski fakultet
+teodora.simic228@gmail.com,TeSi28!,Teodora,Simic,228,63994,5,139,8.54,,2024,Pravni fakultet
+ksenija.ilic328@gmail.com,KsIl28!,Ksenija,Ilic,328,51534,5,139,8.94,,2024,Elektronski fakultet
+ivana.nikolic198@gmail.com,IvNi98!,Ivana,Nikolic,198,68925,3,0,,4.45,2026,Građevinsko-arhitektonski fakultet (GAF)
+jovana.kovacevic448@gmail.com,JoKo48!,Jovana,Kovacevic,448,64082,4,48,8.99,,2025,Mašinski fakultet
+anja.todorovic27@gmail.com,AnTo27!,Anja,Todorovic,27,40445,3,0,,4.64,2026,Medicinski fakultet
+radovan.markovic97@gmail.com,RaMa97!,Radovan,Markovic,97,60661,3,0,,4.77,2026,Mašinski fakultet
+ana.filipovic246@gmail.com,AnFi46!,Ana,Filipovic,246,67610,4,250,8.99,,2022,Elektronski fakultet
+dusan.ilic253@gmail.com,DuIl53!,Dusan,Ilic,253,56218,6,231,8.83,,2022,Mašinski fakultet
+biljana.lazic415@gmail.com,BiLa15!,Biljana,Lazic,415,53288,3,199,8.66,,2023,Ekonomski fakultet
+lazar.vasic466@gmail.com,LaVa66!,Lazar,Vasic,466,36812,5,79,9.29,,2025,Prirodno-matematički fakultet (PMF)
+jasmina.stevanovic417@gmail.com,JaSt17!,Jasmina,Stevanovic,417,32726,5,226,7.85,,2022,Prirodno-matematički fakultet (PMF)
+marko.todorovic283@gmail.com,MaTo83!,Marko,Todorovic,283,40787,3,140,8.25,,2024,Mašinski fakultet
+biljana.arsic119@gmail.com,BiAr19!,Biljana,Arsic,119,32142,4,0,,4.61,2026,Građevinsko-arhitektonski fakultet (GAF)
+petar.peric2@gmail.com,PePe02!,Petar,Peric,2,30082,5,0,,4.87,2026,Prirodno-matematički fakultet (PMF)
+nikola.popovic377@gmail.com,NiPo77!,Nikola,Popovic,377,36598,4,226,9.04,,2022,Građevinsko-arhitektonski fakultet (GAF)
+jovan.jovanovic178@gmail.com,JoJo78!,Jovan,Jovanovic,178,63783,4,0,,4.35,2026,Fakultet sporta i fizičkog vaspitanja (DIF)
+ivana.stevanovic430@gmail.com,IvSt30!,Ivana,Stevanovic,430,36774,4,137,8.68,,2024,Pravni fakultet
+ana.filipovic389@gmail.com,AnFi89!,Ana,Filipovic,389,35401,5,133,8.0,,2024,Filozofski fakultet
+sanja.popovic25@gmail.com,SaPo25!,Sanja,Popovic,25,54634,3,0,,4.78,2026,Mašinski fakultet
+maja.markovic298@gmail.com,MaMa98!,Maja,Markovic,298,36662,5,109,8.53,,2024,Mašinski fakultet
+jovana.ristic163@gmail.com,JoRi63!,Jovana,Ristic,163,62506,6,0,,4.67,2026,Fakultet sporta i fizičkog vaspitanja (DIF)
+andjela.vasic122@gmail.com,AnVa22!,Andjela,Vasic,122,30144,4,0,,4.78,2026,Mašinski fakultet
+nikola.cvetkovic302@gmail.com,NiCv02!,Nikola,Cvetkovic,302,41464,4,83,9.08,,2025,Elektronski fakultet
+aleksandar.petrovic327@gmail.com,AlPe27!,Aleksandar,Petrovic,327,53101,4,251,8.11,,2022,Prirodno-matematički fakultet (PMF)
+miroslav.markovic320@gmail.com,MiMa20!,Miroslav,Markovic,320,51480,6,253,9.29,,2022,Fakultet sporta i fizičkog vaspitanja (DIF)
+nikola.stankovic96@gmail.com,NiSt96!,Nikola,Stankovic,96,38379,4,0,,4.75,2026,Građevinsko-arhitektonski fakultet (GAF)
+dunja.bozic121@gmail.com,DuBo21!,Dunja,Bozic,121,66491,5,0,,4.81,2026,Ekonomski fakultet
+dejan.stevanovic385@gmail.com,DeSt85!,Dejan,Stevanovic,385,34225,3,285,9.62,,2021,Mašinski fakultet
+jelena.djokovic200@gmail.com,JeDj00!,Jelena,Djokovic,200,59650,4,0,,4.74,2026,Fakultet sporta i fizičkog vaspitanja (DIF)
+luka.mitrovic123@gmail.com,LuMi23!,Luka,Mitrovic,123,63682,4,0,,4.96,2026,Građevinsko-arhitektonski fakultet (GAF)
+tijana.filipovic21@gmail.com,TiFi21!,Tijana,Filipovic,21,43925,5,0,,4.9,2026,Mašinski fakultet
+mila.markovic92@gmail.com,MiMa92!,Mila,Markovic,92,49614,3,0,,4.59,2026,Fakultet umetnosti
+nina.vasic234@gmail.com,NiVa34!,Nina,Vasic,234,53066,4,129,8.11,,2024,Pravni fakultet
+bojana.peric141@gmail.com,BoPe41!,Bojana,Peric,141,31447,3,0,,4.69,2026,Pravni fakultet
+gordana.milosevic476@gmail.com,GoMi76!,Gordana,Milosevic,476,57153,6,259,7.8,,2022,Prirodno-matematički fakultet (PMF)
+nikola.maksimovic332@gmail.com,NiMa32!,Nikola,Maksimovic,332,65201,4,54,8.77,,2025,Ekonomski fakultet
+dunja.ristic69@gmail.com,DuRi69!,Dunja,Ristic,69,67348,4,0,,4.75,2026,Prirodno-matematički fakultet (PMF)
+goran.simic7@gmail.com,GoSi07!,Goran,Simic,7,45496,4,0,,4.94,2026,Prirodno-matematički fakultet (PMF)
+biljana.arsic159@gmail.com,BiAr59!,Biljana,Arsic,159,49847,3,0,,4.47,2026,Građevinsko-arhitektonski fakultet (GAF)
+jovana.mitrovic313@gmail.com,JoMi13!,Jovana,Mitrovic,313,39753,2,258,8.25,,2022,Mašinski fakultet
+ivan.stojanovic264@gmail.com,IvSt64!,Ivan,Stojanovic,264,46085,5,124,9.14,,2024,Pravni fakultet
+andjela.pavlovic398@gmail.com,AnPa98!,Andjela,Pavlovic,398,35913,4,118,8.78,,2024,Filozofski fakultet
+natasa.popovic331@gmail.com,NaPo31!,Natasa,Popovic,331,51252,5,236,7.66,,2022,Prirodno-matematički fakultet (PMF)
+milica.stankovic213@gmail.com,MiSt13!,Milica,Stankovic,213,37684,5,227,9.35,,2022,Mašinski fakultet
+filip.arsic355@gmail.com,FiAr55!,Filip,Arsic,355,30541,5,126,8.97,,2024,Mašinski fakultet
+sofija.stankovic216@gmail.com,SoSt16!,Sofija,Stankovic,216,67981,4,117,7.87,,2024,Ekonomski fakultet
+sasa.antic395@gmail.com,SaAn95!,Sasa,Antic,395,64853,6,254,7.72,,2022,Pravni fakultet
+anja.cvetkovic106@gmail.com,AnCv06!,Anja,Cvetkovic,106,57076,3,0,,4.95,2026,Građevinsko-arhitektonski fakultet (GAF)
+aleksandar.lazic158@gmail.com,AlLa58!,Aleksandar,Lazic,158,32319,4,0,,4.76,2026,Filozofski fakultet
+slobodan.jovanovic207@gmail.com,SlJo07!,Slobodan,Jovanovic,207,40756,6,200,8.46,,2023,Pravni fakultet
+katarina.mitrovic252@gmail.com,KaMi52!,Katarina,Mitrovic,252,59972,5,285,9.83,,2021,Prirodno-matematički fakultet (PMF)
+slobodan.kovacevic452@gmail.com,SlKo52!,Slobodan,Kovacevic,452,61930,4,289,8.82,,2021,Elektronski fakultet
+anja.cvetkovic238@gmail.com,AnCv38!,Anja,Cvetkovic,238,44038,2,300,7.95,,2021,Građevinsko-arhitektonski fakultet (GAF)
+tamara.markovic278@gmail.com,TaMa78!,Tamara,Markovic,278,40252,6,185,7.75,,2023,Pravni fakultet
+mila.zivkovic240@gmail.com,MiZi40!,Mila,Zivkovic,240,55103,4,182,6.74,,2023,Pravni fakultet
+gordana.ristic490@gmail.com,GoRi90!,Gordana,Ristic,490,31917,2,174,9.58,,2023,Prirodno-matematički fakultet (PMF)
+milica.maksimovic451@gmail.com,MiMa51!,Milica,Maksimovic,451,68317,4,227,8.95,,2022,Filozofski fakultet
+filip.nikolic82@gmail.com,FiNi82!,Filip,Nikolic,82,33582,4,0,,4.76,2026,Mašinski fakultet
+petar.simic254@gmail.com,PeSi54!,Petar,Simic,254,58080,5,60,8.6,,2025,Fakultet umetnosti
+anja.popovic145@gmail.com,AnPo45!,Anja,Popovic,145,64616,6,0,,4.95,2026,Građevinsko-arhitektonski fakultet (GAF)
+jovan.jovanovic38@gmail.com,JoJo38!,Jovan,Jovanovic,38,51897,4,0,,4.5,2026,Elektronski fakultet
+tamara.djokovic111@gmail.com,TaDj11!,Tamara,Djokovic,111,29437,4,0,,4.54,2026,Građevinsko-arhitektonski fakultet (GAF)
+marko.djokovic261@gmail.com,MaDj61!,Marko,Djokovic,261,51587,5,171,8.1,,2023,Mašinski fakultet
+nemanja.antic342@gmail.com,NeAn42!,Nemanja,Antic,342,38545,5,300,9.58,,2021,Ekonomski fakultet
+teodora.maksimovic184@gmail.com,TeMa84!,Teodora,Maksimovic,184,38921,5,0,,4.96,2026,Mašinski fakultet
+tijana.jankovic224@gmail.com,TiJa24!,Tijana,Jankovic,224,40202,4,300,8.17,,2021,Mašinski fakultet
+sanja.ristic52@gmail.com,SaRi52!,Sanja,Ristic,52,57846,3,0,,4.87,2026,Ekonomski fakultet
+tijana.arsic381@gmail.com,TiAr81!,Tijana,Arsic,381,46527,3,291,7.97,,2021,Elektronski fakultet
+ksenija.maksimovic353@gmail.com,KsMa53!,Ksenija,Maksimovic,353,55498,6,300,7.84,,2021,Građevinsko-arhitektonski fakultet (GAF)
+petar.ristic260@gmail.com,PeRi60!,Petar,Ristic,260,44151,4,290,8.56,,2021,Građevinsko-arhitektonski fakultet (GAF)
+jelena.stankovic368@gmail.com,JeSt68!,Jelena,Stankovic,368,51494,5,64,9.73,,2025,Elektronski fakultet
+slobodan.popovic53@gmail.com,SlPo53!,Slobodan,Popovic,53,28363,3,0,,4.44,2026,Elektronski fakultet
+sasa.arsic34@gmail.com,SaAr34!,Sasa,Arsic,34,28512,6,0,,4.31,2026,Građevinsko-arhitektonski fakultet (GAF)
+danilo.stevanovic357@gmail.com,DaSt57!,Danilo,Stevanovic,357,67647,5,297,8.78,,2021,Ekonomski fakultet
+milica.zivkovic115@gmail.com,MiZi15!,Milica,Zivkovic,115,38783,4,0,,4.69,2026,Medicinski fakultet
+ana.djokovic85@gmail.com,AnDj85!,Ana,Djokovic,85,43170,2,0,,4.84,2026,Pravni fakultet
+nina.pavlovic445@gmail.com,NiPa45!,Nina,Pavlovic,445,54794,4,171,8.65,,2023,Mašinski fakultet
+luka.ilic297@gmail.com,LuIl97!,Luka,Ilic,297,59248,4,293,8.9,,2021,Mašinski fakultet
+miroslav.sekulic441@gmail.com,MiSe41!,Miroslav,Sekulic,441,67682,3,296,9.7,,2021,Ekonomski fakultet
+luka.arsic407@gmail.com,LuAr07!,Luka,Arsic,407,42700,6,69,7.86,,2025,Mašinski fakultet
+dusan.markovic147@gmail.com,DuMa47!,Dusan,Markovic,147,29366,5,0,,4.79,2026,Mašinski fakultet
+snezana.milosevic384@gmail.com,SnMi84!,Snezana,Milosevic,384,57933,4,181,9.04,,2023,Mašinski fakultet
+dusan.simic107@gmail.com,DuSi07!,Dusan,Simic,107,56225,4,0,,4.6,2026,Elektronski fakultet
+jelena.jankovic59@gmail.com,JeJa59!,Jelena,Jankovic,59,32080,5,0,,4.5,2026,Fakultet umetnosti
+luka.mitrovic220@gmail.com,LuMi20!,Luka,Mitrovic,220,28339,3,55,9.18,,2025,Mašinski fakultet
+filip.arsic210@gmail.com,FiAr10!,Filip,Arsic,210,37160,6,204,8.13,,2023,Prirodno-matematički fakultet (PMF)
+dragan.maksimovic334@gmail.com,DrMa34!,Dragan,Maksimovic,334,49206,3,286,8.98,,2021,Ekonomski fakultet
+teodora.bozic174@gmail.com,TeBo74!,Teodora,Bozic,174,69415,2,0,,4.9,2026,Pravni fakultet
+sofija.filipovic134@gmail.com,SoFi34!,Sofija,Filipovic,134,32399,5,0,,4.78,2026,Građevinsko-arhitektonski fakultet (GAF)
+dragan.popovic249@gmail.com,DrPo49!,Dragan,Popovic,249,65341,5,256,9.04,,2022,Ekonomski fakultet
+goran.kovacevic187@gmail.com,GoKo87!,Goran,Kovacevic,187,67655,2,0,,4.73,2026,Građevinsko-arhitektonski fakultet (GAF)
+snezana.bozic263@gmail.com,SnBo63!,Snezana,Bozic,263,65483,4,55,9.31,,2025,Građevinsko-arhitektonski fakultet (GAF)
+petar.stankovic36@gmail.com,PeSt36!,Petar,Stankovic,36,46132,5,0,,4.84,2026,Elektronski fakultet
+petar.filipovic169@gmail.com,PeFi69!,Petar,Filipovic,169,57565,4,0,,4.83,2026,Mašinski fakultet
+jovana.radic225@gmail.com,JoRa25!,Jovana,Radic,225,54269,3,296,9.0,,2021,Prirodno-matematički fakultet (PMF)
+danilo.jankovic326@gmail.com,DaJa26!,Danilo,Jankovic,326,30270,3,84,8.82,,2025,Ekonomski fakultet
+sofija.popovic39@gmail.com,SoPo39!,Sofija,Popovic,39,51178,3,0,,4.82,2026,Građevinsko-arhitektonski fakultet (GAF)
+milan.cvetkovic319@gmail.com,MiCv19!,Milan,Cvetkovic,319,53752,4,185,9.46,,2023,Mašinski fakultet
+radovan.vasic72@gmail.com,RaVa72!,Radovan,Vasic,72,49122,4,0,,4.94,2026,Elektronski fakultet
+ivana.todorovic143@gmail.com,IvTo43!,Ivana,Todorovic,143,48212,6,0,,4.73,2026,Građevinsko-arhitektonski fakultet (GAF)
+ana.jovanovic370@gmail.com,AnJo70!,Ana,Jovanovic,370,58947,3,257,7.87,,2022,Građevinsko-arhitektonski fakultet (GAF)
+marija.cvetkovic100@gmail.com,MaCv00!,Marija,Cvetkovic,100,57264,3,0,,4.7,2026,Mašinski fakultet
+stefan.ristic66@gmail.com,StRi66!,Stefan,Ristic,66,44205,2,0,,4.87,2026,Filozofski fakultet
+ivana.todorovic315@gmail.com,IvTo15!,Ivana,Todorovic,315,63819,4,234,7.32,,2022,Mašinski fakultet
+jasmina.sekulic16@gmail.com,JaSe16!,Jasmina,Sekulic,16,43692,4,0,,4.61,2026,Fakultet umetnosti
+sofija.arsic208@gmail.com,SoAr08!,Sofija,Arsic,208,36432,3,300,8.36,,2021,Građevinsko-arhitektonski fakultet (GAF)
+goran.arsic436@gmail.com,GoAr36!,Goran,Arsic,436,43095,3,126,9.0,,2024,Elektronski fakultet
+marija.radic424@gmail.com,MaRa24!,Marija,Radic,424,36402,4,231,9.05,,2022,Mašinski fakultet
+jelena.lazic61@gmail.com,JeLa61!,Jelena,Lazic,61,59996,4,0,,4.95,2026,Filozofski fakultet
+tijana.peric78@gmail.com,TiPe78!,Tijana,Peric,78,67111,6,0,,4.85,2026,Elektronski fakultet
+sandra.stevanovic161@gmail.com,SaSt61!,Sandra,Stevanovic,161,34124,6,0,,4.82,2026,Elektronski fakultet
+tamara.stankovic497@gmail.com,TaSt97!,Tamara,Stankovic,497,60106,5,84,9.16,,2025,Građevinsko-arhitektonski fakultet (GAF)
+lazar.peric91@gmail.com,LaPe91!,Lazar,Peric,91,69601,5,0,,4.79,2026,Mašinski fakultet
+danilo.lazic465@gmail.com,DaLa65!,Danilo,Lazic,465,64394,4,129,7.57,,2024,Građevinsko-arhitektonski fakultet (GAF)
+anja.stevanovic403@gmail.com,AnSt03!,Anja,Stevanovic,403,69456,6,237,7.74,,2022,Građevinsko-arhitektonski fakultet (GAF)
+sofija.stojanovic431@gmail.com,SoSt31!,Sofija,Stojanovic,431,37199,6,115,7.74,,2024,Medicinski fakultet
+milica.ristic390@gmail.com,MiRi90!,Milica,Ristic,390,50170,4,78,9.04,,2025,Ekonomski fakultet
+vladan.stankovic475@gmail.com,VlSt75!,Vladan,Stankovic,475,36603,3,55,7.43,,2025,Prirodno-matematički fakultet (PMF)
+nina.sekulic437@gmail.com,NiSe37!,Nina,Sekulic,437,29471,5,227,8.96,,2022,Prirodno-matematički fakultet (PMF)
+dragan.ristic126@gmail.com,DrRi26!,Dragan,Ristic,126,67058,3,0,,4.8,2026,Filozofski fakultet
+bojana.stankovic494@gmail.com,BoSt94!,Bojana,Stankovic,494,52840,6,226,8.58,,2022,Građevinsko-arhitektonski fakultet (GAF)
+maja.arsic364@gmail.com,MaAr64!,Maja,Arsic,364,66304,5,285,8.36,,2021,Elektronski fakultet
+petar.djokovic420@gmail.com,PeDj20!,Petar,Djokovic,420,52996,5,106,9.39,,2024,Prirodno-matematički fakultet (PMF)
+vladimir.pavlovic64@gmail.com,VlPa64!,Vladimir,Pavlovic,64,49420,5,0,,4.82,2026,Mašinski fakultet
+jelena.milosevic11@gmail.com,JeMi11!,Jelena,Milosevic,11,66242,5,0,,4.91,2026,Fakultet sporta i fizičkog vaspitanja (DIF)
+marko.djokovic380@gmail.com,MaDj80!,Marko,Djokovic,380,34617,5,62,8.98,,2025,Ekonomski fakultet
+branko.arsic470@gmail.com,BrAr70!,Branko,Arsic,470,58392,4,235,9.0,,2022,Mašinski fakultet
+natasa.milosevic144@gmail.com,NaMi44!,Natasa,Milosevic,144,49503,4,0,,4.69,2026,Prirodno-matematički fakultet (PMF)
+ivana.kovacevic118@gmail.com,IvKo18!,Ivana,Kovacevic,118,35100,4,0,,4.68,2026,Mašinski fakultet
+luka.jankovic129@gmail.com,LuJa29!,Luka,Jankovic,129,42519,6,0,,4.76,2026,Građevinsko-arhitektonski fakultet (GAF)
+bogdan.mitrovic51@gmail.com,BoMi51!,Bogdan,Mitrovic,51,42722,4,0,,4.96,2026,Pravni fakultet
+petar.simic413@gmail.com,PeSi13!,Petar,Simic,413,41982,4,186,7.83,,2023,Prirodno-matematički fakultet (PMF)
+teodora.stankovic271@gmail.com,TeSt71!,Teodora,Stankovic,271,35167,3,247,7.94,,2022,Pravni fakultet
+sasa.milosevic322@gmail.com,SaMi22!,Sasa,Milosevic,322,30036,3,133,9.56,,2024,Građevinsko-arhitektonski fakultet (GAF)
+ivana.jovanovic153@gmail.com,IvJo53!,Ivana,Jovanovic,153,61248,4,0,,4.93,2026,Elektronski fakultet
+jasmina.radic401@gmail.com,JaRa01!,Jasmina,Radic,401,53209,6,143,9.59,,2024,Elektronski fakultet
+zoran.ristic330@gmail.com,ZoRi30!,Zoran,Ristic,330,38461,4,300,8.08,,2021,Građevinsko-arhitektonski fakultet (GAF)
+radovan.stevanovic486@gmail.com,RaSt86!,Radovan,Stevanovic,486,62153,3,255,7.95,,2022,Prirodno-matematički fakultet (PMF)
+sofija.maksimovic456@gmail.com,SoMa56!,Sofija,Maksimovic,456,48691,4,127,9.54,,2024,Mašinski fakultet
+danilo.stankovic362@gmail.com,DaSt62!,Danilo,Stankovic,362,61638,5,285,9.3,,2021,Elektronski fakultet
+snezana.kovacevic182@gmail.com,SnKo82!,Snezana,Kovacevic,182,40243,4,0,,4.45,2026,Građevinsko-arhitektonski fakultet (GAF)
+slobodan.ristic272@gmail.com,SlRi72!,Slobodan,Ristic,272,56210,4,285,7.27,,2021,Fakultet sporta i fizičkog vaspitanja (DIF)
+aleksandar.kovacevic467@gmail.com,AlKo67!,Aleksandar,Kovacevic,467,38704,3,298,8.88,,2021,Mašinski fakultet
+tamara.kovacevic60@gmail.com,TaKo60!,Tamara,Kovacevic,60,28386,5,0,,4.35,2026,Medicinski fakultet
+bojana.lazic99@gmail.com,BoLa99!,Bojana,Lazic,99,50274,5,0,,4.88,2026,Filozofski fakultet
+mila.maksimovic405@gmail.com,MiMa05!,Mila,Maksimovic,405,62989,5,192,9.86,,2023,Filozofski fakultet
+ana.ristic304@gmail.com,AnRi04!,Ana,Ristic,304,29093,3,49,9.47,,2025,Fakultet zaštite na radu
+stefan.stojanovic338@gmail.com,StSt38!,Stefan,Stojanovic,338,68067,4,265,9.45,,2022,Elektronski fakultet
+marija.kovacevic303@gmail.com,MaKo03!,Marija,Kovacevic,303,43799,3,145,9.04,,2024,Fakultet umetnosti
+snezana.sekulic485@gmail.com,SnSe85!,Snezana,Sekulic,485,53007,4,292,9.04,,2021,Elektronski fakultet
+snezana.stojanovic56@gmail.com,SnSt56!,Snezana,Stojanovic,56,57495,5,0,,4.58,2026,Ekonomski fakultet
+ivan.bozic457@gmail.com,IvBo57!,Ivan,Bozic,457,59231,3,187,8.98,,2023,Elektronski fakultet
+marija.arsic265@gmail.com,MaAr65!,Marija,Arsic,265,58006,4,293,8.75,,2021,Mašinski fakultet
+petar.jovanovic199@gmail.com,PeJo99!,Petar,Jovanovic,199,41815,4,0,,4.69,2026,Pravni fakultet
+danilo.djokovic35@gmail.com,DaDj35!,Danilo,Djokovic,35,50471,4,0,,4.81,2026,Građevinsko-arhitektonski fakultet (GAF)
+tijana.jankovic5@gmail.com,TiJa05!,Tijana,Jankovic,5,36180,6,0,,4.66,2026,Prirodno-matematički fakultet (PMF)
+jovana.djokovic239@gmail.com,JoDj39!,Jovana,Djokovic,239,65755,4,201,9.13,,2023,Građevinsko-arhitektonski fakultet (GAF)
+tamara.cvetkovic294@gmail.com,TaCv94!,Tamara,Cvetkovic,294,50527,5,287,7.95,,2021,Elektronski fakultet
+zoran.ilic139@gmail.com,ZoIl39!,Zoran,Ilic,139,37388,3,0,,4.9,2026,Građevinsko-arhitektonski fakultet (GAF)
+maja.popovic418@gmail.com,MaPo18!,Maja,Popovic,418,54714,4,133,9.85,,2024,Prirodno-matematički fakultet (PMF)
+aleksandar.ristic450@gmail.com,AlRi50!,Aleksandar,Ristic,450,69962,3,133,7.8,,2024,Ekonomski fakultet
+uros.mitrovic31@gmail.com,UrMi31!,Uros,Mitrovic,31,43642,4,0,,4.57,2026,Fakultet umetnosti
+danilo.zivkovic88@gmail.com,DaZi88!,Danilo,Zivkovic,88,60361,6,0,,4.23,2026,Pravni fakultet
+marija.stevanovic458@gmail.com,MaSt58!,Marija,Stevanovic,458,43391,4,241,8.78,,2022,Građevinsko-arhitektonski fakultet (GAF)
+vladimir.lazic301@gmail.com,VlLa01!,Vladimir,Lazic,301,44238,3,170,7.73,,2023,Fakultet sporta i fizičkog vaspitanja (DIF)
+teodora.todorovic270@gmail.com,TeTo70!,Teodora,Todorovic,270,63020,5,71,9.0,,2025,Prirodno-matematički fakultet (PMF)
+radovan.radic462@gmail.com,RaRa62!,Radovan,Radic,462,28774,2,249,8.54,,2022,Prirodno-matematički fakultet (PMF)
+jasmina.maksimovic10@gmail.com,JaMa10!,Jasmina,Maksimovic,10,41934,4,0,,4.86,2026,Prirodno-matematički fakultet (PMF)
+natasa.jankovic73@gmail.com,NaJa73!,Natasa,Jankovic,73,50046,5,0,,4.79,2026,Elektronski fakultet
+anja.stankovic404@gmail.com,AnSt04!,Anja,Stankovic,404,61023,3,85,8.73,,2025,Prirodno-matematički fakultet (PMF)
+maja.jankovic133@gmail.com,MaJa33!,Maja,Jankovic,133,55262,5,0,,4.85,2026,Građevinsko-arhitektonski fakultet (GAF)
+andrija.peric268@gmail.com,AnPe68!,Andrija,Peric,268,39791,6,46,9.29,,2025,Mašinski fakultet
+stefan.arsic105@gmail.com,StAr05!,Stefan,Arsic,105,43385,3,0,,4.78,2026,Pravni fakultet
+milan.jankovic109@gmail.com,MiJa09!,Milan,Jankovic,109,28615,4,0,,4.88,2026,Građevinsko-arhitektonski fakultet (GAF)
+gordana.stevanovic276@gmail.com,GoSt76!,Gordana,Stevanovic,276,61816,4,260,8.29,,2022,Pravni fakultet
+lazar.petrovic108@gmail.com,LaPe08!,Lazar,Petrovic,108,68613,5,0,,4.71,2026,Pravni fakultet
+bogdan.kovacevic170@gmail.com,BoKo70!,Bogdan,Kovacevic,170,52570,3,0,,4.9,2026,Mašinski fakultet
+filip.jovanovic438@gmail.com,FiJo38!,Filip,Jovanovic,438,44925,3,258,8.24,,2022,Elektronski fakultet
+lazar.ristic242@gmail.com,LaRi42!,Lazar,Ristic,242,59032,6,239,7.56,,2022,Prirodno-matematički fakultet (PMF)
+ivana.todorovic231@gmail.com,IvTo31!,Ivana,Todorovic,231,61447,3,108,8.69,,2024,Mašinski fakultet
+sasa.maksimovic307@gmail.com,SaMa07!,Sasa,Maksimovic,307,43639,5,300,7.91,,2021,Elektronski fakultet
+marija.stankovic57@gmail.com,MaSt57!,Marija,Stankovic,57,45996,4,0,,4.85,2026,Prirodno-matematički fakultet (PMF)
+sara.ilic176@gmail.com,SaIl76!,Sara,Ilic,176,58810,5,0,,4.67,2026,Mašinski fakultet
+tijana.popovic8@gmail.com,TiPo08!,Tijana,Popovic,8,58294,3,0,,4.61,2026,Fakultet sporta i fizičkog vaspitanja (DIF)
+ivana.kovacevic148@gmail.com,IvKo48!,Ivana,Kovacevic,148,33154,6,0,,4.8,2026,Elektronski fakultet
+vladan.stojanovic351@gmail.com,VlSt51!,Vladan,Stojanovic,351,41886,3,233,8.73,,2022,Medicinski fakultet
+branko.antic378@gmail.com,BrAn78!,Branko,Antic,378,63044,4,48,9.55,,2025,Građevinsko-arhitektonski fakultet (GAF)
+miroslav.lazic408@gmail.com,MiLa08!,Miroslav,Lazic,408,64184,4,285,8.0,,2021,Mašinski fakultet
+anja.milosevic317@gmail.com,AnMi17!,Anja,Milosevic,317,30877,3,258,8.63,,2022,Prirodno-matematički fakultet (PMF)
+marko.filipovic498@gmail.com,MaFi98!,Marko,Filipovic,498,60204,4,300,8.91,,2021,Fakultet zaštite na radu
+jelena.peric434@gmail.com,JePe34!,Jelena,Peric,434,52684,3,128,9.62,,2024,Elektronski fakultet
+anja.maksimovic192@gmail.com,AnMa92!,Anja,Maksimovic,192,51690,3,0,,4.87,2026,Ekonomski fakultet
+tijana.nikolic103@gmail.com,TiNi03!,Tijana,Nikolic,103,38116,5,0,,4.77,2026,Mašinski fakultet
+stefan.djokovic416@gmail.com,StDj16!,Stefan,Djokovic,416,48992,4,50,9.6,,2025,Fakultet sporta i fizičkog vaspitanja (DIF)
+bogdan.pavlovic23@gmail.com,BoPa23!,Bogdan,Pavlovic,23,63146,4,0,,4.83,2026,Građevinsko-arhitektonski fakultet (GAF)
+tijana.peric226@gmail.com,TiPe26!,Tijana,Peric,226,45141,2,180,8.14,,2023,Ekonomski fakultet
+sara.ristic75@gmail.com,SaRi75!,Sara,Ristic,75,59201,4,0,,4.87,2026,Elektronski fakultet
+jovan.maksimovic483@gmail.com,JoMa83!,Jovan,Maksimovic,483,28537,5,230,8.41,,2022,Ekonomski fakultet
+ksenija.pavlovic180@gmail.com,KsPa80!,Ksenija,Pavlovic,180,48682,2,0,,4.9,2026,Elektronski fakultet
+ivan.jovanovic87@gmail.com,IvJo87!,Ivan,Jovanovic,87,48159,3,0,,4.76,2026,Mašinski fakultet
+ana.bozic461@gmail.com,AnBo61!,Ana,Bozic,461,60930,2,190,9.26,,2023,Ekonomski fakultet
+sofija.stevanovic13@gmail.com,SoSt13!,Sofija,Stevanovic,13,63190,3,0,,4.84,2026,Elektronski fakultet
+nikola.stojanovic359@gmail.com,NiSt59!,Nikola,Stojanovic,359,41154,4,300,8.75,,2021,Mašinski fakultet
+ksenija.petrovic177@gmail.com,KsPe77!,Ksenija,Petrovic,177,43802,4,0,,4.56,2026,Mašinski fakultet
+dusan.ristic165@gmail.com,DuRi65!,Dusan,Ristic,165,43335,5,0,,4.45,2026,Elektronski fakultet
+sara.nikolic98@gmail.com,SaNi98!,Sara,Nikolic,98,40491,5,0,,4.48,2026,Elektronski fakultet
+sanja.todorovic387@gmail.com,SaTo87!,Sanja,Todorovic,387,38930,5,293,9.08,,2021,Prirodno-matematički fakultet (PMF)
+marko.stankovic419@gmail.com,MaSt19!,Marko,Stankovic,419,66378,3,289,8.92,,2021,Pravni fakultet
+vladimir.todorovic217@gmail.com,VlTo17!,Vladimir,Todorovic,217,64732,4,183,8.23,,2023,Mašinski fakultet
+petar.markovic474@gmail.com,PeMa74!,Petar,Markovic,474,68507,4,230,9.21,,2022,Elektronski fakultet
+petar.nikolic58@gmail.com,PeNi58!,Petar,Nikolic,58,43155,3,0,,4.85,2026,Mašinski fakultet
+mila.pavlovic46@gmail.com,MiPa46!,Mila,Pavlovic,46,56265,4,0,,4.73,2026,Građevinsko-arhitektonski fakultet (GAF)
+sasa.pavlovic366@gmail.com,SaPa66!,Sasa,Pavlovic,366,61901,3,228,8.92,,2022,Fakultet sporta i fizičkog vaspitanja (DIF)
+milan.simic468@gmail.com,MiSi68!,Milan,Simic,468,64723,4,61,8.76,,2025,Pravni fakultet
+sanja.filipovic471@gmail.com,SaFi71!,Sanja,Filipovic,471,33184,3,246,8.71,,2022,Pravni fakultet
+ana.popovic137@gmail.com,AnPo37!,Ana,Popovic,137,50945,3,0,,4.61,2026,Mašinski fakultet
+aleksandra.jankovic37@gmail.com,AlJa37!,Aleksandra,Jankovic,37,56028,6,0,,4.8,2026,Mašinski fakultet
+bogdan.nikolic125@gmail.com,BoNi25!,Bogdan,Nikolic,125,32496,4,0,,4.74,2026,Elektronski fakultet
+marina.ilic127@gmail.com,MaIl27!,Marina,Ilic,127,28973,3,0,,4.64,2026,Elektronski fakultet
+marko.antic374@gmail.com,MaAn74!,Marko,Antic,374,62801,4,226,9.33,,2022,Mašinski fakultet
+marko.ristic316@gmail.com,MaRi16!,Marko,Ristic,316,48153,5,298,8.72,,2021,Građevinsko-arhitektonski fakultet (GAF)
+katarina.vasic288@gmail.com,KaVa88!,Katarina,Vasic,288,68380,3,238,8.99,,2022,Pravni fakultet
+gordana.radic101@gmail.com,GoRa01!,Gordana,Radic,101,43650,4,0,,4.55,2026,Mašinski fakultet
+nemanja.stankovic346@gmail.com,NeSt46!,Nemanja,Stankovic,346,33369,4,112,8.41,,2024,Građevinsko-arhitektonski fakultet (GAF)
+filip.markovic203@gmail.com,FiMa03!,Filip,Markovic,203,47019,2,144,7.31,,2024,Prirodno-matematički fakultet (PMF)
+vladan.lazic402@gmail.com,VlLa02!,Vladan,Lazic,402,37055,3,143,9.27,,2024,Mašinski fakultet
+branko.mitrovic102@gmail.com,BrMi02!,Branko,Mitrovic,102,60461,3,0,,4.88,2026,Građevinsko-arhitektonski fakultet (GAF)
+milan.simic287@gmail.com,MiSi87!,Milan,Simic,287,56774,3,300,7.73,,2021,Pravni fakultet
+goran.zivkovic247@gmail.com,GoZi47!,Goran,Zivkovic,247,58540,5,300,9.49,,2021,Građevinsko-arhitektonski fakultet (GAF)
+tamara.simic446@gmail.com,TaSi46!,Tamara,Simic,446,54047,4,251,9.36,,2022,Ekonomski fakultet
+milos.peric67@gmail.com,MiPe67!,Milos,Peric,67,58476,4,0,,4.9,2026,Medicinski fakultet
+andjela.milosevic386@gmail.com,AnMi86!,Andjela,Milosevic,386,52420,3,176,8.02,,2023,Fakultet sporta i fizičkog vaspitanja (DIF)
+nikola.pavlovic257@gmail.com,NiPa57!,Nikola,Pavlovic,257,54102,3,300,8.07,,2021,Građevinsko-arhitektonski fakultet (GAF)
+anja.ilic343@gmail.com,AnIl43!,Anja,Ilic,343,38813,5,72,8.79,,2025,Fakultet sporta i fizičkog vaspitanja (DIF)
+zoran.stevanovic44@gmail.com,ZoSt44!,Zoran,Stevanovic,44,56599,4,0,,4.8,2026,Elektronski fakultet
+ivana.bozic135@gmail.com,IvBo35!,Ivana,Bozic,135,49603,6,0,,4.36,2026,Mašinski fakultet
+marko.radic411@gmail.com,MaRa11!,Marko,Radic,411,38145,5,294,8.39,,2021,Građevinsko-arhitektonski fakultet (GAF)
+dunja.nikolic281@gmail.com,DuNi81!,Dunja,Nikolic,281,53458,6,143,8.81,,2024,Fakultet sporta i fizičkog vaspitanja (DIF)
+milan.arsic363@gmail.com,MiAr63!,Milan,Arsic,363,46047,4,129,9.56,,2024,Ekonomski fakultet
+ksenija.maksimovic412@gmail.com,KsMa12!,Ksenija,Maksimovic,412,62432,4,236,9.37,,2022,Mašinski fakultet
+petar.bozic244@gmail.com,PeBo44!,Petar,Bozic,244,31377,4,189,8.29,,2023,Prirodno-matematički fakultet (PMF)
+dragan.ilic43@gmail.com,DrIl43!,Dragan,Ilic,43,45118,3,0,,4.8,2026,Mašinski fakultet
+katarina.vasic488@gmail.com,KaVa88!,Katarina,Vasic,488,28987,4,242,9.26,,2022,Prirodno-matematički fakultet (PMF)
+anja.markovic68@gmail.com,AnMa68!,Anja,Markovic,68,48384,3,0,,4.54,2026,Građevinsko-arhitektonski fakultet (GAF)
+mila.peric76@gmail.com,MiPe76!,Mila,Peric,76,59015,4,0,,4.81,2026,Elektronski fakultet
+aleksandra.sekulic361@gmail.com,AlSe61!,Aleksandra,Sekulic,361,46682,3,300,8.3,,2021,Elektronski fakultet
+ivan.zivkovic149@gmail.com,IvZi49!,Ivan,Zivkovic,149,62773,3,0,,4.81,2026,Pravni fakultet
+gordana.filipovic222@gmail.com,GoFi22!,Gordana,Filipovic,222,54017,2,116,9.95,,2024,Građevinsko-arhitektonski fakultet (GAF)
+sofija.markovic365@gmail.com,SoMa65!,Sofija,Markovic,365,32183,5,182,9.28,,2023,Pravni fakultet
+tijana.antic47@gmail.com,TiAn47!,Tijana,Antic,47,61234,4,0,,4.75,2026,Građevinsko-arhitektonski fakultet (GAF)
+ksenija.maksimovic489@gmail.com,KsMa89!,Ksenija,Maksimovic,489,67073,5,248,9.04,,2022,Mašinski fakultet
+vladan.jankovic295@gmail.com,VlJa95!,Vladan,Jankovic,295,56036,2,233,9.76,,2022,Građevinsko-arhitektonski fakultet (GAF)
+sara.zivkovic397@gmail.com,SaZi97!,Sara,Zivkovic,397,34967,4,295,8.07,,2021,Elektronski fakultet
+marina.lazic229@gmail.com,MaLa29!,Marina,Lazic,229,62439,3,138,8.82,,2024,Prirodno-matematički fakultet (PMF)
+marina.simic202@gmail.com,MaSi02!,Marina,Simic,202,36569,5,197,8.81,,2023,Elektronski fakultet
+aleksandar.simic345@gmail.com,AlSi45!,Aleksandar,Simic,345,56023,2,300,9.16,,2021,Elektronski fakultet
+marko.kovacevic26@gmail.com,MaKo26!,Marko,Kovacevic,26,57819,4,0,,4.49,2026,Filozofski fakultet
+sasa.ilic79@gmail.com,SaIl79!,Sasa,Ilic,79,36295,6,0,,4.65,2026,Građevinsko-arhitektonski fakultet (GAF)
+natasa.markovic442@gmail.com,NaMa42!,Natasa,Markovic,442,59604,3,263,8.85,,2022,Građevinsko-arhitektonski fakultet (GAF)
+marina.simic358@gmail.com,MaSi58!,Marina,Simic,358,61768,2,229,9.25,,2022,Prirodno-matematički fakultet (PMF)
+luka.vasic258@gmail.com,LuVa58!,Luka,Vasic,258,32981,4,203,9.2,,2023,Građevinsko-arhitektonski fakultet (GAF)
+sanja.zivkovic168@gmail.com,SaZi68!,Sanja,Zivkovic,168,46681,3,0,,4.65,2026,Mašinski fakultet
+milan.popovic77@gmail.com,MiPo77!,Milan,Popovic,77,40621,3,0,,4.86,2026,Elektronski fakultet
+biljana.jovanovic290@gmail.com,BiJo90!,Biljana,Jovanovic,290,36315,4,240,8.64,,2022,Mašinski fakultet
+mila.vasic277@gmail.com,MiVa77!,Mila,Vasic,277,29913,5,57,9.05,,2025,Građevinsko-arhitektonski fakultet (GAF)
+bojana.arsic164@gmail.com,BoAr64!,Bojana,Arsic,164,56683,3,0,,4.34,2026,Pravni fakultet
+zoran.vasic22@gmail.com,ZoVa22!,Zoran,Vasic,22,58606,5,0,,4.95,2026,Građevinsko-arhitektonski fakultet (GAF)
+sofija.todorovic269@gmail.com,SoTo69!,Sofija,Todorovic,269,69506,3,180,8.45,,2023,Mašinski fakultet
+milica.zivkovic157@gmail.com,MiZi57!,Milica,Zivkovic,157,51848,3,0,,4.76,2026,Pravni fakultet
+vladimir.jovanovic28@gmail.com,VlJo28!,Vladimir,Jovanovic,28,66284,2,0,,4.7,2026,Ekonomski fakultet
+zoran.mitrovic391@gmail.com,ZoMi91!,Zoran,Mitrovic,391,37742,5,84,8.57,,2025,Ekonomski fakultet
+ivana.milosevic324@gmail.com,IvMi24!,Ivana,Milosevic,324,29428,3,297,9.42,,2021,Elektronski fakultet
+slobodan.milosevic472@gmail.com,SlMi72!,Slobodan,Milosevic,472,51800,5,78,7.57,,2025,Medicinski fakultet
+andrija.maksimovic6@gmail.com,AnMa06!,Andrija,Maksimovic,6,31003,3,0,,4.78,2026,Elektronski fakultet
+goran.nikolic309@gmail.com,GoNi09!,Goran,Nikolic,309,35736,4,300,9.77,,2021,Prirodno-matematički fakultet (PMF)
+marina.simic335@gmail.com,MaSi35!,Marina,Simic,335,52483,3,142,8.87,,2024,Mašinski fakultet
+goran.petrovic117@gmail.com,GoPe17!,Goran,Petrovic,117,28912,5,0,,4.76,2026,Elektronski fakultet
+vesna.kovacevic62@gmail.com,VeKo62!,Vesna,Kovacevic,62,58630,3,0,,4.8,2026,Prirodno-matematički fakultet (PMF)
+filip.vasic214@gmail.com,FiVa14!,Filip,Vasic,214,54894,4,84,9.74,,2025,Mašinski fakultet
+gordana.radic223@gmail.com,GoRa23!,Gordana,Radic,223,57776,4,78,9.28,,2025,Elektronski fakultet
+ana.stankovic179@gmail.com,AnSt79!,Ana,Stankovic,179,36837,3,0,,4.63,2026,Građevinsko-arhitektonski fakultet (GAF)
+ana.jankovic172@gmail.com,AnJa72!,Ana,Jankovic,172,33192,2,0,,4.56,2026,Elektronski fakultet
+petar.cvetkovic29@gmail.com,PeCv29!,Petar,Cvetkovic,29,32490,3,0,,4.86,2026,Prirodno-matematički fakultet (PMF)
+nemanja.lazic41@gmail.com,NeLa41!,Nemanja,Lazic,41,53070,3,0,,4.9,2026,Mašinski fakultet
+sandra.markovic196@gmail.com,SaMa96!,Sandra,Markovic,196,38028,6,0,,4.81,2026,Elektronski fakultet
+ivana.markovic399@gmail.com,IvMa99!,Ivana,Markovic,399,57975,5,77,7.92,,2025,Mašinski fakultet
+sasa.nikolic375@gmail.com,SaNi75!,Sasa,Nikolic,375,53136,3,82,9.58,,2025,Mašinski fakultet
+andjela.mitrovic425@gmail.com,AnMi25!,Andjela,Mitrovic,425,66284,4,261,9.11,,2022,Fakultet zaštite na radu
+maja.ristic414@gmail.com,MaRi14!,Maja,Ristic,414,35518,2,193,9.56,,2023,Mašinski fakultet
+lazar.ilic329@gmail.com,LaIl29!,Lazar,Ilic,329,67132,4,226,9.83,,2022,Ekonomski fakultet
+jovana.ristic305@gmail.com,JoRi05!,Jovana,Ristic,305,55759,5,110,9.48,,2024,Građevinsko-arhitektonski fakultet (GAF)
+aleksandra.stankovic426@gmail.com,AlSt26!,Aleksandra,Stankovic,426,46132,5,173,8.94,,2023,Elektronski fakultet
+goran.mitrovic296@gmail.com,GoMi96!,Goran,Mitrovic,296,31393,3,145,8.98,,2024,Fakultet zaštite na radu
+aleksandar.sekulic499@gmail.com,AlSe99!,Aleksandar,Sekulic,499,62669,4,289,9.25,,2021,Mašinski fakultet
+milica.kovacevic435@gmail.com,MiKo35!,Milica,Kovacevic,435,50612,4,135,8.74,,2024,Elektronski fakultet
+tijana.stankovic250@gmail.com,TiSt50!,Tijana,Stankovic,250,58200,5,247,8.12,,2022,Prirodno-matematički fakultet (PMF)
+milan.ilic89@gmail.com,MiIl89!,Milan,Ilic,89,43002,3,0,,4.8,2026,Fakultet umetnosti
+tamara.cvetkovic248@gmail.com,TaCv48!,Tamara,Cvetkovic,248,37563,4,300,8.23,,2021,Elektronski fakultet
+dejan.zivkovic477@gmail.com,DeZi77!,Dejan,Zivkovic,477,48293,6,195,8.83,,2023,Elektronski fakultet
+jovan.pavlovic371@gmail.com,JoPa71!,Jovan,Pavlovic,371,54816,4,74,8.84,,2025,Mašinski fakultet
+gordana.filipovic40@gmail.com,GoFi40!,Gordana,Filipovic,40,38649,4,0,,4.41,2026,Elektronski fakultet
+tijana.zivkovic376@gmail.com,TiZi76!,Tijana,Zivkovic,376,50140,6,113,8.74,,2024,Mašinski fakultet
+biljana.arsic112@gmail.com,BiAr12!,Biljana,Arsic,112,46756,5,0,,4.9,2026,Fakultet umetnosti
+radovan.todorovic292@gmail.com,RaTo92!,Radovan,Todorovic,292,66139,4,290,8.65,,2021,Građevinsko-arhitektonski fakultet (GAF)
+jovana.jankovic205@gmail.com,JoJa05!,Jovana,Jankovic,205,42099,4,67,7.36,,2025,Filozofski fakultet
+tijana.antic428@gmail.com,TiAn28!,Tijana,Antic,428,32941,3,300,8.68,,2021,Elektronski fakultet
+andrija.vasic48@gmail.com,AnVa48!,Andrija,Vasic,48,39405,5,0,,4.84,2026,Prirodno-matematički fakultet (PMF)
+dunja.zivkovic443@gmail.com,DuZi43!,Dunja,Zivkovic,443,43039,5,129,7.19,,2024,Prirodno-matematički fakultet (PMF)
+luka.lazic132@gmail.com,LuLa32!,Luka,Lazic,132,64132,3,0,,4.79,2026,Mašinski fakultet
+jovan.jovanovic120@gmail.com,JoJo20!,Jovan,Jovanovic,120,47946,2,0,,4.74,2026,Medicinski fakultet
+aleksandar.nikolic128@gmail.com,AlNi28!,Aleksandar,Nikolic,128,62477,5,0,,4.67,2026,Prirodno-matematički fakultet (PMF)
+bojana.sekulic299@gmail.com,BoSe99!,Bojana,Sekulic,299,37362,3,300,9.4,,2021,Elektronski fakultet
+tamara.nikolic188@gmail.com,TaNi88!,Tamara,Nikolic,188,52048,6,0,,4.84,2026,Medicinski fakultet
+marina.filipovic136@gmail.com,MaFi36!,Marina,Filipovic,136,46850,2,0,,4.7,2026,Filozofski fakultet
+dejan.simic71@gmail.com,DeSi71!,Dejan,Simic,71,38026,5,0,,4.42,2026,Ekonomski fakultet
+marija.bozic427@gmail.com,MaBo27!,Marija,Bozic,427,39519,3,50,9.66,,2025,Elektronski fakultet
+dejan.arsic183@gmail.com,DeAr83!,Dejan,Arsic,183,63748,3,0,,4.79,2026,Mašinski fakultet
+tijana.bozic236@gmail.com,TiBo36!,Tijana,Bozic,236,62860,5,119,8.79,,2024,Fakultet zaštite na radu
+vuk.petrovic20@gmail.com,VuPe20!,Vuk,Petrovic,20,49654,2,0,,4.45,2026,Građevinsko-arhitektonski fakultet (GAF)
+teodora.stankovic49@gmail.com,TeSt49!,Teodora,Stankovic,49,58473,4,0,,4.71,2026,Medicinski fakultet
+katarina.cvetkovic80@gmail.com,KaCv80!,Katarina,Cvetkovic,80,34723,5,0,,4.81,2026,Elektronski fakultet
+biljana.jovanovic429@gmail.com,BiJo29!,Biljana,Jovanovic,429,45079,6,79,8.9,,2025,Fakultet umetnosti
+ksenija.bozic293@gmail.com,KsBo93!,Ksenija,Bozic,293,42275,5,118,9.09,,2024,Građevinsko-arhitektonski fakultet (GAF)
+tamara.stevanovic285@gmail.com,TaSt85!,Tamara,Stevanovic,285,64026,5,52,8.68,,2025,Prirodno-matematički fakultet (PMF)
+luka.ilic262@gmail.com,LuIl62!,Luka,Ilic,262,51194,3,50,8.96,,2025,Fakultet zaštite na radu
+marija.stojanovic284@gmail.com,MaSt84!,Marija,Stojanovic,284,65053,3,299,8.27,,2021,Mašinski fakultet
+vladan.vasic142@gmail.com,VlVa42!,Vladan,Vasic,142,42127,4,0,,4.8,2026,Filozofski fakultet
+sasa.pavlovic422@gmail.com,SaPa22!,Sasa,Pavlovic,422,41876,4,137,7.74,,2024,Građevinsko-arhitektonski fakultet (GAF)
+gordana.markovic354@gmail.com,GoMa54!,Gordana,Markovic,354,46749,3,67,8.92,,2025,Mašinski fakultet
+dusan.stankovic421@gmail.com,DuSt21!,Dusan,Stankovic,421,47533,3,165,8.53,,2023,Građevinsko-arhitektonski fakultet (GAF)
+teodora.todorovic396@gmail.com,TeTo96!,Teodora,Todorovic,396,57657,4,291,9.27,,2021,Elektronski fakultet
+dejan.arsic12@gmail.com,DeAr12!,Dejan,Arsic,12,53216,3,0,,4.69,2026,Građevinsko-arhitektonski fakultet (GAF)
+ana.djokovic479@gmail.com,AnDj79!,Ana,Djokovic,479,56209,2,203,8.35,,2023,Elektronski fakultet
+petar.pavlovic439@gmail.com,PePa39!,Petar,Pavlovic,439,67749,5,135,7.86,,2024,Fakultet umetnosti
+anja.stevanovic480@gmail.com,AnSt80!,Anja,Stevanovic,480,52796,5,241,7.73,,2022,Pravni fakultet
+ivana.simic114@gmail.com,IvSi14!,Ivana,Simic,114,33906,3,0,,4.45,2026,Mašinski fakultet
+ivan.stankovic154@gmail.com,IvSt54!,Ivan,Stankovic,154,68305,3,0,,4.69,2026,Medicinski fakultet
+natasa.radic4@gmail.com,NaRa04!,Natasa,Radic,4,34078,3,0,,4.79,2026,Građevinsko-arhitektonski fakultet (GAF)
+snezana.jovanovic155@gmail.com,SnJo55!,Snezana,Jovanovic,155,65464,5,0,,4.76,2026,Građevinsko-arhitektonski fakultet (GAF)
+dejan.mitrovic70@gmail.com,DeMi70!,Dejan,Mitrovic,70,32519,4,0,,4.36,2026,Građevinsko-arhitektonski fakultet (GAF)
+vladan.radic266@gmail.com,VlRa66!,Vladan,Radic,266,66954,5,244,9.08,,2022,Mašinski fakultet
+vladimir.sekulic9@gmail.com,VlSe09!,Vladimir,Sekulic,9,43010,2,0,,4.82,2026,Prirodno-matematički fakultet (PMF)
+jovana.filipovic306@gmail.com,JoFi06!,Jovana,Filipovic,306,38182,4,65,7.6,,2025,Građevinsko-arhitektonski fakultet (GAF)
+dejan.ilic146@gmail.com,DeIl46!,Dejan,Ilic,146,33102,5,0,,4.76,2026,Mašinski fakultet
+dejan.pavlovic18@gmail.com,DePa18!,Dejan,Pavlovic,18,41182,6,0,,4.65,2026,Ekonomski fakultet
+andrija.peric469@gmail.com,AnPe69!,Andrija,Peric,469,39438,6,187,7.71,,2023,Građevinsko-arhitektonski fakultet (GAF)
+katarina.markovic1@gmail.com,KaMa01!,Katarina,Markovic,1,46024,2,0,,4.9,2026,Prirodno-matematički fakultet (PMF)
+tijana.radic204@gmail.com,TiRa04!,Tijana,Radic,204,38442,4,137,8.63,,2024,Mašinski fakultet
+snezana.zivkovic230@gmail.com,SnZi30!,Snezana,Zivkovic,230,65532,4,54,8.21,,2025,Fakultet zaštite na radu
+sofija.lazic232@gmail.com,SoLa32!,Sofija,Lazic,232,29426,4,121,8.98,,2024,Mašinski fakultet
+andjela.vasic185@gmail.com,AnVa85!,Andjela,Vasic,185,69908,4,0,,4.96,2026,Mašinski fakultet
+jovan.milosevic131@gmail.com,JoMi31!,Jovan,Milosevic,131,49311,6,0,,4.82,2026,Mašinski fakultet
+zoran.maksimovic382@gmail.com,ZoMa82!,Zoran,Maksimovic,382,47356,5,227,8.31,,2022,Elektronski fakultet
+radovan.arsic482@gmail.com,RaAr82!,Radovan,Arsic,482,45834,5,76,8.42,,2025,Elektronski fakultet
+slobodan.sekulic393@gmail.com,SlSe93!,Slobodan,Sekulic,393,33166,4,133,9.66,,2024,Pravni fakultet
+nikola.simic193@gmail.com,NiSi93!,Nikola,Simic,193,65504,6,0,,4.67,2026,Građevinsko-arhitektonski fakultet (GAF)
+vladan.simic110@gmail.com,VlSi10!,Vladan,Simic,110,69873,4,0,,4.91,2026,Mašinski fakultet
+anja.lazic280@gmail.com,AnLa80!,Anja,Lazic,280,68270,4,50,9.35,,2025,Mašinski fakultet
+jelena.stojanovic289@gmail.com,JeSt89!,Jelena,Stojanovic,289,47178,4,201,9.33,,2023,Mašinski fakultet
+sanja.sekulic124@gmail.com,SaSe24!,Sanja,Sekulic,124,34007,5,0,,4.7,2026,Mašinski fakultet
+biljana.nikolic312@gmail.com,BiNi12!,Biljana,Nikolic,312,30317,3,71,7.35,,2025,Građevinsko-arhitektonski fakultet (GAF)
+goran.mitrovic166@gmail.com,GoMi66!,Goran,Mitrovic,166,58256,5,0,,4.77,2026,Elektronski fakultet
+katarina.stojanovic372@gmail.com,KaSt72!,Katarina,Stojanovic,372,69582,4,285,7.91,,2021,Elektronski fakultet
+lazar.mitrovic423@gmail.com,LaMi23!,Lazar,Mitrovic,423,63969,2,140,8.36,,2024,Prirodno-matematički fakultet (PMF)
+dusan.stankovic221@gmail.com,DuSt21!,Dusan,Stankovic,221,33862,2,59,9.35,,2025,Elektronski fakultet
+gordana.peric325@gmail.com,GoPe25!,Gordana,Peric,325,53886,5,106,8.81,,2024,Elektronski fakultet
+marina.stojanovic392@gmail.com,MaSt92!,Marina,Stojanovic,392,60220,3,180,8.41,,2023,Mašinski fakultet
+ivana.djokovic212@gmail.com,IvDj12!,Ivana,Djokovic,212,67119,2,121,8.6,,2024,Elektronski fakultet
+vesna.mitrovic191@gmail.com,VeMi91!,Vesna,Mitrovic,191,50768,4,0,,4.85,2026,Elektronski fakultet
+biljana.lazic433@gmail.com,BiLa33!,Biljana,Lazic,433,53434,4,134,9.26,,2024,Prirodno-matematički fakultet (PMF)
+maja.pavlovic167@gmail.com,MaPa67!,Maja,Pavlovic,167,44384,3,0,,4.68,2026,Fakultet zaštite na radu
+ksenija.stankovic491@gmail.com,KsSt91!,Ksenija,Stankovic,491,56751,4,226,9.55,,2022,Ekonomski fakultet
+uros.radic162@gmail.com,UrRa62!,Uros,Radic,162,40583,5,0,,4.92,2026,Građevinsko-arhitektonski fakultet (GAF)
+milan.popovic463@gmail.com,MiPo63!,Milan,Popovic,463,58890,4,66,9.11,,2025,Mašinski fakultet
+dusan.simic181@gmail.com,DuSi81!,Dusan,Simic,181,49753,2,0,,4.72,2026,Mašinski fakultet
+filip.djokovic478@gmail.com,FiDj78!,Filip,Djokovic,478,28006,2,53,9.84,,2025,Fakultet umetnosti
+gordana.antic227@gmail.com,GoAn27!,Gordana,Antic,227,35694,4,188,9.5,,2023,Medicinski fakultet
+mila.stevanovic308@gmail.com,MiSt08!,Mila,Stevanovic,308,35827,3,293,8.27,,2021,Elektronski fakultet
+ana.markovic274@gmail.com,AnMa74!,Ana,Markovic,274,55261,4,292,9.36,,2021,Elektronski fakultet
+aleksandar.milosevic81@gmail.com,AlMi81!,Aleksandar,Milosevic,81,35476,5,0,,4.95,2026,Građevinsko-arhitektonski fakultet (GAF)
+tijana.maksimovic337@gmail.com,TiMa37!,Tijana,Maksimovic,337,36345,4,225,9.54,,2022,Prirodno-matematički fakultet (PMF)
+bogdan.djokovic173@gmail.com,BoDj73!,Bogdan,Djokovic,173,31129,3,0,,4.58,2026,Ekonomski fakultet
+katarina.milosevic259@gmail.com,KaMi59!,Katarina,Milosevic,259,60152,5,247,9.34,,2022,Mašinski fakultet
+ana.djokovic206@gmail.com,AnDj06!,Ana,Djokovic,206,28535,6,300,8.3,,2021,Građevinsko-arhitektonski fakultet (GAF)
+biljana.stankovic282@gmail.com,BiSt82!,Biljana,Stankovic,282,64366,3,256,7.41,,2022,Mašinski fakultet
+sara.jovanovic93@gmail.com,SaJo93!,Sara,Jovanovic,93,33771,5,0,,4.69,2026,Filozofski fakultet
+aleksandar.pavlovic406@gmail.com,AlPa06!,Aleksandar,Pavlovic,406,38547,4,181,7.93,,2023,Mašinski fakultet
+ivana.mitrovic86@gmail.com,IvMi86!,Ivana,Mitrovic,86,55861,4,0,,4.86,2026,Građevinsko-arhitektonski fakultet (GAF)
+lazar.lazic54@gmail.com,LaLa54!,Lazar,Lazic,54,58444,6,0,,4.21,2026,Prirodno-matematički fakultet (PMF)
+vuk.arsic453@gmail.com,VuAr53!,Vuk,Arsic,453,57803,4,141,8.67,,2024,Građevinsko-arhitektonski fakultet (GAF)
+andjela.stevanovic219@gmail.com,AnSt19!,Andjela,Stevanovic,219,43889,4,300,9.27,,2021,Ekonomski fakultet
+branko.markovic341@gmail.com,BrMa41!,Branko,Markovic,341,65883,5,235,9.09,,2022,Mašinski fakultet
+katarina.filipovic360@gmail.com,KaFi60!,Katarina,Filipovic,360,30002,3,248,8.54,,2022,Elektronski fakultet
+marina.simic235@gmail.com,MaSi35!,Marina,Simic,235,39696,3,70,9.79,,2025,Filozofski fakultet

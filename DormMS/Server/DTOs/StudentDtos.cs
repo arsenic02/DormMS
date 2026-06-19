@@ -100,6 +100,8 @@ public class StudentCsvImportDto
     public int ESPB { get; set; }
     public decimal? AverageGrade { get; set; }
     public int YearOfEnrollment { get; set; }
+    public decimal? HighSchoolAverageGrade { get; set; }
+    public string FacultyName { get; set; } = string.Empty;
 }
 
 public class StudentImportResultDto
@@ -134,3 +136,18 @@ public class BulkFinancialStatusImportResultDto
     public int Failed { get; set; }
     public List<string> Errors { get; set; } = new();
 }
+
+public class StudentSummaryDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Surname { get; set; } = string.Empty;
+    public string? FacultyName { get; set; }
+    public bool IsFreshman { get; set; }
+}
+
+// public class ApplyByFreshmanStatusDto
+// {
+//     public int CompetitionId { get; set; }
+//     public bool IsFreshman { get; set; }
+// }

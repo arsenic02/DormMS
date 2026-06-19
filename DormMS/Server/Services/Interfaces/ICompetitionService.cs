@@ -12,7 +12,12 @@ public interface ICompetitionService
     Task<CompetitionGetDto?> OpenCompetitionAsync(int id);
 
     Task<CompetitionGetDto?> ToggleCompetitionStatusAsync(int id);
-    Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int userId, string role);
+
+   
+    //Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int userId, string role);
+    Task<CreateCompetitionResult> CreateAsync(CompetitionCreateDto dto, int userId, string role);
     Task<CompetitionGetDto?> UpdateAsync(int id, CompetitionUpdateDto dto);
     Task<bool> DeleteAsync(int id);
 }
+
+ public record CreateCompetitionResult(CompetitionGetDto? Competition, string? Error);

@@ -41,6 +41,39 @@
 }
 
 .field input,
+.field textarea,
+.field select {
+    padding: 0.6rem 0.85rem;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+    outline: none;
+    border-color: #4a7c59;
+}
+
+.field select {
+    appearance: none;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.25rem;
+    cursor: pointer;
+}
+
+.field select:hover {
+    border-color: #4a7c59;
+}
+
+/* .field input,
 .field textarea {
     padding: 0.6rem 0.85rem;
     border: 1.5px solid #ddd;
@@ -54,7 +87,7 @@
 .field textarea:focus {
     outline: none;
     border-color: #4a7c59;
-}
+} */
 
 .row {
     display: grid;
@@ -204,4 +237,26 @@
 .openBtn:hover,
 .closeBtn:hover {
     opacity: 0.9;
+}
+
+.badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.typeBadge {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.cardMeta {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+    color: #777;
 }

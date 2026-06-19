@@ -17,3 +17,10 @@ public class DormGetDto
     public bool IsFull { get; set; }
     public List<DormitoryRoomGetDto> Rooms { get; set; } = new();
 }
+
+public class GenerateRoomsDto
+{
+    public int DormId { get; set; }
+    public int DoubleRooms { get; set; }
+    public int TripleRooms { get; set; }
+}

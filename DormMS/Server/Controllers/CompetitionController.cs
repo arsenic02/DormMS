@@ -82,12 +82,13 @@ public class CompetitionController : ControllerBase
         if (string.IsNullOrEmpty(userRole))
             return Unauthorized();
 
-        var competition = await _competitionService.CreateAsync(dto, userId.Value, userRole);
-        if (competition is null)
-            return BadRequest("Failed to create competition");
+        var result = await _competitionService.CreateAsync(dto, userId.Value, userRole);
+        if (result.Error is not null)
+            return BadRequest(result.Error);
 
-        return CreatedAtAction(nameof(GetCompetition), new { id = competition.Id }, competition);
+        return CreatedAtAction(nameof(GetCompetition), new { id = result.Competition!.Id }, result.Competition);
     }
+
     // [Authorize(Roles = "Admin,DormManager")]
     // [HttpPost]
     // public async Task<ActionResult<CompetitionGetDto>> CreateCompetition(CompetitionCreateDto dto)
@@ -97,15 +98,16 @@ public class CompetitionController : ControllerBase
     //         return Unauthorized();
 
     //     var userRole = GetUserRole();
-    //     int? adminId = userRole == "Admin" ? userId : null;
-    //     int? dormManagerId = userRole == "DormManager" ? userId : null;
+    //     if (string.IsNullOrEmpty(userRole))
+    //         return Unauthorized();
 
-    //     var competition = await _competitionService.CreateAsync(dto, adminId, dormManagerId);
+    //     var competition = await _competitionService.CreateAsync(dto, userId.Value, userRole);
     //     if (competition is null)
     //         return BadRequest("Failed to create competition");
 
     //     return CreatedAtAction(nameof(GetCompetition), new { id = competition.Id }, competition);
     // }
+
 
     [Authorize(Roles = "Admin,DormManager")]
     [HttpPut("{id}")]

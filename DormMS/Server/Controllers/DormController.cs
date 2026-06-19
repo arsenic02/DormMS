@@ -61,7 +61,6 @@ public class DormController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    //[Authorize(Policy = "AdminOnly")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteDorm(int id)
     {
@@ -71,4 +70,39 @@ public class DormController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPost("{id}/generate-rooms")]
+    public async Task<IActionResult> GenerateRooms(int id, GenerateRoomsDto dto)
+    {
+        if (id != dto.DormId)
+            return BadRequest("DormId mismatch");
+
+        try
+        {
+            await _dormService.GenerateRoomsAsync(dto);
+            return Ok("Rooms generated successfully");
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    // [HttpPost("{id}/generate-rooms")]
+    // public async Task<IActionResult> GenerateRooms(int id, [FromBody] GenerateRoomsDto dto)
+    // {
+    //     if (id != dto.DormId)
+    //         return BadRequest("DormId mismatch");
+
+    //     var result = await _dormService.GenerateRooms(dto);
+
+    //     if (!result.Success)
+    //         return BadRequest(result.Error);
+
+    //     return Ok(result);
+    // }
 }

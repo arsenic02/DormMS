@@ -90,7 +90,7 @@ public class AssignmentController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize(Roles = "Admin,DormManager")]
+   // [Authorize(Roles = "Admin,DormManager")]
     [HttpPost("reset")]
     public async Task<IActionResult> ResetAssignments()
     {

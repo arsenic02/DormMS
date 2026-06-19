@@ -10,4 +10,5 @@ public interface IDormService
     Task<Dorm?> CreateAsync(DormCreateUpdateDto dto);
     Task<bool?> UpdateAsync(int id, DormCreateUpdateDto dto);
     Task<bool> DeleteAsync(int id);
+    Task GenerateRoomsAsync(GenerateRoomsDto dto);
 }

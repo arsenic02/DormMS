@@ -27,12 +27,53 @@ export const createCompetition = async (form) => {
         },
         body: JSON.stringify(form),
     })
+
     if (!res.ok) {
-        const data = await res.json().catch(() => null)
-        throw new Error(data?.message || 'Greška prilikom kreiranja konkursa.')
+        const text = await res.text()
+
+        console.log('STATUS:', res.status)
+        console.log('RESPONSE:', text)
+
+        throw new Error(text || 'Greška prilikom kreiranja konkursa.')
     }
+
     return res.json()
 }
+
+
+//verzija 2
+// export const createCompetition = async (form) => {
+//     const res = await fetch(API_URL, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             Authorization: `Bearer ${getToken()}`,
+//         },
+//         body: JSON.stringify(form),
+//     })
+//     if (!res.ok) {
+//         const text = await res.text().catch(() => null)
+//         throw new Error(text || 'Greška prilikom kreiranja konkursa.')
+//     }
+//     return res.json()
+// }
+
+//inicijalna verzija
+// export const createCompetition = async (form) => {
+//     const res = await fetch(API_URL, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             Authorization: `Bearer ${getToken()}`,
+//         },
+//         body: JSON.stringify(form),
+//     })
+//     if (!res.ok) {
+//         const data = await res.json().catch(() => null)
+//         throw new Error(data?.message || 'Greška prilikom kreiranja konkursa.')
+//     }
+//     return res.json()
+// }
 
 ///////////
 export const toggleCompetition = async (id) => {

@@ -107,6 +107,7 @@ function DormManagerVerifications() {
                         {pendingProfiles.map((s) => {
                             const key = `profile-${s.id}`
                             const isLoading = actionLoadingKey === key
+                            const isFreshman = s.isFreshman
 
                             return (
                                 <div key={s.id} className={styles.card}>
@@ -119,11 +120,21 @@ function DormManagerVerifications() {
 
                                     <div className={styles.cardDetails}>
                                         <span>Broj indeksa: {s.studentIDNumber}</span>
-                                        <span>Fakultet: {s.facultyName ?? '-'}</span>
-                                        <span>Prosek: {s.averageGrade}</span>
-                                        <span>ESPB: {s.espb}</span>
+                                        <span>Email: {s.email}</span>
                                         <span>JMBG: {s.jmbg}</span>
                                         <span>Adresa: {s.homeAddress}</span>
+                                        <span>Opština: {s.municipalityOfResidence}</span>
+                                        <span>Godine: {s.age}</span>
+                                        <span>Pol: {s.gender === 0 ? 'Muški' : 'Ženski'}</span>
+                                        <span>Godina upisa: {s.yearOfEnrollment}</span>
+                                        <span>Fakultet: {s.facultyName ?? '-'}</span>
+                                        <span>ESPB: {s.espb}</span>
+                                        {isFreshman ? (
+                                            <span>Prosečna ocena (srednja škola): {s.highSchoolAverageGrade ?? '-'}</span>
+                                        ) : (
+                                            <span>Prosečna ocena (fakultet): {s.averageGrade ?? '-'}</span>
+                                        )}
+                                        <span>Finansiranje: {s.isBudgetStudent ? 'Budžet' : 'Samofinansiranje'}</span>
                                     </div>
 
                                     <div className={styles.actions}>
@@ -204,3 +215,4 @@ function DormManagerVerifications() {
 }
 
 export default DormManagerVerifications
+

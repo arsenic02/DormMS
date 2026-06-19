@@ -55,4 +55,16 @@ public class DormRepository : IDormRepository
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<Dorm?> GetByIdWithRoomsAsync(int id)
+    {
+        return await _context.Dorms
+            .Include(d => d.Rooms)
+            .FirstOrDefaultAsync(d => d.Id == id);
+    }
+    public async Task AddRoomsAsync(IEnumerable<DormitoryRoom> rooms)
+    {
+        await _context.DormitoryRooms.AddRangeAsync(rooms);
+        await _context.SaveChangesAsync();
+    }
 }

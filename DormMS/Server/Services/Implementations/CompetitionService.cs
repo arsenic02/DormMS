@@ -70,10 +70,23 @@ public class CompetitionService : ICompetitionService
         await _repository.UpdateAsync(competition);
         return MapToGetDto(competition);
     }
-    public async Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int userId, string role)
+
+    public async Task<CreateCompetitionResult> CreateAsync(CompetitionCreateDto dto, int userId, string role)
     {
         int? adminId = null;
         int? dormManagerId = null;
+
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            return new(null, "Naziv konkursa je obavezan");
+
+        if (string.IsNullOrWhiteSpace(dto.Description))
+            return new(null, "Opis konkursa je obavezan");
+
+        if (dto.EndDate <= dto.StartDate)
+            return new(null, "Datum završetka mora biti posle datuma početka");
+
+        if (dto.MaxStudents.HasValue && dto.MaxStudents.Value <= 0)
+            return new(null, "Maksimalan broj studenata mora biti veći od 0");
 
         if (dto.MaxStudents.HasValue)
         {
@@ -81,8 +94,11 @@ public class CompetitionService : ICompetitionService
                 .Include(d => d.Rooms)
                 .FirstOrDefaultAsync();
 
-            if (dorm != null && dto.MaxStudents.Value > dorm.AvailableSpots)
-                return null;
+            if (dorm is null)
+                return new(null, "Dom nije pronađen u sistemu");
+
+            if (dto.MaxStudents.Value > dorm.AvailableSpots)
+                return new(null, $"Maksimalan broj studenata ({dto.MaxStudents.Value}) premašuje slobodna mesta u domu ({dorm.AvailableSpots})");
         }
 
         if (role == "Admin")
@@ -93,7 +109,7 @@ public class CompetitionService : ICompetitionService
                 .FirstOrDefaultAsync();
 
             if (adminId is null)
-                return null;
+                return new(null, "Admin nalog nije pronađen");
         }
         else if (role == "DormManager")
         {
@@ -103,7 +119,11 @@ public class CompetitionService : ICompetitionService
                 .FirstOrDefaultAsync();
 
             if (dormManagerId is null)
-                return null;
+                return new(null, "DormManager nalog nije pronađen");
+        }
+        else
+        {
+            return new(null, "Nemate dozvolu za kreiranje konkursa");
         }
 
         var competition = new Competition
@@ -120,8 +140,64 @@ public class CompetitionService : ICompetitionService
         };
 
         await _repository.AddAsync(competition);
-        return MapToGetDto(competition);
+        return new(MapToGetDto(competition), null);
     }
+
+    //public record CreateCompetitionResult(CompetitionGetDto? Competition, string? Error);
+
+    
+    // public async Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int userId, string role)
+    // {
+    //     int? adminId = null;
+    //     int? dormManagerId = null;
+
+    //     if (dto.MaxStudents.HasValue)
+    //     {
+    //         var dorm = await _context.Dorms
+    //             .Include(d => d.Rooms)
+    //             .FirstOrDefaultAsync();
+
+    //         if (dorm != null && dto.MaxStudents.Value > dorm.AvailableSpots)
+    //             return null;
+    //     }
+
+    //     if (role == "Admin")
+    //     {
+    //         adminId = await _context.Users
+    //             .Where(u => u.Id == userId)
+    //             .Select(u => u.AdminId)
+    //             .FirstOrDefaultAsync();
+
+    //         if (adminId is null)
+    //             return null;
+    //     }
+    //     else if (role == "DormManager")
+    //     {
+    //         dormManagerId = await _context.Users
+    //             .Where(u => u.Id == userId)
+    //             .Select(u => u.DormManagerId)
+    //             .FirstOrDefaultAsync();
+
+    //         if (dormManagerId is null)
+    //             return null;
+    //     }
+
+    //     var competition = new Competition
+    //     {
+    //         Name = dto.Name.Trim(),
+    //         Description = dto.Description.Trim(),
+    //         StartDate = dto.StartDate.ToUniversalTime(),
+    //         EndDate = dto.EndDate.ToUniversalTime(),
+    //         Status = CompetitionStatus.Draft,
+    //         Type = dto.Type,
+    //         CreatedByAdminId = adminId,
+    //         CreatedByDormManagerId = dormManagerId,
+    //         MaxStudents = dto.MaxStudents
+    //     };
+
+    //     await _repository.AddAsync(competition);
+    //     return MapToGetDto(competition);
+    // }
 
     public async Task<CompetitionGetDto?> UpdateAsync(int id, CompetitionUpdateDto dto)
     {
@@ -136,7 +212,7 @@ public class CompetitionService : ICompetitionService
                 .FirstOrDefaultAsync();
 
             if (dorm != null && dto.MaxStudents.Value > dorm.AvailableSpots)
-                return null; 
+                return null;
         }
 
         competition.Name = dto.Name.Trim();

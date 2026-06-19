@@ -16,6 +16,11 @@ const statusClass = {
     3: 'completed',
 }
 
+const typeLabel = {
+    0: 'Stariji studenti',
+    1: 'Brucoši',
+}
+
 const API_URL = 'http://localhost:5153/api/Competition'
 
 function DormManagerCompetition() {
@@ -24,6 +29,8 @@ function DormManagerCompetition() {
         description: '',
         startDate: new Date().toISOString().split('T')[0],
         endDate: '',
+        type: 0,
+        maxStudents: '',
     })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -75,17 +82,29 @@ function DormManagerCompetition() {
             setError('Datum završetka mora biti posle datuma početka.')
             return
         }
+        if (form.maxStudents !== '' && Number(form.maxStudents) <= 0) {
+            setError('Maksimalan broj studenata mora biti veći od 0.')
+            return
+        }
 
         setLoading(true)
 
+        const payload = {
+            ...form,
+            type: Number(form.type),
+            maxStudents: form.maxStudents === '' ? null : Number(form.maxStudents),
+        }
+
         try {
-            await createCompetition(form)
+            await createCompetition(payload)
             setSuccess(true)
             setForm({
                 name: '',
                 description: '',
                 startDate: new Date().toISOString().split('T')[0],
                 endDate: '',
+                type: 0,
+                maxStudents: '',
             })
             fetchCompetitions()
         } catch (err) {
@@ -93,33 +112,6 @@ function DormManagerCompetition() {
         } finally {
             setLoading(false)
         }
-        // try {
-        //     const token = localStorage.getItem('token')
-        //     const res = await fetch(API_URL, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             Authorization: `Bearer ${token}`,
-        //         },
-        //         body: JSON.stringify(form),
-        //     })
-
-        //     if (!res.ok) {
-        //         const data = await res.json().catch(() => null)
-        //         //console.log(data)
-        //         throw new Error(data?.message || 'Greška prilikom kreiranja konkursa.')
-        //     }
-        //     const data = await res.json().catch(() => null)
-        //     console.log(data)
-        //     setSuccess(true)
-        //     setForm({ name: '', description: '', startDate: '', endDate: '' })
-
-
-        // } catch (err) {
-        //     setError(err.message)
-        // } finally {
-        //     setLoading(false)
-        // }
     }
 
     const handleToggleCompetition = async (id) => {
@@ -130,23 +122,6 @@ function DormManagerCompetition() {
             setError(err.message)
         }
     }
-    // const handleOpenCompetition = async (id) => {
-    //     try {
-    //         await openCompetition(id)
-    //         fetchCompetitions()
-    //     } catch (err) {
-    //         setError(err.message)
-    //     }
-    // }
-
-    // const handleCloseCompetition = async (id) => {
-    //     try {
-    //         await closeCompetition(id)
-    //         fetchCompetitions()
-    //     } catch (err) {
-    //         setError(err.message)
-    //     }
-    // }
 
     const formatDate = (dateStr) => {
         if (!dateStr) return '-'
@@ -167,7 +142,6 @@ function DormManagerCompetition() {
                         value={form.name}
                         onChange={handleChange}
                         placeholder="Konkurs za smeštaj 2026"
-                    //required jer baca na engleskom greske
                     />
                 </div>
 
@@ -182,6 +156,30 @@ function DormManagerCompetition() {
                         rows={4}
                     />
                 </div>
+
+                <div className={styles.row}>
+                    <div className={styles.field}>
+                        <label htmlFor="type">Tip konkursa</label>
+                        <select id="type" name="type" value={form.type} onChange={handleChange}>
+                            <option value={0}>Stariji studenti</option>
+                            <option value={1}>Brucoši</option>
+                        </select>
+                    </div>
+
+                    <div className={styles.field}>
+                        <label htmlFor="maxStudents">Maksimalan broj studenata</label>
+                        <input
+                            id="maxStudents"
+                            name="maxStudents"
+                            type="number"
+                            min="1"
+                            value={form.maxStudents}
+                            onChange={handleChange}
+                            placeholder="Neograničeno"
+                        />
+                    </div>
+                </div>
+
                 <div className={styles.row}>
                     <div className={styles.field}>
                         <label htmlFor="startDate">Datum početka</label>
@@ -194,8 +192,7 @@ function DormManagerCompetition() {
                             className={styles.readonly}
                         />
                     </div>
-                </div>
-                <div className={styles.row}>
+
                     <div className={styles.field}>
                         <label htmlFor="endDate">Datum završetka</label>
                         <input
@@ -231,14 +228,21 @@ function DormManagerCompetition() {
                         <div key={comp.id} className={styles.card}>
                             <div className={styles.cardHeader}>
                                 <span className={styles.cardName}>{comp.name}</span>
-                                <span className={`${styles.badge} ${styles[comp.status?.toString().toLowerCase() ?? '']}`}>
-                                    {statusLabel[comp.status] ?? 'N/A'}
-                                </span>
+                                <div className={styles.badges}>
+                                    <span className={styles.typeBadge}>{typeLabel[comp.type] ?? 'N/A'}</span>
+                                    <span className={`${styles.badge} ${styles[comp.status?.toString().toLowerCase() ?? '']}`}>
+                                        {statusLabel[comp.status] ?? 'N/A'}
+                                    </span>
+                                </div>
                             </div>
                             <p className={styles.cardDesc}>{comp.description}</p>
                             <div className={styles.cardDates}>
                                 <span>Početak: {formatDate(comp.startDate)}</span>
                                 <span>Završetak: {formatDate(comp.endDate)}</span>
+                            </div>
+                            <div className={styles.cardMeta}>
+                                <span>Prijave: {comp.applicationCount}</span>
+                                <span>Max studenata: {comp.maxStudents ?? 'Neograničeno'}</span>
                             </div>
                             <div className={styles.cardActions}>
                                 {comp.status === 0 && (

@@ -33,21 +33,39 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             .FirstOrDefaultAsync();
 
         if (studentId is null)
-            return new(null, "Student not found");
+            return new(null, "Student nije pronađen");
 
         var competition = await _competitionRepository.GetByIdAsync(dto.CompetitionId);
         if (competition is null)
-            return new(null, "Competition not found");
+            return new(null, "Konkurs nije pronađen");
 
         if (!competition.IsOpen)
-            return new(null, "Competition is not open");
+            return new(null, "Konkurs nije otvoren za prijave");
 
         var student = await _studentRepository.GetByIdWithFinancialStatusAsync((int)studentId);
         if (student is null)
-            return new(null, "Student not found");
+            return new(null, "Student nije pronađen");
 
-        if (!student.IsEligibleToApply)
-            return new(null, "Student is not eligible to apply. Check profile verification, financial status and budget status.");
+        if (competition.Type == CompetitionType.Freshmen && !student.IsFreshman)
+            return new(null, "Ovaj konkurs je namenjen samo brucošima. Stariji studenti ne mogu da konkurišu.");
+
+        if (competition.Type == CompetitionType.General && student.IsFreshman)
+            return new(null, "Ovaj konkurs je namenjen samo starijim studentima. Brucoši ne mogu da konkurišu.");
+
+        if (!string.IsNullOrWhiteSpace(dto.DocumentUrl) && !dto.DocumentUrl.StartsWith("/uploads/documents/"))
+            return new(null, "Nevažeća putanja dokumenta");
+
+        if (!student.IsBudgetStudent)
+            return new(null, "Samo budžetski studenti mogu da konkurišu za smeštaj u domu.");
+
+        if (student.ProfileStatus != StudentProfileStatus.Verified)
+            return new(null, "Vaš profil još nije verifikovan od strane administratora.");
+
+        if (student.FinancialStatus is null)
+            return new(null, "Morate popuniti finansijski status pre prijave na konkurs.");
+
+        if (!student.FinancialStatus.IsVerified)
+            return new(null, "Vaš finansijski status još nije verifikovan od strane administratora.");
 
         // Provera opstine
         if (competition.CreatedByDormManagerId.HasValue)
@@ -59,13 +77,13 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             if (dormManager?.Dorm != null &&
                 student.MunicipalityOfResidence.Equals(
                     dormManager.Dorm.Municipality, StringComparison.OrdinalIgnoreCase))
-                return new(null, "Student municipality matches dormitory municipality");
+                return new(null, "Studenti iz opštine u kojoj se dom nalazi ne mogu konkurisati za smeštaj.");
         }
 
         var existingApplication = await _repository
             .GetApplicationByStudentAndCompetitionAsync(studentId.Value, dto.CompetitionId);
         if (existingApplication is not null)
-            return new(null, "Student has already applied to this competition");
+            return new(null, "Već ste se prijavili na ovaj konkurs");
 
         var application = new CompetitionApplication
         {
@@ -266,4 +284,21 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         Notes = application.Notes,
         DocumentUrl = application.DocumentUrl
     };
+
+    public async Task<string> SaveDocumentAsync(IFormFile file)
+    {
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "documents");
+        Directory.CreateDirectory(uploadsFolder);
+
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        var filePath = Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        return $"/uploads/documents/{fileName}";
+    }
+
 }

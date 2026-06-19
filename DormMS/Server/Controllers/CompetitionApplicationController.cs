@@ -34,6 +34,28 @@ public class CompetitionApplicationController : ControllerBase
         return Ok(result.Application);
     }
 
+    [Authorize(Roles = "Student")]
+    [HttpPost("upload-document")]
+    public async Task<IActionResult> UploadDocument(IFormFile file)
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        if (file is null || file.Length == 0)
+            return BadRequest("Fajl nije prosledjen");
+
+        if (Path.GetExtension(file.FileName).ToLowerInvariant() != ".pdf")
+            return BadRequest("Dozvoljen je samo PDF format");
+
+        const long maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.Length > maxSize)
+            return BadRequest("Fajl prevazilazi maksimalnu velicinu od 5MB");
+
+        var result = await _applicationService.SaveDocumentAsync(file);
+        return Ok(new { documentUrl = result });
+    }
+
     [Authorize(Roles = "Admin,DormManager")]
     [HttpGet("{competitionId}/applications")]
     public async Task<ActionResult<IEnumerable<CompetitionApplicationGetDto>>> GetApplications(int competitionId)

@@ -53,7 +53,7 @@ public class AssignmentService : IAssignmentService
 
         // Samo stariji studenti (ne brucosi), budzetski
         var approvedApplications = competition.Applications
-            .Where(a => (a.Status == ApplicationStatus.Approved || a.Status == ApplicationStatus.Pending)
+            .Where(a => /*(*/ a.Status == ApplicationStatus.Approved //|| a.Status == ApplicationStatus.Pending)
                         && a.Student.IsBudgetStudent
                         && !a.Student.IsFreshman) // iskljuci brucose
             .ToList();
@@ -153,7 +153,7 @@ public class AssignmentService : IAssignmentService
 
         // Samo brucosi, budzetski studenti
         var approvedApplications = competition.Applications
-            .Where(a => (a.Status == ApplicationStatus.Approved || a.Status == ApplicationStatus.Pending)
+            .Where(a => /*(*/ a.Status == ApplicationStatus.Approved //|| a.Status == ApplicationStatus.Pending)
                         && a.Student.IsBudgetStudent
                         && a.Student.IsFreshman) // samo brucosi
             .ToList();

@@ -8,6 +8,7 @@ public record ApplyResult(CompetitionApplicationGetDto? Application, string? Err
 public interface ICompetitionApplicationService
 {
     Task<ApplyResult> ApplyAsync(int userId, CompetitionApplicationCreateDto dto);
+    Task<string> SaveDocumentAsync(IFormFile file);
     Task<IEnumerable<CompetitionApplicationGetDto>> GetApplicationsByCompetitionIdAsync(int competitionId);
     Task<IEnumerable<CompetitionApplicationGetDto>> GetAllAsync();
     Task<IEnumerable<CompetitionApplicationGetDto>> GetVerifiedApplicationsAsync();

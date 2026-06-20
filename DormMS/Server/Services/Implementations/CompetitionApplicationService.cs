@@ -128,10 +128,19 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         if (application is null)
             return null;
 
+        var finalDocumentUrl = dto.DocumentUrl ?? application.DocumentUrl;
+
+        if (dto.Status == ApplicationStatus.Approved && string.IsNullOrWhiteSpace(finalDocumentUrl))
+            throw new InvalidOperationException("Prijava ne može biti odobrena bez priloženog dokumenta.");
+
+        // if (dto.Status == ApplicationStatus.Approved && string.IsNullOrWhiteSpace(application.DocumentUrl))
+        //     throw new InvalidOperationException("Prijava ne može biti odobrena bez priloženog dokumenta.");
+
         application.Status = dto.Status;
         application.PriorityScore = dto.PriorityScore;
         application.Notes = dto.Notes ?? application.Notes;
-        application.DocumentUrl = dto.DocumentUrl ?? application.DocumentUrl;
+        //application.DocumentUrl = dto.DocumentUrl ?? application.DocumentUrl;
+        application.DocumentUrl = finalDocumentUrl;
 
         await _repository.UpdateAsync(application);
         return MapToApplicationGetDto(application);
@@ -274,6 +283,13 @@ public class CompetitionApplicationService : ICompetitionApplicationService
                     continue;
                 }
 
+                if (dto.Status == ApplicationStatus.Approved && string.IsNullOrWhiteSpace(application.DocumentUrl))
+                {
+                    result.Errors.Add($"Application {applicationId} cannot be approved without an attached document");
+                    result.Failed++;
+                    continue;
+                }
+
                 application.Status = dto.Status;
                 await _repository.UpdateAsync(application);
                 result.SuccessfullyVerified++;
@@ -286,6 +302,34 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         }
 
         return result;
+    }
+
+    // public async Task<BulkVerifyApplicationsResultDto> BulkVerifyAllForCompetitionAsync(int competitionId, ApplicationStatus status)
+    // {
+    //     var applications = await _repository.GetApplicationsByCompetitionIdAsync(competitionId);
+    //     var applicationIds = applications.Select(a => a.Id).ToList();
+
+    //     var dto = new BulkVerifyApplicationsDto
+    //     {
+    //         ApplicationIds = applicationIds,
+    //         Status = status
+    //     };
+
+    //     return await BulkVerifyApplicationsAsync(dto);
+    // }
+
+    public async Task<BulkVerifyApplicationsResultDto> BulkVerifyAllForCompetitionAsync(int competitionId, ApplicationStatus status)
+    {
+        var applications = await _repository.GetApplicationsByCompetitionIdAsync(competitionId);
+        var applicationIds = applications.Select(a => a.Id).ToList();
+
+        var dto = new BulkVerifyApplicationsDto
+        {
+            ApplicationIds = applicationIds,
+            Status = status
+        };
+
+        return await BulkVerifyApplicationsAsync(dto);
     }
 
     private List<int> GetIdsFromDto(List<int>? ids, int? startId, int? endId)

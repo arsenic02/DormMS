@@ -9,6 +9,8 @@ using DormMS.Server.Services.Implementations;
 using DormMS.Server.Repositories.Interfaces;
 using DormMS.Server.Repositories.Implementations;
 using DormMS.Server.Models;
+using QuestPDF.Infrastructure;
+using QuestPDF.Drawing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +40,7 @@ builder.Services.AddAuthentication(x =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        
+
         ValidIssuer = jwtSettings.Issuer,
         ValidAudience = jwtSettings.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
@@ -48,17 +50,17 @@ builder.Services.AddAuthentication(x =>
 });
 
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    // .AddJwtBearer(options =>
-    // {
-    //     options.Authority = builder.Configuration["Auth0:Domain"];
-    //     options.Audience = builder.Configuration["Auth0:Audience"];
-    // });
+// .AddJwtBearer(options =>
+// {
+//     options.Authority = builder.Configuration["Auth0:Domain"];
+//     options.Audience = builder.Configuration["Auth0:Audience"];
+// });
 
 builder.Services.AddAuthorization(options =>
 {
-   // options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-   options.AddPolicy("AdminOrDormManager", policy =>
-    policy.RequireRole("Admin", "DormManager"));
+    // options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("AdminOrDormManager", policy =>
+     policy.RequireRole("Admin", "DormManager"));
 });
 builder.Services.AddControllers();
 
@@ -88,8 +90,16 @@ builder.Services.AddScoped<ICompetitionApplicationRepository, CompetitionApplica
 builder.Services.AddScoped<ICompetitionApplicationService, CompetitionApplicationService>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
+builder.Services.AddScoped<IDocumentGenerationService, DocumentGenerationService>();
 
 var app = builder.Build();
+
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+QuestPDF.Drawing.FontManager.RegisterFont(
+    File.OpenRead(Path.Combine(builder.Environment.WebRootPath, "fonts", "DejaVuSans.ttf")));
+QuestPDF.Drawing.FontManager.RegisterFont(
+    File.OpenRead(Path.Combine(builder.Environment.WebRootPath, "fonts", "DejaVuSans-Bold.ttf")));
 
 await app.Services.SeedDefaultUsersAsync(builder.Configuration);
 

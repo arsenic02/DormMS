@@ -4,16 +4,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DormMS.Server.Services.Interfaces;
 using DormMS.Server.DTOs;
+using DormMS.Server.Models;
 
 [ApiController]
 [Route("api/[controller]")]
 public class CompetitionApplicationController : ControllerBase
 {
     private readonly ICompetitionApplicationService _applicationService;
+    private readonly IDocumentGenerationService _documentGenerationService;
 
-    public CompetitionApplicationController(ICompetitionApplicationService applicationService)
+    public CompetitionApplicationController(ICompetitionApplicationService applicationService, IDocumentGenerationService documentGenerationService)
     {
         _applicationService = applicationService;
+        _documentGenerationService = documentGenerationService;
     }
 
     [Authorize(Roles = "Student")]
@@ -81,11 +84,18 @@ public class CompetitionApplicationController : ControllerBase
     [HttpPut("applications/{id}")]
     public async Task<ActionResult<CompetitionApplicationGetDto>> UpdateApplication(int id, CompetitionApplicationUpdateDto dto)
     {
-        var application = await _applicationService.UpdateApplicationAsync(id, dto);
-        if (application is null)
-            return NotFound();
+        try
+        {
+            var application = await _applicationService.UpdateApplicationAsync(id, dto);
+            if (application is null)
+                return NotFound();
 
-        return Ok(application);
+            return Ok(application);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = "Admin,DormManager")]
@@ -127,6 +137,30 @@ public class CompetitionApplicationController : ControllerBase
     public async Task<ActionResult<BulkVerifyApplicationsResultDto>> BulkVerifyApplications(BulkVerifyApplicationsDto dto)
     {
         var result = await _applicationService.BulkVerifyApplicationsAsync(dto);
+        return Ok(result);
+    }
+
+    // [HttpPost("competition/{competitionId}/bulk-verify-all")]
+    // public async Task<ActionResult<BulkVerifyApplicationsResultDto>> BulkVerifyAllForCompetition(int competitionId, [FromQuery] ApplicationStatus status)
+    // {
+    //     var result = await _applicationService.BulkVerifyAllForCompetitionAsync(competitionId, status);
+    //     return Ok(result);
+    // }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("competition/{competitionId}/bulk-verify-all")]
+    public async Task<ActionResult<BulkVerifyApplicationsResultDto>> BulkVerifyAllForCompetition(
+    int competitionId, [FromQuery] ApplicationStatus status)
+    {
+        var result = await _applicationService.BulkVerifyAllForCompetitionAsync(competitionId, status);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("competition/{competitionId}/generate-documents")]
+    public async Task<ActionResult<GenerateDocumentsResultDto>> GenerateDocuments(int competitionId)
+    {
+        var result = await _documentGenerationService.GenerateDocumentsForCompetitionAsync(competitionId);
         return Ok(result);
     }
 

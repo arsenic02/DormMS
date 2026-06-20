@@ -20,7 +20,7 @@ public class CompetitionUpdateDto
     public DateTime EndDate { get; set; }
     public CompetitionStatus Status { get; set; }
     public CompetitionType Type { get; set; } = CompetitionType.General;
-    public int? MaxStudents { get; set; }   
+    public int? MaxStudents { get; set; }
 }
 
 public class CompetitionGetDto
@@ -38,7 +38,7 @@ public class CompetitionGetDto
     public int? CreatedByDormManagerId { get; set; }
     public int ApplicationCount { get; set; }
     public int? MaxStudents { get; set; }
-    public bool HasApplied { get; set; } 
+    public bool HasApplied { get; set; }
 }
 
 public class CompetitionApplicationCreateDto
@@ -93,6 +93,14 @@ public class BulkVerifyApplicationsResultDto
 {
     public int TotalProcessed { get; set; }
     public int SuccessfullyVerified { get; set; }
+    public int Failed { get; set; }
+    public List<string> Errors { get; set; } = new();
+}
+
+public class GenerateDocumentsResultDto
+{
+    public int TotalProcessed { get; set; }
+    public int SuccessfullyGenerated { get; set; }
     public int Failed { get; set; }
     public List<string> Errors { get; set; } = new();
 }

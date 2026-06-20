@@ -16,8 +16,10 @@ public interface ICompetitionApplicationService
     Task<bool> DeleteApplicationAsync(int id);
     Task<int> DeleteApplicationsByCompetitionIdAsync(int competitionId);
     Task<CompetitionImportResultDto> BulkApplyAsync(BulkApplicationDto dto);
-   // Task<CompetitionImportResultDto> BulkApplyByFreshmanStatusAsync(ApplyByFreshmanStatusDto dto);
+    // Task<CompetitionImportResultDto> BulkApplyByFreshmanStatusAsync(ApplyByFreshmanStatusDto dto);
     Task<BulkVerifyApplicationsResultDto> BulkVerifyApplicationsAsync(BulkVerifyApplicationsDto dto);
+
+    Task<BulkVerifyApplicationsResultDto> BulkVerifyAllForCompetitionAsync(int competitionId, ApplicationStatus status);
 }
 
 public class CompetitionImportResultDto

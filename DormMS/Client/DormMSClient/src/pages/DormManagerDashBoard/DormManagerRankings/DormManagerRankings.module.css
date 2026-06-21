@@ -1,0 +1,96 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 1.5rem;
+}
+
+.info {
+  font-size: 14px;
+  color: #555;
+}
+
+.error {
+  color: #a32d2d;
+  font-size: 14px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  width: 100%;
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  padding: 16px 18px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.card:hover {
+  border-color: #b9b9b9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.cardName {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.typeBadge {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #eef0ff;
+  color: #2f3a8f;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cardDesc {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 10px;
+}
+
+.cardMeta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.cardCta {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2f3a8f;
+  align-self: flex-end;
+}

@@ -1,0 +1,179 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.runButton {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.runButton:hover {
+  background: #f5f5f5;
+}
+
+.runButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #a32d2d;
+  margin-bottom: 1rem;
+}
+
+.totalInfo {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.card {
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.cardHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.cardHeader:hover {
+  background: #fafafa;
+}
+
+.cardHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chevron {
+  font-size: 16px;
+  color: #777;
+  transition: transform 0.15s;
+}
+
+.chevronOpen {
+  transform: rotate(90deg);
+}
+
+.facultyName {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.summary {
+  font-size: 13px;
+  color: #777;
+  white-space: nowrap;
+}
+
+.cardBody {
+  border-top: 1px solid #e2e2e2;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: right;
+  padding: 8px 12px;
+  background: #fafafa;
+  color: #777;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.table th:first-child {
+  text-align: left;
+}
+
+.table td {
+  padding: 8px 12px;
+  border-top: 1px solid #eee;
+}
+
+.numeric {
+  text-align: right;
+}
+
+.numericBold {
+  text-align: right;
+  font-weight: 600;
+}
+
+.muted {
+  color: #777;
+}
+
+.rowAssigned {
+  background: #eaf3de;
+}
+
+.badgeAssigned {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #c0dd97;
+  color: #173404;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.badgeWaitlisted {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #fac775;
+  color: #412402;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.badgeNeutral {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #eee;
+  color: #555;
+  font-weight: 500;
+}

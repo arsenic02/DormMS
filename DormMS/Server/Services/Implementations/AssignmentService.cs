@@ -51,9 +51,15 @@ public class AssignmentService : IAssignmentService
         result.CompetitionId = competition.Id;
         result.CompetitionName = competition.Name;
 
+        if (competition.Status == CompetitionStatus.Completed)
+        {
+            result.Errors.Add("Konkurs je već rangiran i prebačen u status 'Completed'.");
+            return result;
+        }
+
         // Samo stariji studenti (ne brucosi), budzetski
         var approvedApplications = competition.Applications
-            .Where(a => /*(*/ a.Status == ApplicationStatus.Approved //|| a.Status == ApplicationStatus.Pending)
+            .Where(a => a.Status == ApplicationStatus.Approved
                         && a.Student.IsBudgetStudent
                         && !a.Student.IsFreshman) // iskljuci brucose
             .ToList();
@@ -126,6 +132,11 @@ public class AssignmentService : IAssignmentService
             }
         }
 
+        competition.Status = CompetitionStatus.Completed;
+        Console.WriteLine($"DEBUG: Setting competition {competition.Id} status to Completed. Current EF state: {_context.Entry(competition).State}");
+        await _context.SaveChangesAsync();
+        Console.WriteLine($"DEBUG: After SaveChangesAsync, status in memory: {competition.Status}");
+        
         result.RankingsByFaculty = groupedByFaculty;
         result.TotalStudents = studentAssignments.Count;
 
@@ -150,6 +161,12 @@ public class AssignmentService : IAssignmentService
 
         result.CompetitionId = competition.Id;
         result.CompetitionName = competition.Name;
+
+        if (competition.Status == CompetitionStatus.Completed)
+        {
+            result.Errors.Add("Konkurs je već rangiran i prebačen u status 'Completed'.");
+            return result;
+        }
 
         // Samo brucosi, budzetski studenti
         var approvedApplications = competition.Applications
@@ -222,6 +239,10 @@ public class AssignmentService : IAssignmentService
                         : AssignmentStatus.Waitlisted;
             }
         }
+        competition.Status = CompetitionStatus.Completed;
+        Console.WriteLine($"DEBUG: Setting competition {competition.Id} status to Completed. Current EF state: {_context.Entry(competition).State}");
+        await _context.SaveChangesAsync();
+        Console.WriteLine($"DEBUG: After SaveChangesAsync, status in memory: {competition.Status}");
 
         result.RankingsByFaculty = groupedByFaculty;
         result.TotalStudents = freshmanAssignments.Count;
@@ -234,6 +255,10 @@ public class AssignmentService : IAssignmentService
     int maxStudents)
     {
         var total = facultyApplicationCounts.Values.Sum();
+
+        if (total == 0)
+            return new Dictionary<string, int>();
+
         var quotas = new Dictionary<string, int>();
         var assigned = 0;
 

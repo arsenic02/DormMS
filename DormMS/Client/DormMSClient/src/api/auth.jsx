@@ -1,3 +1,5 @@
+import { fetchWithAuth } from "./httpClient"
+
 const BASE_URL = 'http://localhost:5153/api'
 
 export async function loginUser(email, password) {

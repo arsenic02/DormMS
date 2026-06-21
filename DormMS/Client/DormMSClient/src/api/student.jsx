@@ -1,7 +1,9 @@
+import { fetchWithAuth } from "./httpClient"
+
 const BASE_URL = 'http://localhost:5153/api'
 
 export async function updateStudentProfile(profileData, token) {
-  const response = await fetch(`${BASE_URL}/student/me/profile`, {
+  const response = await fetchWithAuth(`${BASE_URL}/student/me/profile`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -23,7 +25,7 @@ export async function updateStudentProfile(profileData, token) {
 }
 
 export async function getStudentProfile(token) {
-  const response = await fetch(`${BASE_URL}/student/me`, {
+  const response = await fetchWithAuth(`${BASE_URL}/student/me`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -40,7 +42,7 @@ export async function getStudentProfile(token) {
 }
 
 export async function submitFinancialStatus(financialData, token) {
-  const response = await fetch(`${BASE_URL}/student/me/financial-status`, {
+  const response = await fetchWithAuth(`${BASE_URL}/student/me/financial-status`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -59,7 +61,7 @@ export async function submitFinancialStatus(financialData, token) {
 }
 
 export async function getFinancialStatus(token) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${BASE_URL}/student/me`,
     {
       headers: {
@@ -74,7 +76,7 @@ export async function getFinancialStatus(token) {
 }
 
 export async function getAllStudents(token) {
-  const response = await fetch(`${BASE_URL}/Student`, {
+  const response = await fetchWithAuth(`${BASE_URL}/Student`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -91,7 +93,7 @@ export async function getAllStudents(token) {
 }
 
 export async function verifyStudentProfile(studentId, status, token) {
-  const response = await fetch(`${BASE_URL}/Student/${studentId}/verify-profile`, {
+  const response = await fetchWithAuth(`${BASE_URL}/Student/${studentId}/verify-profile`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -110,7 +112,7 @@ export async function verifyStudentProfile(studentId, status, token) {
 }
 
 export async function verifyStudentFinancialStatus(studentId, isVerified, token) {
-  const response = await fetch(`${BASE_URL}/Student/${studentId}/verify-financial-status`, {
+  const response = await fetchWithAuth(`${BASE_URL}/Student/${studentId}/verify-financial-status`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

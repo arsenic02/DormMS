@@ -68,6 +68,7 @@ public class FreshmanRankingResultDto
     public int TotalStudents { get; set; }
     public Dictionary<string, List<FreshmanAssignmentDto>> RankingsByFaculty { get; set; } = new();
     public List<string> Errors { get; set; } = new();
+    public bool RoomsAssigned { get; set; }
 }
 
 // Result za rangiranje starijih studenata - grupisano po fakultetima
@@ -78,6 +79,7 @@ public class OlderStudentsRankingResultDto
     public int TotalStudents { get; set; }
     public Dictionary<string, List<StudentAssignmentDto>> RankingsByFaculty { get; set; } = new();
     public List<string> Errors { get; set; } = new();
+    public bool RoomsAssigned { get; set; }
 }
 
 public enum AssignmentStatus
@@ -87,3 +89,4 @@ public enum AssignmentStatus
     NotAssigned,
     Error
 }
+

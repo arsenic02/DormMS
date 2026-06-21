@@ -45,7 +45,7 @@ builder.Services.AddAuthentication(x =>
         ValidAudience = jwtSettings.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
         RoleClaimType = ClaimTypes.Role,
-        //ClockSkew = TimeSpan.Zero
+        ClockSkew = TimeSpan.Zero
     };
 });
 

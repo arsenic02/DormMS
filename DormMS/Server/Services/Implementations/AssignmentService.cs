@@ -33,6 +33,122 @@ public class AssignmentService : IAssignmentService
         return result;
     }
 
+
+    /// Raspodeljuje sobe STARIJIM studentima na osnovu vec sacuvanog rang-rezultata
+    /// (RankingResult tabela). Uzima u obzir SAMO studente sa statusom Assigned
+    /// (oni unutar kvote) - studenti na cekanju (Waitlisted) ne ulaze u raspodelu.
+    /// Ne dozvoljava ponovnu raspodelu ako je vec izvrsena za ovaj konkurs.
+    public async Task<AssignmentResultDto> AssignOlderStudentsToDormsAsync(int competitionId)
+    {
+        return await AssignFromRankingResultsAsync(competitionId, isFreshmanView: false);
+    }
+
+    /// Raspodeljuje sobe BRUCOSIMA na osnovu vec sacuvanog rang-rezultata
+    /// (RankingResult tabela). Uzima u obzir SAMO studente sa statusom Assigned.
+    /// Ne dozvoljava ponovnu raspodelu ako je vec izvrsena za ovaj konkurs.
+    public async Task<AssignmentResultDto> AssignFreshmenToDormsAsync(int competitionId)
+    {
+        return await AssignFromRankingResultsAsync(competitionId, isFreshmanView: true);
+    }
+
+    /// <summary>
+    /// Zajednicka logika - cita sacuvane RankingResult redove za konkurs (filtrirano po
+    /// isFreshmanView i Status == Assigned), pa pokusava da dodeli sobu svakom studentu
+    /// koji jos nema dodeljenu sobu.
+    /// </summary>
+    private async Task<AssignmentResultDto> AssignFromRankingResultsAsync(int competitionId, bool isFreshmanView)
+    {
+        var result = new AssignmentResultDto();
+
+        var competition = await _context.Competitions
+            .FirstOrDefaultAsync(c => c.Id == competitionId);
+
+        if (competition == null)
+        {
+            result.Errors.Add("Competition not found");
+            return result;
+        }
+
+        result.CompetitionId = competition.Id;
+        result.CompetitionName = competition.Name;
+
+        // Uzimamo samo studente koji su Assigned (unutar kvote) iz sacuvanog rang-rezultata
+        var assignedResults = await _context.RankingResults
+            .Include(r => r.Student)
+            .Where(r => r.CompetitionId == competitionId
+                        && r.IsFreshman == isFreshmanView
+                        && r.Status == AssignmentStatus.Assigned)
+            .ToListAsync();
+
+        if (!assignedResults.Any())
+        {
+            result.Errors.Add("Nema rangiranih studenata sa statusom 'Assigned' za ovaj konkurs. Da li je rangiranje pokrenuto?");
+            return result;
+        }
+
+        // Zastita od ponovne raspodele: ako bar jedan od ovih studenata vec ima sobu, smatramo
+        // da je raspodela vec izvrsena za ovaj konkurs.
+        var alreadyAssignedCount = assignedResults.Count(r => r.Student.DormitoryRoomId != null);
+        if (alreadyAssignedCount > 0)
+        {
+            result.Errors.Add("Sobe su već raspodeljene za ovaj konkurs.");
+            return result;
+        }
+
+        var dorms = await _assignmentRepository.GetAllDormsWithRoomsAsync();
+        var totalAvailableSpots = dorms.Sum(d => d.AvailableSpots);
+
+        if (totalAvailableSpots == 0)
+        {
+            result.Errors.Add("Nema slobodnih mesta u domu.");
+            return result;
+        }
+
+        // Sortiramo po bodovima opadajuce da bi redosled dodele sobe pratio rang
+        // (vec su Assigned, ali medju njima i dalje vazi prioritet po bodovima)
+        var orderedResults = assignedResults
+            .OrderByDescending(r => r.CalculatedPoints)
+            .ToList();
+
+        result.TotalStudents = orderedResults.Count;
+
+        foreach (var rankingResult in orderedResults)
+        {
+            var student = rankingResult.Student;
+
+            var assignment = new StudentAssignmentDto
+            {
+                StudentId = student.Id,
+                StudentName = student.Name,
+                StudentSurname = student.Surname,
+                StudentIDNumber = student.StudentIDNumber,
+                CalculatedPoints = rankingResult.CalculatedPoints,
+                FacultyName = rankingResult.FacultyName,
+            };
+
+            var assigned = await TryAssignStudentAsync(assignment, dorms);
+
+            if (assigned)
+            {
+                result.SuccessfullyAssigned++;
+                assignment.Status = AssignmentStatus.Assigned;
+            }
+            else
+            {
+                // Iako je student bio "Assigned" u rang listi, fizicki nema vise mesta
+                // (npr. nema slobodne sobe odgovarajuceg pola) - ide na cekanje za sobu.
+                result.Waitlisted++;
+                assignment.Status = AssignmentStatus.Waitlisted;
+            }
+
+            result.Assignments.Add(assignment);
+        }
+
+        return result;
+    }
+
+
+
     /// <summary>
     /// Rangira starije studente (ne brucose) po fakultetima.
     /// Formula: (averageGrade * 5) + (espb / yearsOfStudy * 0.8) + espbBonus + financialBonus
@@ -138,7 +254,6 @@ public class AssignmentService : IAssignmentService
         _context.RankingResults.RemoveRange(oldResults);
 
         competition.Status = CompetitionStatus.Completed;
-        await _context.SaveChangesAsync();
 
         foreach (var assignment in studentAssignments)
         {
@@ -158,6 +273,8 @@ public class AssignmentService : IAssignmentService
                 IncomePerMember = assignment.IncomePerMember
             });
         }
+
+        await _context.SaveChangesAsync();
 
         result.RankingsByFaculty = groupedByFaculty;
         result.TotalStudents = studentAssignments.Count;
@@ -337,6 +454,10 @@ public class AssignmentService : IAssignmentService
             .Include(r => r.Student)
             .Where(r => r.CompetitionId == competitionId && r.IsFreshman == isFreshmanView)
             .ToListAsync();
+
+        var roomsAssigned = savedResults
+       .Where(r => r.Status == AssignmentStatus.Assigned)
+       .Any(r => r.Student.DormitoryRoomId != null);
 
         if (isFreshmanView)
         {

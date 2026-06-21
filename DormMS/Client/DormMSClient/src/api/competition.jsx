@@ -1,9 +1,11 @@
+import { fetchWithAuth } from "./httpClient"
+
 const API_URL = 'http://localhost:5153/api/Competition'
 
 const getToken = () => localStorage.getItem('token')
 
 export const getCompetitions = async () => {
-    const res = await fetch(API_URL, {
+    const res = await fetchWithAuth(API_URL, {
         headers: { Authorization: `Bearer ${getToken()}` },
     })
     if (!res.ok) throw new Error('Greška prilikom učitavanja konkursa.')
@@ -11,7 +13,7 @@ export const getCompetitions = async () => {
 }
 
 export const getOpenCompetitions = async () => {
-    const res = await fetch(`${API_URL}/open`, {
+    const res = await fetchWithAuth(`${API_URL}/open`, {
         headers: { Authorization: `Bearer ${getToken()}` },
     })
     if (!res.ok) throw new Error('Greška prilikom učitavanja otvorenih konkursa.')
@@ -19,7 +21,7 @@ export const getOpenCompetitions = async () => {
 }
 
 export const createCompetition = async (form) => {
-    const res = await fetch(API_URL, {
+    const res = await fetchWithAuth(API_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

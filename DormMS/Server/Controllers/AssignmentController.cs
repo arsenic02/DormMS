@@ -26,6 +26,30 @@ public class AssignmentController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("assign-older")]
+    public async Task<ActionResult<AssignmentResultDto>> AssignOlderStudentsToDorms(AssignmentRequestDto dto)
+    {
+        var result = await _assignmentService.AssignOlderStudentsToDormsAsync(dto.CompetitionId);
+
+        if (result.Errors.Any() && result.SuccessfullyAssigned == 0)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("assign-freshmen")]
+    public async Task<ActionResult<AssignmentResultDto>> AssignFreshmenToDorms(AssignmentRequestDto dto)
+    {
+        var result = await _assignmentService.AssignFreshmenToDormsAsync(dto.CompetitionId);
+
+        if (result.Errors.Any() && result.SuccessfullyAssigned == 0)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
+
     //mislim da mi nece trebati, stara metoda, jer sam napravio novu za starije i brucose
     // [Authorize(Roles = "Admin,DormManager")]
     // [HttpPost("rank")]

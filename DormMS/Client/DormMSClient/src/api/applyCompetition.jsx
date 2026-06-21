@@ -1,9 +1,11 @@
+import { fetchWithAuth } from "./httpClient"
+
 const API_URL = 'http://localhost:5153/api/CompetitionApplication'
 
 const getToken = () => localStorage.getItem('token')
 
 export const applyToCompetition = async (competitionId, notes = '', documentUrl = null) => {
-    const res = await fetch(`${API_URL}/${competitionId}/apply`, {
+    const res = await fetchWithAuth(`${API_URL}/${competitionId}/apply`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -27,7 +29,7 @@ export const uploadDocument = async (file) => {
     const formData = new FormData()
     formData.append('file', file)
 
-    const res = await fetch(`${API_URL}/upload-document`, {
+    const res = await fetchWithAuth(`${API_URL}/upload-document`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${getToken()}`,

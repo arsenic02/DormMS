@@ -37,3 +37,21 @@ export const rankOlderStudents = async (competitionId) => {
 
     return res.json()
 }
+
+export const getSavedRankingResults = async (competitionId, isFreshmanView) => {
+    const res = await fetch(
+        `${API_URL}/results/${competitionId}?isFreshmanView=${isFreshmanView}`,
+        {
+            headers: {
+                Authorization: `Bearer ${getToken()}`,
+            },
+        }
+    )
+
+    if (!res.ok) {
+        const text = await res.text().catch(() => null)
+        throw new Error(text || 'Greška prilikom učitavanja sačuvanih rezultata.')
+    }
+
+    return res.json()
+}

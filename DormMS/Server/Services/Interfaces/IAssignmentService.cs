@@ -12,6 +12,8 @@ public interface IAssignmentService
     // Rangiranje brucosa (vraca rezultat grupisan po fakultetima)
     Task<FreshmanRankingResultDto> RankFreshmenAsync(int competitionId);
 
+     Task<object> GetSavedRankingResultsAsync(int competitionId, bool isFreshmanView);
+
     // Kompatibilnost sa starim endpoint-om
    // Task<List<StudentAssignmentDto>> RankStudentsAsync(int competitionId);
 

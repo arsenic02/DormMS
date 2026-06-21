@@ -231,6 +231,72 @@ namespace DormMS.Migrations
                     b.ToTable("DormitoryRooms");
                 });
 
+            modelBuilder.Entity("DormMS.Server.Models.RankingResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("AverageGrade")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("CalculatedPoints")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("CompetitionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ESPB")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FacultyName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("FamilyMemberCount")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal?>("HighSchoolAverageGrade")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal?>("HighSchoolPoints")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("IncomePerMember")
+                        .HasColumnType("numeric");
+
+                    b.Property<bool>("IsFreshman")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("RankedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal?>("SocialBonus")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalFamilyIncome")
+                        .HasColumnType("numeric");
+
+                    b.Property<int?>("YearsOfStudy")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompetitionId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("RankingResults");
+                });
+
             modelBuilder.Entity("DormMS.Server.Models.Student", b =>
                 {
                     b.Property<int>("Id")
@@ -443,6 +509,25 @@ namespace DormMS.Migrations
                         .IsRequired();
 
                     b.Navigation("Dorm");
+                });
+
+            modelBuilder.Entity("DormMS.Server.Models.RankingResult", b =>
+                {
+                    b.HasOne("DormMS.Server.Models.Competition", "Competition")
+                        .WithMany()
+                        .HasForeignKey("CompetitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DormMS.Server.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Competition");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("DormMS.Server.Models.Student", b =>

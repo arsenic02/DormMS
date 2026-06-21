@@ -1,0 +1,109 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-block;
+  font-size: 13px;
+  color: #777;
+  text-decoration: none;
+  margin-bottom: 14px;
+}
+
+.backLink:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.description {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 1.25rem;
+}
+
+.statusDraft,
+.statusOpen,
+.statusClosed,
+.statusCompleted,
+.statusNeutral {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.statusDraft {
+  background: #eee;
+  color: #555;
+}
+
+.statusOpen {
+  background: #dcecd1;
+  color: #2e5a17;
+}
+
+.statusClosed {
+  background: #fdeacb;
+  color: #7a4a02;
+}
+
+.statusCompleted {
+  background: #dbe6fb;
+  color: #1d3f8f;
+}
+
+.statusNeutral {
+  background: #eee;
+  color: #555;
+}
+
+.metaCard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 1.5rem;
+  background: #fafafa;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metaLabel {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.metaValue {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+}
+
+@media (max-width: 700px) {
+  .metaCard {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

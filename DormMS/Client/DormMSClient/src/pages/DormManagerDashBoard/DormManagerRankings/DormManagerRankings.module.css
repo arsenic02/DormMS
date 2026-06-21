@@ -63,12 +63,38 @@
   font-weight: 600;
 }
 
+.badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 .typeBadge {
   font-size: 12px;
   padding: 3px 10px;
   border-radius: 8px;
   background: #eef0ff;
   color: #2f3a8f;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.statusBadgeClosed {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #fdeacb;
+  color: #7a4a02;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.statusBadgeCompleted {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #dcecd1;
+  color: #2e5a17;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -94,3 +120,4 @@
   color: #2f3a8f;
   align-self: flex-end;
 }
+

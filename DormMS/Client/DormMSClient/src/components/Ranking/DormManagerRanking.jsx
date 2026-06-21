@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { rankFreshmen, rankOlderStudents } from '../../api/ranking';
+import { useState, useEffect } from 'react';
+import { rankFreshmen, rankOlderStudents, getSavedRankingResults } from '../../api/ranking';
 import styles from './DormManagerRanking.module.css';
 
 const AVERAGE_SALARY = 121650;
@@ -18,12 +18,26 @@ function formatNumber(value) {
   return Number(value).toLocaleString('sr-RS', { maximumFractionDigits: 2 });
 }
 
+// Backend enum: Assigned=0, Waitlisted=1, NotAssigned=2, Error=3
+const ASSIGNMENT_STATUS = {
+  ASSIGNED: 0,
+  WAITLISTED: 1,
+  NOT_ASSIGNED: 2,
+  ERROR: 3,
+};
+
 function StatusBadge({ status }) {
-  if (status === 'Assigned') {
+  if (status === ASSIGNMENT_STATUS.ASSIGNED) {
     return <span className={styles.badgeAssigned}>Primljen</span>;
   }
-  if (status === 'Waitlisted') {
+  if (status === ASSIGNMENT_STATUS.WAITLISTED) {
     return <span className={styles.badgeWaitlisted}>Lista čekanja</span>;
+  }
+  if (status === ASSIGNMENT_STATUS.NOT_ASSIGNED) {
+    return <span className={styles.badgeNeutral}>Nije rangiran</span>;
+  }
+  if (status === ASSIGNMENT_STATUS.ERROR) {
+    return <span className={styles.badgeNeutral}>Greška</span>;
   }
   return <span className={styles.badgeNeutral}>{status}</span>;
 }
@@ -41,12 +55,12 @@ function OlderStudentsTable({ students }) {
           <th>Socijalni bonus</th>
           <th>Dodatak</th>
           <th>Ukupno</th>
-          <th>Status</th>
+          <th className={styles.statusCell}>Status</th>
         </tr>
       </thead>
       <tbody>
         {students.map((s) => (
-          <tr key={s.studentId} className={s.status === 'Assigned' ? styles.rowAssigned : undefined}>
+          <tr key={s.studentId} className={s.status === ASSIGNMENT_STATUS.ASSIGNED ? styles.rowAssigned : undefined}>
             <td>{s.studentName} {s.studentSurname}</td>
             <td className={styles.muted}>{s.studentIDNumber}</td>
             <td className={styles.numeric}>{formatNumber(s.averageGrade)}</td>
@@ -55,7 +69,7 @@ function OlderStudentsTable({ students }) {
             <td className={styles.numeric}>{getSocialBonus(s.incomePerMember)}</td>
             <td className={styles.numeric}>{getEspbBonus(s.espb)}</td>
             <td className={styles.numericBold}>{formatNumber(s.calculatedPoints)}</td>
-            <td><StatusBadge status={s.status} /></td>
+            <td className={styles.statusCell}><StatusBadge status={s.status} /></td>
           </tr>
         ))}
       </tbody>
@@ -73,18 +87,18 @@ function FreshmenTable({ students }) {
           <th>Prosek (srednja škola)</th>
           <th>Socijalni bonus</th>
           <th>Ukupno</th>
-          <th>Status</th>
+          <th className={styles.statusCell}>Status</th>
         </tr>
       </thead>
       <tbody>
         {students.map((s) => (
-          <tr key={s.studentId} className={s.status === 'Assigned' ? styles.rowAssigned : undefined}>
+          <tr key={s.studentId} className={s.status === ASSIGNMENT_STATUS.ASSIGNED ? styles.rowAssigned : undefined}>
             <td>{s.studentName} {s.studentSurname}</td>
             <td className={styles.muted}>{s.studentIDNumber}</td>
             <td className={styles.numeric}>{formatNumber(s.highSchoolAverageGrade)}</td>
             <td className={styles.numeric}>{getSocialBonus(s.incomePerMember)}</td>
             <td className={styles.numericBold}>{formatNumber(s.calculatedPoints)}</td>
-            <td><StatusBadge status={s.status} /></td>
+            <td className={styles.statusCell}><StatusBadge status={s.status} /></td>
           </tr>
         ))}
       </tbody>
@@ -93,7 +107,7 @@ function FreshmenTable({ students }) {
 }
 
 function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onToggle }) {
-  const assignedCount = students.filter((s) => s.status === 'Assigned').length;
+  const assignedCount = students.filter((s) => s.status === ASSIGNMENT_STATUS.ASSIGNED).length;
 
   return (
     <div className={styles.card}>
@@ -120,11 +134,34 @@ function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onTog
   );
 }
 
-export default function DormManagerRanking({ competitionId, isFreshmanView }) {
+export default function DormManagerRanking({ competitionId, isFreshmanView, isCompleted }) {
   const [rankingData, setRankingData] = useState(null);
   const [openFaculties, setOpenFaculties] = useState({});
   const [loading, setLoading] = useState(false);
+  const [loadingSaved, setLoadingSaved] = useState(false);
   const [error, setError] = useState(null);
+
+  // Ako je konkurs vec zavrsen (Completed), automatski ucitaj sacuvane rezultate
+  // umesto da korisnik mora da klikne "Pokreni rangiranje" (sto vise ne bi smelo
+  // da se radi ponovo).
+  useEffect(() => {
+    if (!isCompleted) return;
+
+    async function fetchSavedResults() {
+      setLoadingSaved(true);
+      setError(null);
+      try {
+        const result = await getSavedRankingResults(competitionId, isFreshmanView);
+        setRankingData(result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoadingSaved(false);
+      }
+    }
+
+    fetchSavedResults();
+  }, [isCompleted, competitionId, isFreshmanView]);
 
   async function handleRunRanking() {
     setLoading(true);
@@ -155,11 +192,18 @@ export default function DormManagerRanking({ competitionId, isFreshmanView }) {
         <h2 className={styles.title}>
           {isFreshmanView ? 'Rangiranje brucoša' : 'Rangiranje starijih studenata'}
         </h2>
-        <button className={styles.runButton} onClick={handleRunRanking} disabled={loading} type="button">
-          {loading ? 'Rangiranje u toku...' : 'Pokreni rangiranje'}
+        <button
+          className={styles.runButton}
+          onClick={handleRunRanking}
+          disabled={loading || isCompleted}
+          type="button"
+          title={isCompleted ? 'Konkurs je već rangiran i ne može se rangirati ponovo.' : undefined}
+        >
+          {loading ? 'Rangiranje u toku...' : isCompleted ? 'Konkurs je već rangiran' : 'Pokreni rangiranje'}
         </button>
       </div>
 
+      {loadingSaved && <p className={styles.totalInfo}>Učitavanje sačuvanih rezultata...</p>}
       {error && <p className={styles.error}>{error}</p>}
 
       {rankingData && (
@@ -184,8 +228,9 @@ export default function DormManagerRanking({ competitionId, isFreshmanView }) {
   );
 }
 
-// import { useState } from 'react';
-// import { rankFreshmen, rankOlderStudents } from '../../api/ranking';
+//stari solidan kod
+// import { useState, useEffect } from 'react';
+// import { rankFreshmen, rankOlderStudents, getSavedRankingResults } from '../../api/ranking';
 // import styles from './DormManagerRanking.module.css';
 
 // const AVERAGE_SALARY = 121650;
@@ -204,12 +249,26 @@ export default function DormManagerRanking({ competitionId, isFreshmanView }) {
 //   return Number(value).toLocaleString('sr-RS', { maximumFractionDigits: 2 });
 // }
 
+// // Backend enum: Assigned=0, Waitlisted=1, NotAssigned=2, Error=3
+// const ASSIGNMENT_STATUS = {
+//   ASSIGNED: 0,
+//   WAITLISTED: 1,
+//   NOT_ASSIGNED: 2,
+//   ERROR: 3,
+// };
+
 // function StatusBadge({ status }) {
-//   if (status === 'Assigned') {
+//   if (status === ASSIGNMENT_STATUS.ASSIGNED) {
 //     return <span className={styles.badgeAssigned}>Primljen</span>;
 //   }
-//   if (status === 'Waitlisted') {
+//   if (status === ASSIGNMENT_STATUS.WAITLISTED) {
 //     return <span className={styles.badgeWaitlisted}>Lista čekanja</span>;
+//   }
+//   if (status === ASSIGNMENT_STATUS.NOT_ASSIGNED) {
+//     return <span className={styles.badgeNeutral}>Nije rangiran</span>;
+//   }
+//   if (status === ASSIGNMENT_STATUS.ERROR) {
+//     return <span className={styles.badgeNeutral}>Greška</span>;
 //   }
 //   return <span className={styles.badgeNeutral}>{status}</span>;
 // }
@@ -232,7 +291,7 @@ export default function DormManagerRanking({ competitionId, isFreshmanView }) {
 //       </thead>
 //       <tbody>
 //         {students.map((s) => (
-//           <tr key={s.studentId} className={s.status === 'Assigned' ? styles.rowAssigned : undefined}>
+//           <tr key={s.studentId} className={s.status === ASSIGNMENT_STATUS.ASSIGNED ? styles.rowAssigned : undefined}>
 //             <td>{s.studentName} {s.studentSurname}</td>
 //             <td className={styles.muted}>{s.studentIDNumber}</td>
 //             <td className={styles.numeric}>{formatNumber(s.averageGrade)}</td>
@@ -264,7 +323,7 @@ export default function DormManagerRanking({ competitionId, isFreshmanView }) {
 //       </thead>
 //       <tbody>
 //         {students.map((s) => (
-//           <tr key={s.studentId} className={s.status === 'Assigned' ? styles.rowAssigned : undefined}>
+//           <tr key={s.studentId} className={s.status === ASSIGNMENT_STATUS.ASSIGNED ? styles.rowAssigned : undefined}>
 //             <td>{s.studentName} {s.studentSurname}</td>
 //             <td className={styles.muted}>{s.studentIDNumber}</td>
 //             <td className={styles.numeric}>{formatNumber(s.highSchoolAverageGrade)}</td>
@@ -279,7 +338,7 @@ export default function DormManagerRanking({ competitionId, isFreshmanView }) {
 // }
 
 // function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onToggle }) {
-//   const assignedCount = students.filter((s) => s.status === 'Assigned').length;
+//   const assignedCount = students.filter((s) => s.status === ASSIGNMENT_STATUS.ASSIGNED).length;
 
 //   return (
 //     <div className={styles.card}>
@@ -306,14 +365,36 @@ export default function DormManagerRanking({ competitionId, isFreshmanView }) {
 //   );
 // }
 
-// export default function DormManagerRanking({ competitionId, isFreshmanView }) {
+// export default function DormManagerRanking({ competitionId, isFreshmanView, isCompleted }) {
 //   const [rankingData, setRankingData] = useState(null);
 //   const [openFaculties, setOpenFaculties] = useState({});
 //   const [loading, setLoading] = useState(false);
+//   const [loadingSaved, setLoadingSaved] = useState(false);
 //   const [error, setError] = useState(null);
 
+//   // Ako je konkurs vec zavrsen (Completed), automatski ucitaj sacuvane rezultate
+//   // umesto da korisnik mora da klikne "Pokreni rangiranje" (sto vise ne bi smelo
+//   // da se radi ponovo).
+//   useEffect(() => {
+//     if (!isCompleted) return;
+
+//     async function fetchSavedResults() {
+//       setLoadingSaved(true);
+//       setError(null);
+//       try {
+//         const result = await getSavedRankingResults(competitionId, isFreshmanView);
+//         setRankingData(result);
+//       } catch (err) {
+//         setError(err.message);
+//       } finally {
+//         setLoadingSaved(false);
+//       }
+//     }
+
+//     fetchSavedResults();
+//   }, [isCompleted, competitionId, isFreshmanView]);
+
 //   async function handleRunRanking() {
-//     console.log('competitionId koji se salje:', competitionId)
 //     setLoading(true);
 //     setError(null);
 
@@ -342,11 +423,18 @@ export default function DormManagerRanking({ competitionId, isFreshmanView }) {
 //         <h2 className={styles.title}>
 //           {isFreshmanView ? 'Rangiranje brucoša' : 'Rangiranje starijih studenata'}
 //         </h2>
-//         <button className={styles.runButton} onClick={handleRunRanking} disabled={loading} type="button">
-//           {loading ? 'Rangiranje u toku...' : 'Pokreni rangiranje'}
+//         <button
+//           className={styles.runButton}
+//           onClick={handleRunRanking}
+//           disabled={loading || isCompleted}
+//           type="button"
+//           title={isCompleted ? 'Konkurs je već rangiran i ne može se rangirati ponovo.' : undefined}
+//         >
+//           {loading ? 'Rangiranje u toku...' : isCompleted ? 'Konkurs je već rangiran' : 'Pokreni rangiranje'}
 //         </button>
 //       </div>
 
+//       {loadingSaved && <p className={styles.totalInfo}>Učitavanje sačuvanih rezultata...</p>}
 //       {error && <p className={styles.error}>{error}</p>}
 
 //       {rankingData && (
@@ -370,3 +458,4 @@ export default function DormManagerRanking({ competitionId, isFreshmanView }) {
 //     </div>
 //   );
 // }
+

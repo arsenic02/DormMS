@@ -132,11 +132,33 @@ public class AssignmentService : IAssignmentService
             }
         }
 
+        var oldResults = await _context.RankingResults
+            .Where(r => r.CompetitionId == competitionId)
+            .ToListAsync();
+        _context.RankingResults.RemoveRange(oldResults);
+
         competition.Status = CompetitionStatus.Completed;
-        Console.WriteLine($"DEBUG: Setting competition {competition.Id} status to Completed. Current EF state: {_context.Entry(competition).State}");
         await _context.SaveChangesAsync();
-        Console.WriteLine($"DEBUG: After SaveChangesAsync, status in memory: {competition.Status}");
-        
+
+        foreach (var assignment in studentAssignments)
+        {
+            _context.RankingResults.Add(new RankingResult
+            {
+                CompetitionId = competition.Id,
+                StudentId = assignment.StudentId,
+                FacultyName = assignment.FacultyName ?? "Unknown",
+                IsFreshman = false,
+                CalculatedPoints = assignment.CalculatedPoints,
+                Status = assignment.Status,
+                AverageGrade = assignment.AverageGrade,
+                ESPB = assignment.ESPB,
+                YearsOfStudy = assignment.YearsOfStudy,
+                TotalFamilyIncome = assignment.TotalFamilyIncome,
+                FamilyMemberCount = assignment.FamilyMemberCount,
+                IncomePerMember = assignment.IncomePerMember
+            });
+        }
+
         result.RankingsByFaculty = groupedByFaculty;
         result.TotalStudents = studentAssignments.Count;
 
@@ -239,10 +261,33 @@ public class AssignmentService : IAssignmentService
                         : AssignmentStatus.Waitlisted;
             }
         }
+
+        var oldResults = await _context.RankingResults
+            .Where(r => r.CompetitionId == competitionId)
+            .ToListAsync();
+        _context.RankingResults.RemoveRange(oldResults);
+
+        foreach (var assignment in freshmanAssignments)
+        {
+            _context.RankingResults.Add(new RankingResult
+            {
+                CompetitionId = competition.Id,
+                StudentId = assignment.StudentId,
+                FacultyName = assignment.FacultyName ?? "Unknown",
+                IsFreshman = true,
+                CalculatedPoints = assignment.CalculatedPoints,
+                Status = assignment.Status,
+                HighSchoolAverageGrade = assignment.HighSchoolAverageGrade,
+                HighSchoolPoints = assignment.HighSchoolPoints,
+                SocialBonus = assignment.SocialBonus,
+                TotalFamilyIncome = assignment.TotalFamilyIncome,
+                FamilyMemberCount = assignment.FamilyMemberCount,
+                IncomePerMember = assignment.IncomePerMember
+            });
+        }
+
         competition.Status = CompetitionStatus.Completed;
-        Console.WriteLine($"DEBUG: Setting competition {competition.Id} status to Completed. Current EF state: {_context.Entry(competition).State}");
         await _context.SaveChangesAsync();
-        Console.WriteLine($"DEBUG: After SaveChangesAsync, status in memory: {competition.Status}");
 
         result.RankingsByFaculty = groupedByFaculty;
         result.TotalStudents = freshmanAssignments.Count;
@@ -282,6 +327,97 @@ public class AssignmentService : IAssignmentService
 
         return quotas;
     }
+
+    public async Task<object> GetSavedRankingResultsAsync(int competitionId, bool isFreshmanView)
+    {
+        var competition = await _context.Competitions
+            .FirstOrDefaultAsync(c => c.Id == competitionId);
+
+        var savedResults = await _context.RankingResults
+            .Include(r => r.Student)
+            .Where(r => r.CompetitionId == competitionId && r.IsFreshman == isFreshmanView)
+            .ToListAsync();
+
+        if (isFreshmanView)
+        {
+            var freshmanAssignments = savedResults.Select(r => new FreshmanAssignmentDto
+            {
+                StudentId = r.StudentId,
+                StudentName = r.Student.Name,
+                StudentSurname = r.Student.Surname,
+                StudentIDNumber = r.Student.StudentIDNumber,
+                HighSchoolAverageGrade = r.HighSchoolAverageGrade ?? 0,
+                FacultyName = r.FacultyName,
+                HighSchoolPoints = r.HighSchoolPoints ?? 0,
+                SocialBonus = r.SocialBonus ?? 0,
+                CalculatedPoints = r.CalculatedPoints,
+                TotalFamilyIncome = r.TotalFamilyIncome,
+                FamilyMemberCount = r.FamilyMemberCount,
+                IncomePerMember = r.IncomePerMember,
+                Status = r.Status
+            }).ToList();
+
+            var groupedByFaculty = freshmanAssignments
+                .GroupBy(s => s.FacultyName ?? "Unknown")
+                .ToDictionary(
+                    g => g.Key,
+                    g => g
+                        .OrderByDescending(s => s.CalculatedPoints)
+                        .ThenByDescending(s => s.HighSchoolPoints)
+                        .ThenBy(s => s.IncomePerMember)
+                        .ToList()
+                );
+
+            return new FreshmanRankingResultDto
+            {
+                CompetitionId = competitionId,
+                CompetitionName = competition?.Name ?? string.Empty,
+                TotalStudents = freshmanAssignments.Count,
+                RankingsByFaculty = groupedByFaculty
+            };
+        }
+        else
+        {
+            var studentAssignments = savedResults.Select(r => new StudentAssignmentDto
+            {
+                StudentId = r.StudentId,
+                StudentName = r.Student.Name,
+                StudentSurname = r.Student.Surname,
+                StudentIDNumber = r.Student.StudentIDNumber,
+                AverageGrade = r.AverageGrade ?? 0,
+                ESPB = r.ESPB ?? 0,
+                YearsOfStudy = r.YearsOfStudy ?? 0,
+                CalculatedPoints = r.CalculatedPoints,
+                TotalFamilyIncome = r.TotalFamilyIncome,
+                FamilyMemberCount = r.FamilyMemberCount,
+                IncomePerMember = r.IncomePerMember,
+                FacultyName = r.FacultyName,
+                Status = r.Status
+            }).ToList();
+
+            var groupedByFaculty = studentAssignments
+                .GroupBy(s => s.FacultyName ?? "Unknown")
+                .ToDictionary(
+                    g => g.Key,
+                    g => g
+                        .OrderByDescending(s => s.CalculatedPoints)
+                        .ThenByDescending(s => s.ESPB)
+                        .ThenBy(s => s.YearsOfStudy)
+                        .ThenByDescending(s => s.AverageGrade)
+                        .ThenBy(s => s.IncomePerMember)
+                        .ToList()
+                );
+
+            return new OlderStudentsRankingResultDto
+            {
+                CompetitionId = competitionId,
+                CompetitionName = competition?.Name ?? string.Empty,
+                TotalStudents = studentAssignments.Count,
+                RankingsByFaculty = groupedByFaculty
+            };
+        }
+    }
+
 
     // public async Task<List<StudentAssignmentDto>> RankStudentsAsync(int competitionId)
     // {

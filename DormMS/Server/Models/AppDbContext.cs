@@ -16,4 +16,5 @@ public class AppDbContext : DbContext
     public DbSet<CompetitionApplication> CompetitionApplications { get; set; }
 
     public DbSet<StudentFinancialStatus> StudentFinancialStatuses { get; set; }
+    public DbSet<RankingResult> RankingResults { get; set; }
 }

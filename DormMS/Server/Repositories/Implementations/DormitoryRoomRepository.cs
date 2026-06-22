@@ -67,4 +67,41 @@ public class DormitoryRoomRepository : IDormitoryRoomRepository
 
         return await query.AnyAsync();
     }
+
+    public async Task<(List<DormitoryRoom> Rooms, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize)
+    {
+        var totalCount = await _context.DormitoryRooms.CountAsync();
+
+        var rooms = await _context.DormitoryRooms
+            .AsNoTracking()
+            .OrderBy(r => r.DormId)
+            .ThenBy(r => r.RoomNumber)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (rooms, totalCount);
+    }
+
+    public async Task<List<Student>> GetStudentsByRoomIdsAsync(List<int> roomIds)
+    {
+        if (roomIds.Count == 0)
+            return new List<Student>();
+
+        return await _context.Students
+            .AsNoTracking()
+            .Where(s => s.DormitoryRoomId.HasValue && roomIds.Contains(s.DormitoryRoomId.Value))
+            .ToListAsync();
+    }
+
+    public async Task<Dictionary<int, string>> GetDormNamesByIdsAsync(List<int> dormIds)
+    {
+        if (dormIds.Count == 0)
+            return new Dictionary<int, string>();
+
+        return await _context.Dorms
+            .AsNoTracking()
+            .Where(d => dormIds.Contains(d.Id))
+            .ToDictionaryAsync(d => d.Id, d => d.Name);
+    }
 }

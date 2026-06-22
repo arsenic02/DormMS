@@ -17,6 +17,7 @@ import DormManagerVerifications from './pages/DormManagerDashBoard/DormManagerVe
 import DormManagerRankingPage from './pages/DormManagerDashBoard/DormManagerRankings/DormManagerRankingPage/DormManagerRankingPage'
 import DormManagerRankings from './pages/DormManagerDashBoard/DormManagerRankings/DormManagerRankings'
 import DormManagerRanking from './components/Ranking/DormManagerRanking'
+import DormManagerRooms from './pages/DormManagerDashBoard/DormManagerRooms/DormManagerRooms'
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="/dorm-manager/verifications" element={<DormManagerVerifications />} />
           <Route path="/dorm-manager/rankings" element={<DormManagerRankings />} />
           <Route path="/dorm-manager/rankings/:id" element={<DormManagerRankingPage />} />
+          <Route path="/dorm-manager/rooms" element={<DormManagerRooms />} />
         </Route>
 
       </Routes>

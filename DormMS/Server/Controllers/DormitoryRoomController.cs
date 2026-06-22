@@ -43,7 +43,7 @@ public class DormitoryRoomController : ControllerBase
         return CreatedAtAction(nameof(GetDormitoryRoom), new { id = room.Id }, room);
     }
 
-    [HttpPut("{id}")] 
+    [HttpPut("{id}")]
     //[Authorize(Policy = "AdminOnly")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateDormitoryRoom(int id, DormitoryRoomCreateUpdateDto dto)
@@ -57,7 +57,7 @@ public class DormitoryRoomController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]    
+    [HttpDelete("{id}")]
     //[Authorize(Policy = "AdminOnly")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteDormitoryRoom(int id)
@@ -67,5 +67,18 @@ public class DormitoryRoomController : ControllerBase
             return NotFound();
 
         return NoContent();
+    }
+
+    [HttpGet("rooms-paged")]
+    [Authorize(Roles = "DormManager")]
+    public async Task<ActionResult<PagedResultDto<DormitoryRoomGetDto>>> GetDormitoryRoomsPaged(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 12)
+    {
+        if (pageNumber < 1) pageNumber = 1;
+        if (pageSize < 1 || pageSize > 100) pageSize = 12;
+
+        var result = await _dormitoryRoomService.GetPagedWithStudentsAsync(pageNumber, pageSize);
+        return Ok(result);
     }
 }

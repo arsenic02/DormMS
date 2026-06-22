@@ -23,5 +23,7 @@ public class DormitoryRoomGetDto
     public GenderType Gender { get; set; }
     public RoomStatus Status { get; set; }
     public int DormId { get; set; }
+    public string? DormName { get; set; }
+    public List<StudentSummaryDto> Students { get; set; } = new();
     // NEMA navigacionog Dorm objekta!
 }

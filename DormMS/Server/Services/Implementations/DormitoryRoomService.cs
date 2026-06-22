@@ -62,6 +62,53 @@ public class DormitoryRoomService : IDormitoryRoomService
         return true;
     }
 
+    public async Task<PagedResultDto<DormitoryRoomGetDto>> GetPagedWithStudentsAsync(int pageNumber, int pageSize)
+    {
+        var (rooms, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize);
+
+        var roomIds = rooms.Select(r => r.Id).ToList();
+        var dormIds = rooms.Select(r => r.DormId).Distinct().ToList();
+
+        var students = await _repository.GetStudentsByRoomIdsAsync(roomIds);
+        var dormNames = await _repository.GetDormNamesByIdsAsync(dormIds);
+
+        var studentsByRoom = students
+            .GroupBy(s => s.DormitoryRoomId!.Value)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
+        var items = rooms.Select(room => new DormitoryRoomGetDto
+        {
+            Id = room.Id,
+            RoomNumber = room.RoomNumber,
+            Capacity = room.Capacity,
+            CurrentOccupancy = room.CurrentOccupancy,
+            AvailableSpots = room.AvailableSpots,
+            Gender = room.Gender,
+            Status = room.Status,
+            DormId = room.DormId,
+            DormName = dormNames.TryGetValue(room.DormId, out var name) ? name : null,
+            Students = studentsByRoom.TryGetValue(room.Id, out var roomStudents)
+                ? roomStudents.Select(s => new StudentSummaryDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Surname = s.Surname,
+                    FacultyName = s.FacultyName,
+                    IsFreshman = s.IsFreshman
+                }).ToList()
+                : new List<StudentSummaryDto>()
+        }).ToList();
+
+        return new PagedResultDto<DormitoryRoomGetDto>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
+
+
     private static DormitoryRoom MapToEntity(DormitoryRoomCreateUpdateDto dto, DormitoryRoom? existing = null)
     {
         var room = existing ?? new DormitoryRoom();

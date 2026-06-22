@@ -126,7 +126,7 @@ public class AssignmentService : IAssignmentService
                 FacultyName = rankingResult.FacultyName,
             };
 
-            var assigned = await TryAssignStudentAsync(assignment, dorms);
+            var assigned = await TryAssignStudentAsync(assignment, student, dorms);
 
             if (assigned)
             {
@@ -562,6 +562,10 @@ public class AssignmentService : IAssignmentService
 
         result.TotalStudents = rankedStudents.Count;
 
+        var studentIds = rankedStudents.Where(s => s.Status != AssignmentStatus.Error).Select(s => s.StudentId).ToList();
+        var students = await _assignmentRepository.GetStudentsByIdsAsync(studentIds);
+        var studentsDict = students.ToDictionary(s => s.Id);
+
         foreach (var assignment in rankedStudents)
         {
             if (assignment.Status == AssignmentStatus.Error)
@@ -571,7 +575,16 @@ public class AssignmentService : IAssignmentService
                 continue;
             }
 
-            var assigned = await TryAssignStudentAsync(assignment, dorms);
+            if (!studentsDict.TryGetValue(assignment.StudentId, out var student))
+            {
+                assignment.Status = AssignmentStatus.Error;
+                result.Errors.Add($"Student with ID {assignment.StudentId} not found in database.");
+                result.Failed++;
+                result.Assignments.Add(assignment);
+                continue;
+            }
+
+            var assigned = await TryAssignStudentAsync(assignment, student, dorms);
 
             if (assigned)
             {
@@ -586,6 +599,30 @@ public class AssignmentService : IAssignmentService
 
             result.Assignments.Add(assignment);
         }
+        // foreach (var assignment in rankedStudents)
+        // {
+        //     if (assignment.Status == AssignmentStatus.Error)
+        //     {
+        //         result.Failed++;
+        //         result.Assignments.Add(assignment);
+        //         continue;
+        //     }
+
+        //     var assigned = await TryAssignStudentAsync(assignment, student, dorms);
+
+        //     if (assigned)
+        //     {
+        //         result.SuccessfullyAssigned++;
+        //         assignment.Status = AssignmentStatus.Assigned;
+        //     }
+        //     else
+        //     {
+        //         result.Waitlisted++;
+        //         assignment.Status = AssignmentStatus.Waitlisted;
+        //     }
+
+        //     result.Assignments.Add(assignment);
+        // }
 
         return result;
     }
@@ -661,7 +698,7 @@ public class AssignmentService : IAssignmentService
         return false;
     }
 
-    public async Task<bool> ResetAssignmentsAsync()
+    public async Task<bool> ResetFlowAsync()
     {
         var studentsWithRooms = await _context.Students
             .Where(s => s.DormitoryRoomId != null)
@@ -676,6 +713,47 @@ public class AssignmentService : IAssignmentService
         foreach (var room in rooms)
         {
             room.CurrentOccupancy = 0;
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    // 2. Novi metod -  reset SAMO za jedan konkurs.
+    public async Task<bool> ResetAssignmentAsync(int competitionId)
+    {
+        var assignedResults = await _context.RankingResults
+            .Include(r => r.Student)
+            .Where(r => r.CompetitionId == competitionId && r.Status == AssignmentStatus.Assigned)
+            .ToListAsync();
+
+        if (!assignedResults.Any())
+            return false;
+
+        // Brojimo koliko studenata se uklanja iz svake sobe, da bismo tacno
+        // dekrementirali CurrentOccupancy (ne na 0, vec za tacan broj).
+        var roomIdsToDecrement = assignedResults
+            .Where(r => r.Student.DormitoryRoomId != null)
+            .Select(r => r.Student.DormitoryRoomId!.Value)
+            .GroupBy(roomId => roomId)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        if (roomIdsToDecrement.Count == 0)
+            return false; // nijedan student iz ovog konkursa trenutno nema dodeljenu sobu
+
+        var affectedRooms = await _context.DormitoryRooms
+            .Where(r => roomIdsToDecrement.Keys.Contains(r.Id))
+            .ToListAsync();
+
+        foreach (var room in affectedRooms)
+        {
+            var countToRemove = roomIdsToDecrement[room.Id];
+            room.CurrentOccupancy = Math.Max(0, room.CurrentOccupancy - countToRemove);
+        }
+
+        foreach (var result in assignedResults)
+        {
+            result.Student.DormitoryRoomId = null;
         }
 
         await _context.SaveChangesAsync();
@@ -706,26 +784,69 @@ public class AssignmentService : IAssignmentService
         return Math.Round(totalPoints, 2);
     }
 
-    private async Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, List<Dorm> dorms)
+    private async Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, Student student, List<Dorm> dorms)
     {
         foreach (var dorm in dorms.Where(d => !d.IsFull))
         {
-            var room = await _assignmentRepository.GetAvailableRoomAsync(dorm.Id);
+            // 1. korak: probaj sobu ISTOG pola u ovom domu
+            var room = await _assignmentRepository.GetAvailableRoomAsync(dorm.Id, student.Gender);
+            var isMixed = false;
+
+            // 2. korak (fallback): ako nema sobe odgovarajuceg pola u ovom domu,
+            // dozvoli bilo koju slobodnu sobu u istom domu (mesovita dodela)
+            if (room == null)
+            {
+                room = await _assignmentRepository.GetAnyAvailableRoomAsync(dorm.Id);
+                isMixed = room != null;
+            }
+
             if (room != null)
             {
                 await _assignmentRepository.AssignStudentToRoomAsync(assignment.StudentId, room.Id);
 
-                // Increment room occupancy
                 room.CurrentOccupancy++;
                 await _context.SaveChangesAsync();
 
                 assignment.AssignedDormId = dorm.Id;
                 assignment.AssignedDormName = dorm.Name;
                 assignment.AssignedRoomId = room.Id;
+                assignment.IsMixedGenderAssignment = isMixed;
                 return true;
             }
         }
 
         return false;
     }
+    // private async Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, Student student, List<Dorm> dorms)
+    // {
+    //     foreach (var dorm in dorms.Where(d => !d.IsFull))
+    //     {
+    //         //prvo da se nadje soba istog pola
+    //         var room = await _assignmentRepository.GetAvailableRoomAsync(dorm.Id, student.Gender);
+    //         var isMixed = false;
+
+    //         // dozvoli bilo koju slobodnu sobu u istom domu (mesovita dodela)
+    //         if (room == null)
+    //         {
+    //             room = await _assignmentRepository.GetAnyAvailableRoomAsync(dorm.Id);
+    //             isMixed = room != null;
+    //         }
+
+    //         if (room != null)
+    //         {
+    //             await _assignmentRepository.AssignStudentToRoomAsync(assignment.StudentId, room.Id);
+
+    //             room.CurrentOccupancy++;
+    //             await _context.SaveChangesAsync();
+
+    //             assignment.AssignedDormId = dorm.Id;
+    //             assignment.AssignedDormName = dorm.Name;
+    //             assignment.AssignedRoomId = room.Id;
+    //             assignment.IsMixedGenderAssignment = isMixed;
+    //             return true;
+    //         }
+    //     }
+
+    //     return false;
+    // }
 }

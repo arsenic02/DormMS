@@ -123,10 +123,24 @@ public class AssignmentController : ControllerBase
     }
 
     // [Authorize(Roles = "Admin,DormManager")]
-    [HttpPost("reset")]
-    public async Task<IActionResult> ResetAssignments()
+    [HttpPost("reset-flow")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ResetFlow()
     {
-        await _assignmentService.ResetAssignmentsAsync();
-        return Ok(new { Message = "All room assignments have been cleared and room occupancy reset to 0." });
+        var success = await _assignmentService.ResetFlowAsync();
+        if (!success)
+            return BadRequest("Reset nije uspeo.");
+        return Ok(new { message = "Ceo flow (rangiranje + dodela) je resetovan za sve studente i sobe." });
+    }
+
+    [HttpPost("reset-assignment/{competitionId}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ResetAssignment(int competitionId)
+    {
+        var success = await _assignmentService.ResetAssignmentAsync(competitionId);
+        if (!success)
+            return BadRequest("Nema dodeljenih studenata za ovaj konkurs, ili konkurs ne postoji.");
+
+        return Ok(new { message = $"Dodela sobe je resetovana za konkurs {competitionId}." });
     }
 }

@@ -24,7 +24,8 @@ public class StudentAssignmentDto
     public string? AssignedDormName { get; set; }
     public int? AssignedRoomId { get; set; }
     public AssignmentStatus Status { get; set; }
-    public string? FacultyName { get; set; } // dodato za grupisanje po fakultetima
+    public string? FacultyName { get; set; } 
+    public bool IsMixedGenderAssignment { get; set; }
 }
 
 // DTO za rangiranje brucosa

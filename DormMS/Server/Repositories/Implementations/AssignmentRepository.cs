@@ -36,7 +36,19 @@ public class AssignmentRepository : IAssignmentRepository
             .ToListAsync();
     }
 
-    public async Task<DormitoryRoom?> GetAvailableRoomAsync(int dormId)
+    public async Task<DormitoryRoom?> GetAvailableRoomAsync(int dormId, Gender studentGender)
+    {
+        return await _context.DormitoryRooms
+            .Where(r => r.DormId == dormId
+            && r.CurrentOccupancy < r.Capacity
+            && (int)r.Gender == (int)studentGender) //vidi ovo
+            .OrderBy(r => r.CurrentOccupancy)
+            .FirstOrDefaultAsync();
+    }
+
+    // bilo koja slobodna soba u domu, nezavisno od pola.
+    // Koristi se SAMO kad nema slobodne sobe odgovarajuceg pola u tom domu.
+    public async Task<DormitoryRoom?> GetAnyAvailableRoomAsync(int dormId)
     {
         return await _context.DormitoryRooms
             .Where(r => r.DormId == dormId && r.CurrentOccupancy < r.Capacity)

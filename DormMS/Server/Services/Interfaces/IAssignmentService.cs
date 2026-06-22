@@ -1,4 +1,5 @@
 using DormMS.Server.DTOs;
+using DormMS.Server.Models;
 
 namespace DormMS.Server.Services.Interfaces;
 
@@ -23,5 +24,8 @@ public interface IAssignmentService
 
     Task<AssignmentResultDto> AssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents);
     Task<AssignmentResultDto> BulkAssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents);
-    Task<bool> ResetAssignmentsAsync();
+    Task<bool> ResetFlowAsync();    
+    //Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, Student student,List<Dorm> dorms); //ne treba da se poziva kao endpoint
+    Task<bool> ResetAssignmentAsync(int competitionId);
+
 }

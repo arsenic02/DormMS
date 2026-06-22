@@ -67,4 +67,29 @@ public class DormRepository : IDormRepository
         await _context.DormitoryRooms.AddRangeAsync(rooms);
         await _context.SaveChangesAsync();
     }
+
+    public async Task ClearStudentRoomAssignmentsAsync(List<int> roomIds)
+    {
+        var students = await _context.Students
+            .Where(s => s.DormitoryRoomId != null && roomIds.Contains(s.DormitoryRoomId.Value))
+            .ToListAsync();
+
+        foreach (var student in students)
+        {
+            student.DormitoryRoomId = null;
+        }
+
+        await _context.SaveChangesAsync();
+    }
+    public async Task<int> DeleteRoomsByIdsAsync(List<int> roomIds)
+    {
+        var rooms = await _context.DormitoryRooms
+            .Where(r => roomIds.Contains(r.Id))
+            .ToListAsync();
+
+        _context.DormitoryRooms.RemoveRange(rooms);
+        await _context.SaveChangesAsync();
+
+        return rooms.Count;
+    }
 }

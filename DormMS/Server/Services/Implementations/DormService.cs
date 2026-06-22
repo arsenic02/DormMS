@@ -70,6 +70,9 @@ public class DormService : IDormService
         if (dto.DoubleRooms < 0 || dto.TripleRooms < 0)
             throw new ArgumentException("Broj soba ne može biti negativan");
 
+        if (dto.MalePercentage < 0 || dto.MalePercentage > 100)
+            throw new ArgumentException("MalePercentage mora biti izmedju 0 i 100");
+
         var dorm = await _repository.GetByIdWithRoomsAsync(dto.DormId);
 
         if (dorm == null)
@@ -78,7 +81,11 @@ public class DormService : IDormService
         var rooms = new List<DormitoryRoom>();
         int counter = dorm.Rooms.Count + 1;
 
-        for (int i = 0; i < dto.DoubleRooms; i++)
+        // Dvokrevetne sobe - podela po polu
+        int doubleMaleCount = (int)Math.Round(dto.DoubleRooms * dto.MalePercentage / 100.0);
+        int doubleFemaleCount = dto.DoubleRooms - doubleMaleCount;
+
+        for (int i = 0; i < doubleMaleCount; i++)
         {
             rooms.Add(new DormitoryRoom
             {
@@ -91,7 +98,24 @@ public class DormService : IDormService
             });
         }
 
-        for (int i = 0; i < dto.TripleRooms; i++)
+        for (int i = 0; i < doubleFemaleCount; i++)
+        {
+            rooms.Add(new DormitoryRoom
+            {
+                RoomNumber = $"D{counter++:000}",
+                Capacity = 2,
+                CurrentOccupancy = 0,
+                Gender = GenderType.Female,
+                Status = RoomStatus.Available,
+                DormId = dorm.Id
+            });
+        }
+
+        // Trokrevetne sobe - podela po polu (isti procenat, racuna se odvojeno)
+        int tripleMaleCount = (int)Math.Round(dto.TripleRooms * dto.MalePercentage / 100.0);
+        int tripleFemaleCount = dto.TripleRooms - tripleMaleCount;
+
+        for (int i = 0; i < tripleMaleCount; i++)
         {
             rooms.Add(new DormitoryRoom
             {
@@ -104,7 +128,80 @@ public class DormService : IDormService
             });
         }
 
+        for (int i = 0; i < tripleFemaleCount; i++)
+        {
+            rooms.Add(new DormitoryRoom
+            {
+                RoomNumber = $"T{counter++:000}",
+                Capacity = 3,
+                CurrentOccupancy = 0,
+                Gender = GenderType.Female,
+                Status = RoomStatus.Available,
+                DormId = dorm.Id
+            });
+        }
+
         await _repository.AddRoomsAsync(rooms);
+    }
+
+    // public async Task GenerateRoomsAsync(GenerateRoomsDto dto)
+    // {
+    //     if (dto.DoubleRooms < 0 || dto.TripleRooms < 0)
+    //         throw new ArgumentException("Broj soba ne može biti negativan");
+
+    //     var dorm = await _repository.GetByIdWithRoomsAsync(dto.DormId);
+
+    //     if (dorm == null)
+    //         throw new Exception("Dom nije pronađen");
+
+    //     var rooms = new List<DormitoryRoom>();
+    //     int counter = dorm.Rooms.Count + 1;
+
+    //     for (int i = 0; i < dto.DoubleRooms; i++)
+    //     {
+    //         rooms.Add(new DormitoryRoom
+    //         {
+    //             RoomNumber = $"D{counter++:000}",
+    //             Capacity = 2,
+    //             CurrentOccupancy = 0,
+    //             Gender = GenderType.Male,
+    //             Status = RoomStatus.Available,
+    //             DormId = dorm.Id
+    //         });
+    //     }
+
+    //     for (int i = 0; i < dto.TripleRooms; i++)
+    //     {
+    //         rooms.Add(new DormitoryRoom
+    //         {
+    //             RoomNumber = $"T{counter++:000}",
+    //             Capacity = 3,
+    //             CurrentOccupancy = 0,
+    //             Gender = GenderType.Male,
+    //             Status = RoomStatus.Available,
+    //             DormId = dorm.Id
+    //         });
+    //     }
+
+    //     await _repository.AddRoomsAsync(rooms);
+    // }
+
+    public async Task<int> DeleteAllRoomsForDormAsync(int dormId)
+    {
+        var dorm = await _repository.GetByIdWithRoomsAsync(dormId);
+
+        if (dorm == null)
+            throw new Exception("Dom nije pronađen");
+
+        var roomIds = dorm.Rooms.Select(r => r.Id).ToList();
+
+        if (roomIds.Count == 0)
+            return 0;
+
+        await _repository.ClearStudentRoomAssignmentsAsync(roomIds);
+        var deletedCount = await _repository.DeleteRoomsByIdsAsync(roomIds);
+
+        return deletedCount;
     }
 
     private static Dorm MapToEntity(DormCreateUpdateDto dto, Dorm? existing = null)

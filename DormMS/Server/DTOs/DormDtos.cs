@@ -23,4 +23,5 @@ public class GenerateRoomsDto
     public int DormId { get; set; }
     public int DoubleRooms { get; set; }
     public int TripleRooms { get; set; }
+    public int MalePercentage { get; set; } = 50;
 }

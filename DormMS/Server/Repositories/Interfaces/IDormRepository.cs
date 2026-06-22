@@ -12,4 +12,6 @@ public interface IDormRepository
     Task<bool> DeleteAsync(int id);
     Task<Dorm?> GetByIdWithRoomsAsync(int id);
     Task AddRoomsAsync(IEnumerable<DormitoryRoom> rooms);
+    Task ClearStudentRoomAssignmentsAsync(List<int> roomIds);
+    Task<int> DeleteRoomsByIdsAsync(List<int> roomIds);
 }

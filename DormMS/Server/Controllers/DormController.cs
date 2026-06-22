@@ -92,6 +92,21 @@ public class DormController : ControllerBase
         }
     }
 
+    [HttpDelete("{id}/rooms")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteAllRooms(int id)
+    {
+        try
+        {
+            var deletedCount = await _dormService.DeleteAllRoomsForDormAsync(id);
+            return Ok(new { message = $"Obrisano {deletedCount} soba.", deletedCount });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     // [HttpPost("{id}/generate-rooms")]
     // public async Task<IActionResult> GenerateRooms(int id, [FromBody] GenerateRoomsDto dto)
     // {

@@ -132,6 +132,7 @@ public class CompetitionApplicationController : ControllerBase
     //     return Ok(result);
     // }
 
+    //poziva ga bulk-verify all, nema potrebe da se zove ovako
     [Authorize(Roles = "Admin,DormManager")]
     [HttpPost("bulk-verify")]
     public async Task<ActionResult<BulkVerifyApplicationsResultDto>> BulkVerifyApplications(BulkVerifyApplicationsDto dto)

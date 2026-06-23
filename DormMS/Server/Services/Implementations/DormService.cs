@@ -89,7 +89,7 @@ public class DormService : IDormService
         {
             rooms.Add(new DormitoryRoom
             {
-                RoomNumber = $"D{counter++:000}",
+                RoomNumber = $"{counter++:000}",
                 Capacity = 2,
                 CurrentOccupancy = 0,
                 Gender = GenderType.Male,
@@ -102,7 +102,7 @@ public class DormService : IDormService
         {
             rooms.Add(new DormitoryRoom
             {
-                RoomNumber = $"D{counter++:000}",
+                RoomNumber = $"{counter++:000}",
                 Capacity = 2,
                 CurrentOccupancy = 0,
                 Gender = GenderType.Female,
@@ -119,7 +119,7 @@ public class DormService : IDormService
         {
             rooms.Add(new DormitoryRoom
             {
-                RoomNumber = $"T{counter++:000}",
+                RoomNumber = $"{counter++:000}",
                 Capacity = 3,
                 CurrentOccupancy = 0,
                 Gender = GenderType.Male,
@@ -132,7 +132,7 @@ public class DormService : IDormService
         {
             rooms.Add(new DormitoryRoom
             {
-                RoomNumber = $"T{counter++:000}",
+                RoomNumber = $"{counter++:000}",
                 Capacity = 3,
                 CurrentOccupancy = 0,
                 Gender = GenderType.Female,
@@ -143,48 +143,6 @@ public class DormService : IDormService
 
         await _repository.AddRoomsAsync(rooms);
     }
-
-    // public async Task GenerateRoomsAsync(GenerateRoomsDto dto)
-    // {
-    //     if (dto.DoubleRooms < 0 || dto.TripleRooms < 0)
-    //         throw new ArgumentException("Broj soba ne može biti negativan");
-
-    //     var dorm = await _repository.GetByIdWithRoomsAsync(dto.DormId);
-
-    //     if (dorm == null)
-    //         throw new Exception("Dom nije pronađen");
-
-    //     var rooms = new List<DormitoryRoom>();
-    //     int counter = dorm.Rooms.Count + 1;
-
-    //     for (int i = 0; i < dto.DoubleRooms; i++)
-    //     {
-    //         rooms.Add(new DormitoryRoom
-    //         {
-    //             RoomNumber = $"D{counter++:000}",
-    //             Capacity = 2,
-    //             CurrentOccupancy = 0,
-    //             Gender = GenderType.Male,
-    //             Status = RoomStatus.Available,
-    //             DormId = dorm.Id
-    //         });
-    //     }
-
-    //     for (int i = 0; i < dto.TripleRooms; i++)
-    //     {
-    //         rooms.Add(new DormitoryRoom
-    //         {
-    //             RoomNumber = $"T{counter++:000}",
-    //             Capacity = 3,
-    //             CurrentOccupancy = 0,
-    //             Gender = GenderType.Male,
-    //             Status = RoomStatus.Available,
-    //             DormId = dorm.Id
-    //         });
-    //     }
-
-    //     await _repository.AddRoomsAsync(rooms);
-    // }
 
     public async Task<int> DeleteAllRoomsForDormAsync(int dormId)
     {

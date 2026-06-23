@@ -786,33 +786,39 @@ public class AssignmentService : IAssignmentService
 
     private async Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, Student student, List<Dorm> dorms)
     {
-        foreach (var dorm in dorms.Where(d => !d.IsFull))
+        //foreach (var dorm in dorms.Where(d => !d.IsFull))
+        foreach (var dorm in dorms)
         {
-            // 1. korak: probaj sobu ISTOG pola u ovom domu
-            var room = await _assignmentRepository.GetAvailableRoomAsync(dorm.Id, student.Gender);
-            var isMixed = false;
+            // var hasSpace = await _context.DormitoryRooms
+            // .AnyAsync(r => r.DormId == dorm.Id && r.CurrentOccupancy < r.Capacity);
 
-            // 2. korak (fallback): ako nema sobe odgovarajuceg pola u ovom domu,
-            // dozvoli bilo koju slobodnu sobu u istom domu (mesovita dodela)
+            // if (!hasSpace)
+            //     continue;
+
+            var room = await _assignmentRepository.GetAvailableRoomAsync(dorm.Id, student.Gender);
+            //var isMixed = false;//za sada ne treba
+
             if (room == null)
             {
-                room = await _assignmentRepository.GetAnyAvailableRoomAsync(dorm.Id);
-                isMixed = room != null;
+                continue;
+                // room = await _assignmentRepository.GetAnyAvailableRoomAsync(dorm.Id);
+                // isMixed = room != null;
             }
 
-            if (room != null)
-            {
-                await _assignmentRepository.AssignStudentToRoomAsync(assignment.StudentId, room.Id);
+            // if (room.CurrentOccupancy >= room.Capacity)
+            //     continue;
 
-                room.CurrentOccupancy++;
-                await _context.SaveChangesAsync();
+            await _assignmentRepository.AssignStudentToRoomAsync(assignment.StudentId, room.Id);
 
-                assignment.AssignedDormId = dorm.Id;
-                assignment.AssignedDormName = dorm.Name;
-                assignment.AssignedRoomId = room.Id;
-                assignment.IsMixedGenderAssignment = isMixed;
-                return true;
-            }
+            // room.CurrentOccupancy++;
+            //await _context.SaveChangesAsync();
+
+            assignment.AssignedDormId = dorm.Id;
+            assignment.AssignedDormName = dorm.Name;
+            assignment.AssignedRoomId = room.Id;
+            //assignment.IsMixedGenderAssignment = isMixed;
+            return true;
+
         }
 
         return false;

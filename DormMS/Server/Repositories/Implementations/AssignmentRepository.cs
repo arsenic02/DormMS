@@ -59,11 +59,22 @@ public class AssignmentRepository : IAssignmentRepository
     public async Task AssignStudentToRoomAsync(int studentId, int roomId)
     {
         var student = await _context.Students.FindAsync(studentId);
-        if (student != null)
-        {
-            student.DormitoryRoomId = roomId;
-            await _context.SaveChangesAsync();
-        }
+        var room = await _context.DormitoryRooms.FindAsync(roomId);
+
+        if (student == null)
+            return;
+
+        if (room == null)
+            return;
+        
+        // if(student.Gender != (Gender)room.Gender)
+        // {
+        //     return;
+        // }
+
+        student.DormitoryRoomId = room.Id;
+        room.CurrentOccupancy++;
+        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateApplicationStatusAsync(int applicationId, ApplicationStatus status)

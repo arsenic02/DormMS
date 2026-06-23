@@ -20,6 +20,43 @@ public class StudentService : IStudentService
         _passwordHasher = new PasswordHasher<User>();
     }
 
+    private static readonly string[] MaleNames = new[]
+   {
+        "Marko", "Nikola", "Stefan", "Jovan", "Luka", "Milos", "Aleksandar",
+        "Nemanja", "Dusan", "Vuk", "Ivan", "Filip", "Petar", "Bogdan",
+        "Lazar", "Sava", "Andrej", "Uros", "Pavle", "Djordje", "Zeljko",
+        "Milan", "Nenad", "Ognjen"
+    };
+
+    private static readonly string[] FemaleNames = new[]
+    {
+        "Milica", "Ana", "Jovana", "Sara", "Teodora", "Jelena", "Marija",
+        "Kristina", "Ivana", "Katarina", "Tamara", "Nina", "Andrea", "Sofija",
+        "Lena", "Miljana", "Nevena", "Tijana", "Andjela", "Dunja", "Hana",
+        "Masa", "Olga", "Danica", "Ljubica"
+    };
+
+    // Pravi listu Gender vrednosti duzine 'count', sa tacnom (ili sto blizom moguce)
+    // 50/50 podelom, izmesanom (shuffle) da redosled ne bude predvidiv.
+    private static List<Gender> BuildBalancedGenderAssignments(int count, Random random)
+    {
+        var maleCount = count / 2;
+        var femaleCount = count - maleCount;
+
+        var assignments = new List<Gender>(count);
+        assignments.AddRange(Enumerable.Repeat(Gender.Male, maleCount));
+        assignments.AddRange(Enumerable.Repeat(Gender.Female, femaleCount));
+
+        // Fisher-Yates shuffle
+        for (int i = assignments.Count - 1; i > 0; i--)
+        {
+            int j = random.Next(i + 1);
+            (assignments[i], assignments[j]) = (assignments[j], assignments[i]);
+        }
+
+        return assignments;
+    }
+
     public async Task<IEnumerable<StudentGetDto>> GetAllAsync()
     {
         var students = await _repository.GetAllAsync();
@@ -104,7 +141,6 @@ public class StudentService : IStudentService
                     var normalizedEmail = record.Email.Trim().ToLowerInvariant();
                     var indexNumber = record.StudentIDNumber.Trim();
 
-                    // Check if email already exists
                     var emailExists = await _context.Users.AnyAsync(u => u.Email == normalizedEmail);
                     if (emailExists)
                     {
@@ -113,7 +149,6 @@ public class StudentService : IStudentService
                         continue;
                     }
 
-                    // Check if student ID number already exists
                     var indexExists = await _context.Students.AnyAsync(s => s.StudentIDNumber == indexNumber);
                     if (indexExists)
                     {
@@ -122,7 +157,6 @@ public class StudentService : IStudentService
                         continue;
                     }
 
-                    // Create student
                     var student = new Student
                     {
                         Name = record.Name.Trim(),
@@ -138,6 +172,7 @@ public class StudentService : IStudentService
                         FacultyId = 1,
                         HighSchoolAverageGrade = record.HighSchoolAverageGrade,
                         FacultyName = record.FacultyName.Trim(),
+                        Gender = record.Gender, // CITA SE IZ CSV-A, ne pogadja se
                     };
 
                     ApplyRealisticData(student, random);
@@ -145,7 +180,6 @@ public class StudentService : IStudentService
                     _context.Students.Add(student);
                     await _context.SaveChangesAsync();
 
-                    // Create user
                     var user = new User
                     {
                         Email = normalizedEmail,
@@ -159,7 +193,6 @@ public class StudentService : IStudentService
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
 
-                    // Create financial status
                     if (record.TotalFamilyIncome > 0 && record.FamilyMemberCount > 0)
                     {
                         var financialStatus = new StudentFinancialStatus
@@ -190,6 +223,234 @@ public class StudentService : IStudentService
 
         return result;
     }
+
+    //noviji kod koji ima staticku listu imena mmuskih i zenskih
+    // public async Task<StudentImportResultDto> ImportFromCsvAsync(IFormFile csvFile)
+    // {
+    //     Console.WriteLine(_context == null);
+    //     Console.WriteLine(_passwordHasher == null);
+
+    //     var result = new StudentImportResultDto();
+    //     var random = new Random();
+
+    //     try
+    //     {
+    //         using var reader = new StreamReader(csvFile.OpenReadStream());
+    //         using var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+
+    //         var records = csv.GetRecords<StudentCsvImportDto>().ToList();
+    //         result.TotalProcessed = records.Count;
+
+    //         var genderAssignments = BuildBalancedGenderAssignments(records.Count, random);
+
+    //         for (int i = 0; i < records.Count; i++)
+    //         {
+    //             var record = records[i];
+    //             try
+    //             {
+    //                 Console.WriteLine("1");
+    //                 var normalizedEmail = record.Email.Trim().ToLowerInvariant();
+    //                 var indexNumber = record.StudentIDNumber.Trim();
+
+    //                 var emailExists = await _context.Users.AnyAsync(u => u.Email == normalizedEmail);
+    //                 if (emailExists)
+    //                 {
+    //                     result.Errors.Add($"Email {normalizedEmail} already exists");
+    //                     result.Failed++;
+    //                     continue;
+    //                 }
+
+    //                 var indexExists = await _context.Students.AnyAsync(s => s.StudentIDNumber == indexNumber);
+    //                 if (indexExists)
+    //                 {
+    //                     result.Errors.Add($"Student ID {indexNumber} already exists");
+    //                     result.Failed++;
+    //                     continue;
+    //                 }
+
+    //                 var assignedGender = genderAssignments[i];
+    //                 var nameList = assignedGender == Gender.Male ? MaleNames : FemaleNames;
+    //                 var assignedName = nameList[random.Next(nameList.Length)];
+
+    //                 var student = new Student
+    //                 {
+    //                     Name = assignedName, 
+    //                     Surname = record.Surname.Trim(),
+    //                     StudentIDNumber = indexNumber,
+    //                     Email = normalizedEmail,
+    //                     Status = StudentStatus.Active,
+    //                     ProfileStatus = StudentProfileStatus.Incomplete,
+    //                     ESPB = record.ESPB,
+    //                     AverageGrade = record.AverageGrade,
+    //                     YearOfEnrollment = record.YearOfEnrollment > 0 ? record.YearOfEnrollment : DateTime.Now.Year - random.Next(1, 5),
+    //                     StudyLevel = StudyLevel.Undergraduate,
+    //                     FacultyId = 1,
+    //                     HighSchoolAverageGrade = record.HighSchoolAverageGrade,
+    //                     FacultyName = record.FacultyName.Trim(),
+    //                     Gender = assignedGender,
+    //                 };
+
+
+    //                 ApplyRealisticData(student, random);
+    //                 Console.WriteLine("6");
+    //                 _context.Students.Add(student);
+
+    //                 Console.WriteLine("7");
+    //                 await _context.SaveChangesAsync();
+
+    //                 // Create user
+    //                 var user = new User
+    //                 {
+    //                     Email = normalizedEmail,
+    //                     Role = UserRole.Student,
+    //                     IsActive = true,
+    //                     StudentId = student.Id
+    //                 };
+
+    //                 user.PasswordHash = _passwordHasher.HashPassword(user, record.Password);
+
+    //                 _context.Users.Add(user);
+    //                 await _context.SaveChangesAsync();
+
+    //                 if (record.TotalFamilyIncome > 0 && record.FamilyMemberCount > 0)
+    //                 {
+    //                     var financialStatus = new StudentFinancialStatus
+    //                     {
+    //                         StudentId = student.Id,
+    //                         TotalFamilyIncome = record.TotalFamilyIncome,
+    //                         FamilyMemberCount = record.FamilyMemberCount,
+    //                         IsVerified = true,
+    //                         VerifiedAt = DateTime.UtcNow
+    //                     };
+    //                     _context.StudentFinancialStatuses.Add(financialStatus);
+    //                     await _context.SaveChangesAsync();
+    //                 }
+
+    //                 result.SuccessfullyImported++;
+    //             }
+    //             catch (Exception ex)
+    //             {
+    //                 result.Errors.Add($"Error importing {record.Email}: {ex.Message}\n{ex.StackTrace}");
+    //                 result.Failed++;
+    //             }
+
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         result.Errors.Add($"Import failed: {ex.Message}");
+    //     }
+
+    //     return result;
+    // }
+
+    //stari solidan kod
+    // public async Task<StudentImportResultDto> ImportFromCsvAsync(IFormFile csvFile)
+    // {
+    //     var result = new StudentImportResultDto();
+    //     var random = new Random();
+
+    //     try
+    //     {
+    //         using var reader = new StreamReader(csvFile.OpenReadStream());
+    //         using var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+
+    //         var records = csv.GetRecords<StudentCsvImportDto>().ToList();
+    //         result.TotalProcessed = records.Count;
+
+    //         foreach (var record in records)
+    //         {
+    //             try
+    //             {
+    //                 var normalizedEmail = record.Email.Trim().ToLowerInvariant();
+    //                 var indexNumber = record.StudentIDNumber.Trim();
+
+    //                 // Check if email already exists
+    //                 var emailExists = await _context.Users.AnyAsync(u => u.Email == normalizedEmail);
+    //                 if (emailExists)
+    //                 {
+    //                     result.Errors.Add($"Email {normalizedEmail} already exists");
+    //                     result.Failed++;
+    //                     continue;
+    //                 }
+
+    //                 // Check if student ID number already exists
+    //                 var indexExists = await _context.Students.AnyAsync(s => s.StudentIDNumber == indexNumber);
+    //                 if (indexExists)
+    //                 {
+    //                     result.Errors.Add($"Student ID {indexNumber} already exists");
+    //                     result.Failed++;
+    //                     continue;
+    //                 }
+
+    //                 // Create student
+    //                 var student = new Student
+    //                 {
+    //                     Name = record.Name.Trim(),
+    //                     Surname = record.Surname.Trim(),
+    //                     StudentIDNumber = indexNumber,
+    //                     Email = normalizedEmail,
+    //                     Status = StudentStatus.Active,
+    //                     ProfileStatus = StudentProfileStatus.Incomplete,
+    //                     ESPB = record.ESPB,
+    //                     AverageGrade = record.AverageGrade,
+    //                     YearOfEnrollment = record.YearOfEnrollment > 0 ? record.YearOfEnrollment : DateTime.Now.Year - random.Next(1, 5),
+    //                     StudyLevel = StudyLevel.Undergraduate,
+    //                     FacultyId = 1,
+    //                     HighSchoolAverageGrade = record.HighSchoolAverageGrade,
+    //                     FacultyName = record.FacultyName.Trim(),
+    //                 };
+
+    //                 ApplyRealisticData(student, random);
+
+    //                 _context.Students.Add(student);
+    //                 await _context.SaveChangesAsync();
+
+    //                 // Create user
+    //                 var user = new User
+    //                 {
+    //                     Email = normalizedEmail,
+    //                     Role = UserRole.Student,
+    //                     IsActive = true,
+    //                     StudentId = student.Id
+    //                 };
+
+    //                 user.PasswordHash = _passwordHasher.HashPassword(user, record.Password);
+
+    //                 _context.Users.Add(user);
+    //                 await _context.SaveChangesAsync();
+
+    //                 // Create financial status
+    //                 if (record.TotalFamilyIncome > 0 && record.FamilyMemberCount > 0)
+    //                 {
+    //                     var financialStatus = new StudentFinancialStatus
+    //                     {
+    //                         StudentId = student.Id,
+    //                         TotalFamilyIncome = record.TotalFamilyIncome,
+    //                         FamilyMemberCount = record.FamilyMemberCount,
+    //                         IsVerified = true,
+    //                         VerifiedAt = DateTime.UtcNow
+    //                     };
+    //                     _context.StudentFinancialStatuses.Add(financialStatus);
+    //                     await _context.SaveChangesAsync();
+    //                 }
+
+    //                 result.SuccessfullyImported++;
+    //             }
+    //             catch (Exception ex)
+    //             {
+    //                 result.Errors.Add($"Error importing {record.Email}: {ex.Message}");
+    //                 result.Failed++;
+    //             }
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         result.Errors.Add($"Import failed: {ex.Message}");
+    //     }
+
+    //     return result;
+    // }
 
     private void ApplyRealisticData(Student student, Random random)
     {
@@ -237,10 +498,6 @@ public class StudentService : IStudentService
         student.FacultyName = faculties[facultyIndex];
         student.FacultyId = facultyIndex + 1;
 
-        // var facultyIndex = random.Next(faculties.Length);
-        // student.FacultyName = faculties[facultyIndex];
-        // student.FacultyId = facultyIndex + 1;
-
         if (int.TryParse(student.StudentIDNumber, out _))
         {
             if (student.FacultyName.Contains("Elektronski"))
@@ -254,7 +511,6 @@ public class StudentService : IStudentService
         }
 
         if (student.Age == 0) student.Age = random.Next(19, 27);
-        student.Gender = (Gender)random.Next(2);
 
         var day = random.Next(1, 29).ToString("D2");
         var month = random.Next(1, 13).ToString("D2");
@@ -265,7 +521,6 @@ public class StudentService : IStudentService
         student.MunicipalityOfResidence = random.Next(100) < 90 ? cities[random.Next(cities.Length)] : "Niš";
         student.HomeAddress = $"{streets[random.Next(streets.Length)]} {random.Next(1, 150)}";
 
-        //if (student.ESPB == 0) student.ESPB = random.Next(30, 241);
         if (student.ESPB == 0 && !student.IsFreshman) student.ESPB = random.Next(30, 241);
         student.StudyLevel = random.Next(100) < 90 ? StudyLevel.Undergraduate : StudyLevel.Postgraduate;
         if (student.AverageGrade == 0) student.AverageGrade = Math.Round((decimal)(random.NextDouble() * 3.5 + 6.5), 2);
@@ -473,9 +728,6 @@ public class StudentService : IStudentService
 
         return await _repository.DormitoryRoomExistsAsync(dormitoryRoomId.Value);
     }
-
-
-
     private static bool IsProfileValid(StudentProfileUpdateDto dto)
     {
         if (string.IsNullOrWhiteSpace(dto.HomeAddress))
@@ -624,7 +876,7 @@ public class StudentService : IStudentService
             .ToList();
     }
 
-   
+
     private static Student MapToEntity(StudentCreateUpdateDto dto, Student? existing = null)
     {
         var student = existing ?? new Student();

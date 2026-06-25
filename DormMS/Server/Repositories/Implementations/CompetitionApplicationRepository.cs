@@ -13,6 +13,14 @@ public class CompetitionApplicationRepository : ICompetitionApplicationRepositor
         _context = context;
     }
 
+    public async Task<List<int>> GetApplicationIdsByCompetitionIdAsync(int competitionId)
+    {
+        return await _context.CompetitionApplications
+            .Where(a => a.CompetitionId == competitionId)
+            .Select(a => a.Id)
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<CompetitionApplication>> GetApplicationsByCompetitionIdAsync(int competitionId)
     {
         return await _context.CompetitionApplications
@@ -66,7 +74,11 @@ public class CompetitionApplicationRepository : ICompetitionApplicationRepositor
 
     public async Task UpdateAsync(CompetitionApplication application)
     {
-        await _context.SaveChangesAsync();
+        _context.CompetitionApplications.Update(application);
+        var rows=await _context.SaveChangesAsync();//ovde moze da se izbaci rows posle
+
+        //DODATO Za testiranje
+        Console.WriteLine($"[REPO-UPDATE] application.Id={application.Id}, status={application.Status}, rows affected={rows}");
     }
 
     public async Task<bool> DeleteAsync(int id)

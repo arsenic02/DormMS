@@ -5,6 +5,7 @@ namespace DormMS.Server.Repositories.Interfaces;
 public interface ICompetitionApplicationRepository
 {
     Task<IEnumerable<CompetitionApplication>> GetApplicationsByCompetitionIdAsync(int competitionId);
+    Task<List<int>> GetApplicationIdsByCompetitionIdAsync(int competitionId);
     Task<IEnumerable<CompetitionApplication>> GetAllAsync();
     Task<IEnumerable<CompetitionApplication>> GetByStatusAsync(ApplicationStatus status);
     Task<CompetitionApplication?> GetApplicationByIdAsync(int id);

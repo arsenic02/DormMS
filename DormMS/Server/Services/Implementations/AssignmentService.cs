@@ -309,7 +309,7 @@ public class AssignmentService : IAssignmentService
 
         // Samo brucosi, budzetski studenti
         var approvedApplications = competition.Applications
-            .Where(a => /*(*/ a.Status == ApplicationStatus.Approved //|| a.Status == ApplicationStatus.Pending)
+            .Where(a => /*(*/ a.Status == ApplicationStatus.Approved 
                         && a.Student.IsBudgetStudent
                         && a.Student.IsFreshman) // samo brucosi
             .ToList();
@@ -384,6 +384,8 @@ public class AssignmentService : IAssignmentService
             .ToListAsync();
         _context.RankingResults.RemoveRange(oldResults);
 
+        competition.Status = CompetitionStatus.Completed;
+
         foreach (var assignment in freshmanAssignments)
         {
             _context.RankingResults.Add(new RankingResult
@@ -403,9 +405,8 @@ public class AssignmentService : IAssignmentService
             });
         }
 
-        competition.Status = CompetitionStatus.Completed;
         await _context.SaveChangesAsync();
-
+       
         result.RankingsByFaculty = groupedByFaculty;
         result.TotalStudents = freshmanAssignments.Count;
 

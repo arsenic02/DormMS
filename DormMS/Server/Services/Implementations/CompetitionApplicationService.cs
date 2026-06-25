@@ -267,6 +267,7 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         var applicationIds = GetIdsFromDto(dto.ApplicationIds, dto.StartId, dto.EndId);
         result.TotalProcessed = applicationIds.Count;
 
+        Console.WriteLine($"[BULKVERIFY] dto.Status={dto.Status}, applicationIds.Count={applicationIds.Count}, first few ids: {string.Join(",", applicationIds.Take(5))}");
         foreach (var applicationId in applicationIds)
         {
             try
@@ -289,15 +290,27 @@ public class CompetitionApplicationService : ICompetitionApplicationService
                     result.Failed++;
                     continue;
                 }
-
+                var oldStatus = application.Status;//DODATO ZA TEST
                 application.Status = dto.Status;
+
+                //DODATO ZA TESTIRANJE
+                var entry = _context.Entry(application);
+                Console.WriteLine($"[BULKVERIFY] id={applicationId}, oldStatus={oldStatus}, newStatus={application.Status}, EF State BEFORE UpdateAsync={entry.State}");
+
                 await _repository.UpdateAsync(application);
+
+                //DODATO ZA TESTIRANJE
+                Console.WriteLine($"[BULKVERIFY] id={applicationId}, EF State AFTER UpdateAsync={entry.State}");
+
                 result.SuccessfullyVerified++;
             }
             catch (Exception ex)
             {
                 result.Errors.Add($"Error verifying application {applicationId}: {ex.Message}");
                 result.Failed++;
+                
+                //ZA TESTIRANJE
+                // Console.WriteLine($"[BULKVERIFY] EXCEPTION for id={applicationId}: {ex}");
             }
         }
 
@@ -320,8 +333,10 @@ public class CompetitionApplicationService : ICompetitionApplicationService
 
     public async Task<BulkVerifyApplicationsResultDto> BulkVerifyAllForCompetitionAsync(int competitionId, ApplicationStatus status)
     {
-        var applications = await _repository.GetApplicationsByCompetitionIdAsync(competitionId);
-        var applicationIds = applications.Select(a => a.Id).ToList();
+        //var applications = await _repository.GetApplicationsByCompetitionIdAsync(competitionId);
+        //var applicationIds = applications.Select(a => a.Id).ToList();
+
+        var applicationIds = await _repository.GetApplicationIdsByCompetitionIdAsync(competitionId);
 
         var dto = new BulkVerifyApplicationsDto
         {

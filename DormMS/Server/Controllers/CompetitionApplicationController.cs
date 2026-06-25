@@ -67,6 +67,21 @@ public class CompetitionApplicationController : ControllerBase
     }
 
     [Authorize(Roles = "Admin,DormManager")]
+    [HttpGet("{competitionId}/applications-paged")]
+    public async Task<ActionResult<PagedResultDto<CompetitionApplicationGetDto>>> GetApplicationsPaged(
+    int competitionId,
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 12,
+    [FromQuery] ApplicationStatus? status = null)
+    {
+        if (pageNumber < 1) pageNumber = 1;
+        if (pageSize < 1 || pageSize > 100) pageSize = 12;
+
+        var result = await _applicationService.GetPagedByCompetitionIdAsync(competitionId, pageNumber, pageSize, status);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CompetitionApplicationGetDto>>> GetAllApplications()
     {

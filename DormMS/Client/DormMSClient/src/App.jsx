@@ -18,6 +18,7 @@ import DormManagerRankingPage from './pages/DormManagerDashBoard/DormManagerRank
 import DormManagerRankings from './pages/DormManagerDashBoard/DormManagerRankings/DormManagerRankings'
 import DormManagerRanking from './components/Ranking/DormManagerRanking'
 import DormManagerRooms from './pages/DormManagerDashBoard/DormManagerRooms/DormManagerRooms'
+import DormManagerCompetitionApplications from './pages/DormManagerDashBoard/DormManagerCompetitionApplications/DormManagerCompetitionApplications'
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path="/dorm-manager/rankings" element={<DormManagerRankings />} />
           <Route path="/dorm-manager/rankings/:id" element={<DormManagerRankingPage />} />
           <Route path="/dorm-manager/rooms" element={<DormManagerRooms />} />
+          <Route path="/dorm-manager/competitions/:competitionId/applications" element={<DormManagerCompetitionApplications />} />
         </Route>
 
       </Routes>

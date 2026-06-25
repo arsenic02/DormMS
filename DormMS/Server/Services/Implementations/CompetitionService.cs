@@ -24,6 +24,19 @@ public class CompetitionService : ICompetitionService
         var competitions = await _repository.GetAllAsync();
         return competitions.Select(c => MapToGetDto(c));
     }
+    public async Task<PagedResultDto<CompetitionGetDto>> GetPagedAsync(
+    int pageNumber, int pageSize, CompetitionType? type, CompetitionStatus? status)
+    {
+        var (competitions, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize, type, status);
+
+        return new PagedResultDto<CompetitionGetDto>
+        {
+            Items = competitions.Select(c => MapToGetDto(c)).ToList(),
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
 
     public async Task<CompetitionGetDto?> GetByIdAsync(int id)
     {
@@ -142,62 +155,6 @@ public class CompetitionService : ICompetitionService
         await _repository.AddAsync(competition);
         return new(MapToGetDto(competition), null);
     }
-
-    //public record CreateCompetitionResult(CompetitionGetDto? Competition, string? Error);
-
-    
-    // public async Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int userId, string role)
-    // {
-    //     int? adminId = null;
-    //     int? dormManagerId = null;
-
-    //     if (dto.MaxStudents.HasValue)
-    //     {
-    //         var dorm = await _context.Dorms
-    //             .Include(d => d.Rooms)
-    //             .FirstOrDefaultAsync();
-
-    //         if (dorm != null && dto.MaxStudents.Value > dorm.AvailableSpots)
-    //             return null;
-    //     }
-
-    //     if (role == "Admin")
-    //     {
-    //         adminId = await _context.Users
-    //             .Where(u => u.Id == userId)
-    //             .Select(u => u.AdminId)
-    //             .FirstOrDefaultAsync();
-
-    //         if (adminId is null)
-    //             return null;
-    //     }
-    //     else if (role == "DormManager")
-    //     {
-    //         dormManagerId = await _context.Users
-    //             .Where(u => u.Id == userId)
-    //             .Select(u => u.DormManagerId)
-    //             .FirstOrDefaultAsync();
-
-    //         if (dormManagerId is null)
-    //             return null;
-    //     }
-
-    //     var competition = new Competition
-    //     {
-    //         Name = dto.Name.Trim(),
-    //         Description = dto.Description.Trim(),
-    //         StartDate = dto.StartDate.ToUniversalTime(),
-    //         EndDate = dto.EndDate.ToUniversalTime(),
-    //         Status = CompetitionStatus.Draft,
-    //         Type = dto.Type,
-    //         CreatedByAdminId = adminId,
-    //         CreatedByDormManagerId = dormManagerId,
-    //         MaxStudents = dto.MaxStudents
-    //     };
-
-    //     await _repository.AddAsync(competition);
-    //     return MapToGetDto(competition);
-    // }
 
     public async Task<CompetitionGetDto?> UpdateAsync(int id, CompetitionUpdateDto dto)
     {

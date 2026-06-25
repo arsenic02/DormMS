@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DormMS.Server.Services.Interfaces;
 using DormMS.Server.DTOs;
+using DormMS.Server.Models;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -22,6 +23,21 @@ public class CompetitionController : ControllerBase
     public async Task<ActionResult<IEnumerable<CompetitionGetDto>>> GetCompetitions()
     {
         return Ok(await _competitionService.GetAllAsync());
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpGet("paged")]
+    public async Task<ActionResult<PagedResultDto<CompetitionGetDto>>> GetCompetitionsPaged(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] CompetitionType? type = null,
+    [FromQuery] CompetitionStatus? status = null)
+    {
+        if (pageNumber < 1) pageNumber = 1;
+        if (pageSize < 1 || pageSize > 100) pageSize = 10;
+
+        var result = await _competitionService.GetPagedAsync(pageNumber, pageSize, type, status);
+        return Ok(result);
     }
 
     [Authorize(Roles = "Admin,DormManager")]

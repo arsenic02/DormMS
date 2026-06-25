@@ -65,6 +65,29 @@ public class CompetitionApplicationRepository : ICompetitionApplicationRepositor
             .AsNoTracking()
             .FirstOrDefaultAsync(a => a.StudentId == studentId && a.CompetitionId == competitionId);
     }
+    public async Task<(List<CompetitionApplication> Applications, int TotalCount)> GetPagedByCompetitionIdAsync(
+    int competitionId, int pageNumber, int pageSize, ApplicationStatus? status)
+    {
+        var query = _context.CompetitionApplications
+            .Where(a => a.CompetitionId == competitionId);
+
+        if (status.HasValue)
+            query = query.Where(a => a.Status == status.Value);
+
+        var totalCount = await query.CountAsync();
+
+        var applications = await query
+            .Include(a => a.Student)
+            .Include(a => a.Competition)
+            .AsNoTracking()
+            .OrderBy(a => a.Status)
+            .ThenBy(a => a.AppliedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (applications, totalCount);
+    }
 
     public async Task AddAsync(CompetitionApplication application)
     {
@@ -75,7 +98,7 @@ public class CompetitionApplicationRepository : ICompetitionApplicationRepositor
     public async Task UpdateAsync(CompetitionApplication application)
     {
         _context.CompetitionApplications.Update(application);
-        var rows=await _context.SaveChangesAsync();//ovde moze da se izbaci rows posle
+        var rows = await _context.SaveChangesAsync();//ovde moze da se izbaci rows posle
 
         //DODATO Za testiranje
         Console.WriteLine($"[REPO-UPDATE] application.Id={application.Id}, status={application.Status}, rows affected={rows}");

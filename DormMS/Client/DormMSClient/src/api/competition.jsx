@@ -12,11 +12,35 @@ export const getCompetitions = async () => {
     return res.json()
 }
 
+
+
 export const getOpenCompetitions = async () => {
     const res = await fetchWithAuth(`${API_URL}/open`, {
         headers: { Authorization: `Bearer ${getToken()}` },
     })
     if (!res.ok) throw new Error('Greška prilikom učitavanja otvorenih konkursa.')
+    return res.json()
+}
+
+// Vraca paginiranu listu konkursa, opciono filtriranu po tipu i statusu.
+// type: 0=Stariji studenti, 1=Brucosi, ili '' za sve
+// status: 0=Nacrt, 1=Otvoren, 2=Zatvoren, 3=Zavrsen, ili '' za sve
+export const getCompetitionsPaged = async (pageNumber, pageSize, type, status) => {
+    const params = new URLSearchParams({
+        pageNumber: String(pageNumber),
+        pageSize: String(pageSize),
+    })
+    if (type !== null && type !== undefined && type !== '') {
+        params.set('type', String(type))
+    }
+    if (status !== null && status !== undefined && status !== '') {
+        params.set('status', String(status))
+    }
+
+    const res = await fetchWithAuth(`${API_URL}/paged?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+    })
+    if (!res.ok) throw new Error('Greška prilikom učitavanja konkursa.')
     return res.json()
 }
 

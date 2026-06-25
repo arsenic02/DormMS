@@ -12,6 +12,9 @@ public interface ICompetitionApplicationService
     Task<IEnumerable<CompetitionApplicationGetDto>> GetApplicationsByCompetitionIdAsync(int competitionId);
     Task<IEnumerable<CompetitionApplicationGetDto>> GetAllAsync();
     Task<IEnumerable<CompetitionApplicationGetDto>> GetVerifiedApplicationsAsync();
+
+    Task<PagedResultDto<CompetitionApplicationGetDto>> GetPagedByCompetitionIdAsync(
+    int competitionId, int pageNumber, int pageSize, ApplicationStatus? status);
     Task<CompetitionApplicationGetDto?> UpdateApplicationAsync(int id, CompetitionApplicationUpdateDto dto);
     Task<bool> DeleteApplicationAsync(int id);
     Task<int> DeleteApplicationsByCompetitionIdAsync(int competitionId);

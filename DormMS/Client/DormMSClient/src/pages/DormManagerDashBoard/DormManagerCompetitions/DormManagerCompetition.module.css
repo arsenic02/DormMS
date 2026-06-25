@@ -260,3 +260,115 @@
     font-size: 0.85rem;
     color: #777;
 }
+
+
+.applicationsBtn {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    background-color: #4338ca;
+    color: white;
+}
+
+.applicationsBtn:hover {
+    opacity: 0.9;
+}
+
+ 
+/* Red sa naslovom "Konkursi" i filterima */
+.subtitleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 2rem 0 1rem;
+}
+ 
+.subtitleRow .subtitle {
+    margin: 0;
+}
+ 
+.filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+ 
+.filterField {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+ 
+.filterField label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+}
+ 
+.filterField select {
+    padding: 0.4rem 0.7rem;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+ 
+.filterField select:hover,
+.filterField select:focus {
+    outline: none;
+    border-color: #4a7c59;
+}
+ 
+/* Paginacija */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #eee;
+}
+ 
+.pageButton {
+    border: 1.5px solid #ddd;
+    background: #fff;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #444;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+ 
+.pageButton:hover:not(:disabled) {
+    border-color: #4a7c59;
+    color: #4a7c59;
+    background: #f4f9f6;
+}
+ 
+.pageButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+ 
+.pageInfo {
+    font-size: 0.85rem;
+    color: #777;
+}
+ 
+.pageInfo strong {
+    color: #1a1a1a;
+}
+ 
+.info {
+    color: #777;
+    font-size: 0.9rem;
+}

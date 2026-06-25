@@ -10,6 +10,9 @@ public interface ICompetitionApplicationRepository
     Task<IEnumerable<CompetitionApplication>> GetByStatusAsync(ApplicationStatus status);
     Task<CompetitionApplication?> GetApplicationByIdAsync(int id);
     Task<CompetitionApplication?> GetApplicationByStudentAndCompetitionAsync(int studentId, int competitionId);
+
+    Task<(List<CompetitionApplication> Applications, int TotalCount)> GetPagedByCompetitionIdAsync(
+    int competitionId, int pageNumber, int pageSize, ApplicationStatus? status);
     Task AddAsync(CompetitionApplication application);
     Task UpdateAsync(CompetitionApplication application);
     Task<bool> DeleteAsync(int id);

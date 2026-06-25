@@ -6,6 +6,8 @@ namespace DormMS.Server.Services.Interfaces;
 public interface ICompetitionService
 {
     Task<IEnumerable<CompetitionGetDto>> GetAllAsync();
+    Task<PagedResultDto<CompetitionGetDto>> GetPagedAsync(
+    int pageNumber, int pageSize, CompetitionType? type, CompetitionStatus? status);
     Task<CompetitionGetDto?> GetByIdAsync(int id);
     Task<IEnumerable<CompetitionGetDto>> GetOpenCompetitionsAsync(int studentId);
 

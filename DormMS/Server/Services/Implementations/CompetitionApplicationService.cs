@@ -118,6 +118,21 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         return applications.Select(MapToApplicationGetDto);
     }
 
+    public async Task<PagedResultDto<CompetitionApplicationGetDto>> GetPagedByCompetitionIdAsync(
+    int competitionId, int pageNumber, int pageSize, ApplicationStatus? status)
+    {
+        var (applications, totalCount) = await _repository.GetPagedByCompetitionIdAsync(
+            competitionId, pageNumber, pageSize, status);
+
+        return new PagedResultDto<CompetitionApplicationGetDto>
+        {
+            Items = applications.Select(MapToApplicationGetDto).ToList(),
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
+
     public async Task<CompetitionApplicationGetDto?> UpdateApplicationAsync(int id, CompetitionApplicationUpdateDto dto)
     {
         var application = await _context.CompetitionApplications
@@ -308,7 +323,7 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             {
                 result.Errors.Add($"Error verifying application {applicationId}: {ex.Message}");
                 result.Failed++;
-                
+
                 //ZA TESTIRANJE
                 // Console.WriteLine($"[BULKVERIFY] EXCEPTION for id={applicationId}: {ex}");
             }

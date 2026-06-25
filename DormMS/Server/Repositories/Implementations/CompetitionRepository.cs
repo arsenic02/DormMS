@@ -21,6 +21,30 @@ public class CompetitionRepository : ICompetitionRepository
             .ToListAsync();
     }
 
+    public async Task<(List<Competition> Competitions, int TotalCount)> GetPagedAsync(
+    int pageNumber, int pageSize, CompetitionType? type, CompetitionStatus? status)
+    {
+        var query = _context.Competitions.AsQueryable();
+
+        if (type.HasValue)
+            query = query.Where(c => c.Type == type.Value);
+
+        if (status.HasValue)
+            query = query.Where(c => c.Status == status.Value);
+
+        var totalCount = await query.CountAsync();
+
+        var competitions = await query
+            .Include(c => c.Applications)
+            .AsNoTracking()
+            .OrderByDescending(c => c.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (competitions, totalCount);
+    }
+
     public async Task<Competition?> GetByIdAsync(int id)
     {
         return await _context.Competitions
@@ -41,8 +65,8 @@ public class CompetitionRepository : ICompetitionRepository
     {
         var now = DateTime.UtcNow;
         return await _context.Competitions
-            .Where(c => c.Status == CompetitionStatus.Open 
-                && c.StartDate <= now 
+            .Where(c => c.Status == CompetitionStatus.Open
+                && c.StartDate <= now
                 && c.EndDate >= now)
             .Include(c => c.Applications)
             .AsNoTracking()

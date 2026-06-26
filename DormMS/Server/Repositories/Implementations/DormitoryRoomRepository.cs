@@ -27,6 +27,13 @@ public class DormitoryRoomRepository : IDormitoryRoomRepository
     {
         return await _context.DormitoryRooms.FindAsync(id);
     }
+    public async Task<DormitoryRoom?> GetByIdWithDormAndStudentsAsync(int roomId)
+    {
+        return await _context.DormitoryRooms
+            .Include(r => r.Dorm)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(r => r.Id == roomId);
+    }
 
     public async Task AddAsync(DormitoryRoom room)
     {

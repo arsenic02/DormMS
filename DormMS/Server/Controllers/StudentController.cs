@@ -47,6 +47,18 @@ public class StudentController : ControllerBase
 
         return profile;
     }
+    
+    [Authorize(Roles = "Student")]
+    [HttpGet("me/room")]
+    public async Task<ActionResult<MyRoomGetDto>> GetMyRoom()
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        var result = await _studentService.GetMyRoomAsync(userId.Value);
+        return Ok(result);
+    }
 
     [Authorize(Roles = "Student")]
     [HttpPut("me/profile")]
@@ -189,7 +201,7 @@ public class StudentController : ControllerBase
         return Ok(students);
     }
 
-    
+
 
     private int? GetCurrentUserId()
     {

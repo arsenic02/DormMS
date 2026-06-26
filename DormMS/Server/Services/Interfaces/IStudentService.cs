@@ -8,6 +8,7 @@ public interface IStudentService
     Task<IEnumerable<StudentGetDto>> GetAllAsync();
     Task<StudentGetDto?> GetByIdAsync(int id);
     Task<StudentGetDto?> GetByUserIdAsync(int userId);
+    Task<MyRoomGetDto> GetMyRoomAsync(int userId);
     Task<Student?> CreateAsync(StudentCreateUpdateDto dto);
     Task<bool?> UpdateAsync(int id, StudentCreateUpdateDto dto);
     Task<StudentGetDto?> CompleteProfileAsync(int userId, StudentProfileUpdateDto dto);

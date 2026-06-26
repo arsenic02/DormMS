@@ -26,47 +26,57 @@ public class Student
     public int? DormitoryRoomId { get; set; } //FK
     public DormitoryRoom? DormitoryRoom { get; set; }
 
-    public StudentProfileStatus ProfileStatus { get; set; } = StudentProfileStatus.Incomplete; 
+    public StudentProfileStatus ProfileStatus { get; set; } = StudentProfileStatus.Incomplete;
     public StudentFinancialStatus? FinancialStatus { get; set; }
 
     //public bool IsProfileComplete { get; set; }
 
-    public bool IsEligibleToApply => 
-        ProfileStatus == StudentProfileStatus.Verified && 
-        FinancialStatus != null && 
+    public bool IsEligibleToApply =>
+        ProfileStatus == StudentProfileStatus.Verified &&
+        FinancialStatus != null &&
         FinancialStatus.IsVerified &&
         IsBudgetStudent;
 
     //bolje da se racuna nego da se cuva u bazi, jer se menja svake godine
     public int CurrentYearOfStudy => DateTime.Now.Year - YearOfEnrollment + 1;
     public bool IsFreshman => CurrentYearOfStudy == 1;
+
+    public ICollection<RoomSwapRequest> SentSwapRequests { get; set; }
+    = new List<RoomSwapRequest>();
+
+    public ICollection<RoomSwapRequest> ReceivedSwapRequests { get; set; }
+    = new List<RoomSwapRequest>();
+
 }
+
+
+
 
 public enum StudyLevel
 {
-    Undergraduate=0,   
-    Postgraduate=1,    
-    Doctoral=2,         
-    Integrated=3         
+    Undergraduate = 0,
+    Postgraduate = 1,
+    Doctoral = 2,
+    Integrated = 3
 }
 
 public enum StudentStatus
 {
-    Active=0,
-    Inactive=1,
-    Graduated=2,
+    Active = 0,
+    Inactive = 1,
+    Graduated = 2,
 }
 
 public enum Gender
 {
-    Male=0,
-    Female=1
+    Male = 0,
+    Female = 1
 }
 
 public enum StudentProfileStatus
 {
-    Incomplete=0, // Tek registrovan
-    PendingVerification=1,  // Popunio podatke, čeka verifikaciju od admina
-    Verified=2, // Admin potvrdio podatke
-    Rejected=3 // Admin odbio podatke, student treba da ih ispravi
+    Incomplete = 0, // Tek registrovan
+    PendingVerification = 1,  // Popunio podatke, čeka verifikaciju od admina
+    Verified = 2, // Admin potvrdio podatke
+    Rejected = 3 // Admin odbio podatke, student treba da ih ispravi
 }

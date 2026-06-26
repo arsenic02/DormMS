@@ -17,7 +17,6 @@ public class DormitoryRoomService : IDormitoryRoomService
     public Task<IEnumerable<DormitoryRoom>> GetAllAsync() => _repository.GetAllAsync();
 
     public Task<DormitoryRoom?> GetByIdAsync(int id) => _repository.GetByIdAsync(id);
-
     public async Task<DormitoryRoom?> CreateAsync(DormitoryRoomCreateUpdateDto dto)
     {
         if (!await IsValidAsync(dto))

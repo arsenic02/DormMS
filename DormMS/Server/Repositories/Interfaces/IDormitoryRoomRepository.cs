@@ -7,6 +7,7 @@ public interface IDormitoryRoomRepository
     Task<IEnumerable<DormitoryRoom>> GetAllAsync();
     Task<DormitoryRoom?> GetByIdAsync(int id);
     Task<DormitoryRoom?> GetByIdTrackedAsync(int id);
+    Task<DormitoryRoom?> GetByIdWithDormAndStudentsAsync(int roomId);
     Task AddAsync(DormitoryRoom room);
     Task UpdateAsync(DormitoryRoom room);
     Task<bool> DeleteAsync(int id);

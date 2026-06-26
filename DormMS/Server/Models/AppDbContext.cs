@@ -17,4 +17,22 @@ public class AppDbContext : DbContext
 
     public DbSet<StudentFinancialStatus> StudentFinancialStatuses { get; set; }
     public DbSet<RankingResult> RankingResults { get; set; }
+    public DbSet<RoomSwapRequest> RoomSwapRequests { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<RoomSwapRequest>()
+            .HasOne(r => r.Sender)
+            .WithMany(s => s.SentSwapRequests)
+            .HasForeignKey(r => r.SenderId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<RoomSwapRequest>()
+            .HasOne(r => r.Receiver)
+            .WithMany(s => s.ReceivedSwapRequests)
+            .HasForeignKey(r => r.ReceiverId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }

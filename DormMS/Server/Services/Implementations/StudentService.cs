@@ -74,6 +74,52 @@ public class StudentService : IStudentService
         var student = await _repository.GetByUserIdAsync(userId);
         return student is null ? null : MapToGetDto(student);
     }
+    public async Task<MyRoomGetDto> GetMyRoomAsync(int userId)
+    {
+        var student = await _repository.GetByUserIdAsync(userId);
+
+        if (student is null || student.DormitoryRoomId is null)
+        {
+            return new MyRoomGetDto { HasRoom = false };
+        }
+
+        var roomId = student.DormitoryRoomId.Value;
+
+        var room = await _context.DormitoryRooms
+            .Include(r => r.Dorm)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(r => r.Id == roomId);
+
+        if (room is null)
+        {
+            return new MyRoomGetDto { HasRoom = false };
+        }
+
+        var roommates = await _context.Students
+            .Where(s => s.DormitoryRoomId == roomId && s.Id != student.Id)
+            .AsNoTracking()
+            .Select(s => new RoommateSummaryDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Surname = s.Surname,
+                StudentIDNumber = s.StudentIDNumber,
+                FacultyName = s.FacultyName,
+                IsFreshman = s.YearOfEnrollment == DateTime.Now.Year
+            })
+            .ToListAsync();
+
+        return new MyRoomGetDto
+        {
+            HasRoom = true,
+            RoomId = room.Id,
+            RoomNumber = room.RoomNumber,
+            DormName = room.Dorm?.Name,
+            Capacity = room.Capacity,
+            CurrentOccupancy = room.CurrentOccupancy,
+            Roommates = roommates
+        };
+    }
 
     public async Task<Student?> CreateAsync(StudentCreateUpdateDto dto)
     {

@@ -1,0 +1,157 @@
+.container {
+    max-width: 640px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    color: #1a1a1a;
+}
+
+.info {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.error {
+    color: #c0392b;
+    font-size: 0.9rem;
+    background: #fdf0ef;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border-left: 3px solid #c0392b;
+}
+
+.emptyCard {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.emptyText {
+    color: #555;
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Kartica sobe */
+.roomCard {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.roomHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.roomNumber {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.dormName {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.occupancyRow {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.occupancyBar {
+    width: 100%;
+    height: 8px;
+    background: #eee;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.occupancyFill {
+    height: 100%;
+    background: #4a7c59;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+/* Lista cimera */
+.roommatesList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.roommateCard {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.roommateAvatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #eef2ff;
+    color: #4338ca;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.roommateInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.roommateName {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.roommateMeta {
+    font-size: 0.82rem;
+    color: #777;
+}
+
+.freshmanTag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4338ca;
+    text-transform: lowercase;
+}

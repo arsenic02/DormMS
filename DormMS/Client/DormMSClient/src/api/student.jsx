@@ -1,6 +1,7 @@
 import { fetchWithAuth } from "./httpClient"
 
-const BASE_URL = 'http://localhost:5153/api'
+const BASE_URL = 'http://localhost:5153/api/Student'
+const getToken = () => localStorage.getItem('token')
 
 export async function updateStudentProfile(profileData, token) {
   const response = await fetchWithAuth(`${BASE_URL}/student/me/profile`, {
@@ -128,4 +129,14 @@ export async function verifyStudentFinancialStatus(studentId, isVerified, token)
   }
 
   return data
+}
+
+// Vraca informacije o sobi ulogovanog studenta (broj sobe, dom, cimeri).
+// Ako student jos nema dodeljenu sobu, vraceni objekat ima hasRoom: false.
+export const getMyRoom = async () => {
+    const res = await fetchWithAuth(`${BASE_URL}/me/room`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+    })
+    if (!res.ok) throw new Error('Greška prilikom učitavanja podataka o sobi.')
+    return res.json()
 }

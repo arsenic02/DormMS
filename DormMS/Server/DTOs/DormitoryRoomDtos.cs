@@ -27,3 +27,24 @@ public class DormitoryRoomGetDto
     public List<StudentSummaryDto> Students { get; set; } = new();
     // NEMA navigacionog Dorm objekta!
 }
+
+public class MyRoomGetDto
+{
+    public bool HasRoom { get; set; }
+    public int? RoomId { get; set; }
+    public string? RoomNumber { get; set; }
+    public string? DormName { get; set; }
+    public int? Capacity { get; set; }
+    public int? CurrentOccupancy { get; set; }
+    public List<RoommateSummaryDto> Roommates { get; set; } = new();
+}
+
+public class RoommateSummaryDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Surname { get; set; } = string.Empty;
+    public string StudentIDNumber { get; set; } = string.Empty;
+    public string? FacultyName { get; set; }
+    public bool IsFreshman { get; set; }
+}

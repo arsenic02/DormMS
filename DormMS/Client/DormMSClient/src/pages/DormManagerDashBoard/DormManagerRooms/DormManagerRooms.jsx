@@ -40,8 +40,13 @@ export default function DormManagerRooms() {
             setError('')
             try {
                 const data = await getRoomsPaged(pageNumber, PAGE_SIZE)
+                console.log("API RESPONSE:", data)
+
                 if (!active) return
                 setRooms(data.items)
+                console.log(data.items)
+
+
                 setTotalPages(data.totalPages)
                 setTotalCount(data.totalCount)
             } catch (err) {

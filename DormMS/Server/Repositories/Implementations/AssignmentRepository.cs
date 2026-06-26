@@ -66,7 +66,7 @@ public class AssignmentRepository : IAssignmentRepository
 
         if (room == null)
             return;
-        
+
         // if(student.Gender != (Gender)room.Gender)
         // {
         //     return;
@@ -74,7 +74,21 @@ public class AssignmentRepository : IAssignmentRepository
 
         student.DormitoryRoomId = room.Id;
         room.CurrentOccupancy++;
+        room.Status = CalculateStatus(room);
         await _context.SaveChangesAsync();
+    }
+
+    private RoomStatus CalculateStatus(DormitoryRoom room)
+    {
+        if (room.Status == RoomStatus.Maintenance)
+            return RoomStatus.Maintenance;
+
+        if (room.Status == RoomStatus.Closed)
+            return RoomStatus.Closed;
+
+        return room.CurrentOccupancy >= room.Capacity
+            ? RoomStatus.FullyOccupied
+            : RoomStatus.Available;
     }
 
     public async Task UpdateApplicationStatusAsync(int applicationId, ApplicationStatus status)

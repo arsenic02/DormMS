@@ -4,7 +4,7 @@ const BASE_URL = 'http://localhost:5153/api/Student'
 const getToken = () => localStorage.getItem('token')
 
 export async function updateStudentProfile(profileData, token) {
-  const response = await fetchWithAuth(`${BASE_URL}/student/me/profile`, {
+  const response = await fetchWithAuth(`${BASE_URL}/me/profile`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export async function updateStudentProfile(profileData, token) {
 }
 
 export async function getStudentProfile(token) {
-  const response = await fetchWithAuth(`${BASE_URL}/student/me`, {
+  const response = await fetchWithAuth(`${BASE_URL}/me`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -43,7 +43,7 @@ export async function getStudentProfile(token) {
 }
 
 export async function submitFinancialStatus(financialData, token) {
-  const response = await fetchWithAuth(`${BASE_URL}/student/me/financial-status`, {
+  const response = await fetchWithAuth(`${BASE_URL}/me/financial-status`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export async function submitFinancialStatus(financialData, token) {
 
 export async function getFinancialStatus(token) {
   const response = await fetchWithAuth(
-    `${BASE_URL}/student/me`,
+    `${BASE_URL}/me`,
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -77,7 +77,7 @@ export async function getFinancialStatus(token) {
 }
 
 export async function getAllStudents(token) {
-  const response = await fetchWithAuth(`${BASE_URL}/Student`, {
+  const response = await fetchWithAuth(`${BASE_URL}`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`

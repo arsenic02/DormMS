@@ -231,6 +231,39 @@ namespace DormMS.Migrations
                     b.ToTable("DormitoryRooms");
                 });
 
+            modelBuilder.Entity("DormMS.Server.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("DormId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DormId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("DormMS.Server.Models.RankingResult", b =>
                 {
                     b.Property<int>("Id")
@@ -295,6 +328,48 @@ namespace DormMS.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("RankingResults");
+                });
+
+            modelBuilder.Entity("DormMS.Server.Models.RoomSwapRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ReceiverRoomId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("RespondedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SenderRoomId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("ReceiverRoomId");
+
+                    b.HasIndex("SenderId");
+
+                    b.HasIndex("SenderRoomId");
+
+                    b.ToTable("RoomSwapRequests");
                 });
 
             modelBuilder.Entity("DormMS.Server.Models.Student", b =>
@@ -455,38 +530,6 @@ namespace DormMS.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("RoomSwapRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("RespondedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("SenderId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("RoomSwapRequests");
-                });
-
             modelBuilder.Entity("DormMS.Server.Models.Competition", b =>
                 {
                     b.HasOne("DormMS.Server.Models.Admin", "CreatedByAdmin")
@@ -543,6 +586,23 @@ namespace DormMS.Migrations
                     b.Navigation("Dorm");
                 });
 
+            modelBuilder.Entity("DormMS.Server.Models.Notification", b =>
+                {
+                    b.HasOne("DormMS.Server.Models.Dorm", "Dorm")
+                        .WithMany()
+                        .HasForeignKey("DormId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DormMS.Server.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Dorm");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("DormMS.Server.Models.RankingResult", b =>
                 {
                     b.HasOne("DormMS.Server.Models.Competition", "Competition")
@@ -560,6 +620,41 @@ namespace DormMS.Migrations
                     b.Navigation("Competition");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("DormMS.Server.Models.RoomSwapRequest", b =>
+                {
+                    b.HasOne("DormMS.Server.Models.Student", "Receiver")
+                        .WithMany("ReceivedSwapRequests")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DormMS.Server.Models.DormitoryRoom", "ReceiverRoom")
+                        .WithMany()
+                        .HasForeignKey("ReceiverRoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DormMS.Server.Models.Student", "Sender")
+                        .WithMany("SentSwapRequests")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DormMS.Server.Models.DormitoryRoom", "SenderRoom")
+                        .WithMany()
+                        .HasForeignKey("SenderRoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("ReceiverRoom");
+
+                    b.Navigation("Sender");
+
+                    b.Navigation("SenderRoom");
                 });
 
             modelBuilder.Entity("DormMS.Server.Models.Student", b =>
@@ -601,25 +696,6 @@ namespace DormMS.Migrations
                     b.Navigation("DormManager");
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("RoomSwapRequest", b =>
-                {
-                    b.HasOne("DormMS.Server.Models.Student", "Receiver")
-                        .WithMany("ReceivedSwapRequests")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DormMS.Server.Models.Student", "Sender")
-                        .WithMany("SentSwapRequests")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Receiver");
-
-                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("DormMS.Server.Models.Competition", b =>

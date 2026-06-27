@@ -1,0 +1,186 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2d4a35;
+    margin-bottom: 24px;
+}
+
+.subtitle {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #2d4a35;
+    margin: 28px 0 14px;
+}
+
+.formCard {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin-bottom: 8px;
+}
+
+.form {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.input {
+    flex: 1;
+    min-width: 220px;
+    padding: 10px 14px;
+    border: 1px solid #d8e0d9;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #4a7c59;
+}
+
+.sendButton {
+    background: #4a7c59;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.sendButton:hover:not(:disabled) {
+    background: #3d6849;
+}
+
+.sendButton:disabled {
+    background: #a9bdae;
+    cursor: not-allowed;
+}
+
+.requestsList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.requestCard {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.requestInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.requestName {
+    font-weight: 600;
+    color: #2d4a35;
+    font-size: 1rem;
+}
+
+.requestMeta {
+    color: #6b7d6e;
+    font-size: 0.875rem;
+}
+
+.statusBadge {
+    display: inline-block;
+    width: fit-content;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.statusPending {
+    background: #fff3cd;
+    color: #8a6d1d;
+}
+
+.statusAccepted {
+    background: #dcf0e1;
+    color: #2d6a3f;
+}
+
+.statusRejected {
+    background: #fbdede;
+    color: #a13c3c;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.acceptButton {
+    background: #4a7c59;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.acceptButton:hover:not(:disabled) {
+    background: #3d6849;
+}
+
+.rejectButton {
+    background: #fff;
+    color: #a13c3c;
+    border: 1px solid #e3a8a8;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.rejectButton:hover:not(:disabled) {
+    background: #fbeaea;
+}
+
+.acceptButton:disabled,
+.rejectButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.info {
+    color: #6b7d6e;
+    font-size: 0.95rem;
+}
+
+.error {
+    color: #a13c3c;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.success {
+    color: #2d6a3f;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}

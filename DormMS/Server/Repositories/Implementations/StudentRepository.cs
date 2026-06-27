@@ -89,6 +89,7 @@ public class StudentRepository : IStudentRepository
 
     public async Task UpdateAsync(Student student)
     {
+        _context.Students.Update(student);//mozda bude problem u nekim metodama, ali 99% ne bi trebalo
         await _context.SaveChangesAsync();
     }
     public async Task UpdateProfileAsync(Student student)
@@ -111,4 +112,12 @@ public class StudentRepository : IStudentRepository
     {
         return await _context.DormitoryRooms.AnyAsync(r => r.Id == roomId);
     }
+
+    public async Task<Student?> GetByStudentIdNumberAsync(string studentIdNumber)
+    {
+        return await _context.Students
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.StudentIDNumber == studentIdNumber);
+    }
+
 }

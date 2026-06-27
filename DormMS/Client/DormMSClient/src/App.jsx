@@ -19,6 +19,7 @@ import DormManagerRankings from './pages/DormManagerDashBoard/DormManagerRanking
 import DormManagerRanking from './components/Ranking/DormManagerRanking'
 import DormManagerRooms from './pages/DormManagerDashBoard/DormManagerRooms/DormManagerRooms'
 import DormManagerCompetitionApplications from './pages/DormManagerDashBoard/DormManagerCompetitionApplications/DormManagerCompetitionApplications'
+import RoomSwapRequest from './pages/StudentDashboard/StudentRoom/RoomSwapRequest/RoomSwapRequest'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/student/profile" element={<StudentProfile />} />
           <Route path="/student/notifications" element={<StudentNotifications />} />
           <Route path="/student/competitions" element={<StudentCompetitions />} />
+          <Route path="/student/room-swap" element={<RoomSwapRequest />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>

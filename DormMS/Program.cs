@@ -11,6 +11,8 @@ using DormMS.Server.Repositories.Implementations;
 using DormMS.Server.Models;
 using QuestPDF.Infrastructure;
 using QuestPDF.Drawing;
+using DormMS.Server.Services;
+using DormMS.Server.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,6 +93,9 @@ builder.Services.AddScoped<ICompetitionApplicationService, CompetitionApplicatio
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IDocumentGenerationService, DocumentGenerationService>();
+builder.Services.AddScoped<IRoomSwapRequestRepository, RoomSwapRequestRepository>();
+builder.Services.AddScoped<IRoomSwapRequestService, RoomSwapRequestService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var app = builder.Build();
 

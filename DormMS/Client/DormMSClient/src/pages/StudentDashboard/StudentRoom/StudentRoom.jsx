@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import styles from './StudentRoom.module.css'
 import { getMyRoom } from '../../../api/student'
+import { Link } from 'react-router-dom'
 
 function StudentRoom() {
     const [room, setRoom] = useState(null)
@@ -59,6 +60,9 @@ function StudentRoom() {
                                 style={{ width: `${room.capacity > 0 ? (room.currentOccupancy / room.capacity) * 100 : 0}%` }}
                             />
                         </div>
+                        <Link to="/student/room-swap" className={styles.swapLink}>
+                            Zameni sobu →
+                        </Link>
                     </div>
 
                     <h2 className={styles.subtitle}>Cimeri</h2>

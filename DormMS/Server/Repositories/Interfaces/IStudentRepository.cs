@@ -19,4 +19,5 @@ public interface IStudentRepository
     Task UpdateProfileAsync(Student student);
     Task<bool> DeleteAsync(int id);
     Task<bool> DormitoryRoomExistsAsync(int roomId);
+    Task<Student?> GetByStudentIdNumberAsync(string studentIdNumber);
 }

@@ -1,0 +1,229 @@
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.subtitleRow {
+    margin-bottom: 1rem;
+}
+
+.filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.filterField {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filterField label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.filterField select {
+    padding: 0.4rem 0.7rem;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background: #fff;
+    cursor: pointer;
+}
+
+.filterField select:hover,
+.filterField select:focus {
+    outline: none;
+    border-color: #4a7c59;
+}
+
+.facultySearch {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.facultySearch input {
+    padding: 0.4rem 0.7rem;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    min-width: 200px;
+}
+
+.facultySearch input:focus {
+    outline: none;
+    border-color: #4a7c59;
+}
+
+.facultySearch button {
+    padding: 0.4rem 0.9rem;
+    background: #4a7c59;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.facultySearch button:hover {
+    background: #3a6347;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1rem 1.4rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.cardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.cardName {
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.freshmanTag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.cardMeta {
+    font-size: 0.82rem;
+    color: #777;
+}
+
+.cardBadges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.budgetBadge {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: #fff4e5;
+    color: #d97706;
+}
+
+.statusBadge {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+}
+
+.statusBadge.incomplete {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.statusBadge.pending {
+    background: #fef9ec;
+    color: #d4a017;
+}
+
+.statusBadge.verified {
+    background: #edfaf3;
+    color: #27ae60;
+}
+
+.statusBadge.rejected {
+    background: #fdf0ef;
+    color: #c0392b;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #eee;
+}
+
+.pageButton {
+    border: 1.5px solid #ddd;
+    background: #fff;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #444;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.pageButton:hover:not(:disabled) {
+    border-color: #4a7c59;
+    color: #4a7c59;
+    background: #f4f9f6;
+}
+
+.pageButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pageInfo {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.pageInfo strong {
+    color: #1a1a1a;
+}
+
+.info {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.error {
+    color: #c0392b;
+    font-size: 0.9rem;
+    background: #fdf0ef;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border-left: 3px solid #c0392b;
+}

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DormMS.Server.Repositories.Interfaces;
 using DormMS.Server.Models;
+using DormMS.Server.DTOs;
 
 namespace DormMS.Server.Repositories.Implementations;
 
@@ -118,6 +119,81 @@ public class StudentRepository : IStudentRepository
         return await _context.Students
             .AsNoTracking()
             .FirstOrDefaultAsync(s => s.StudentIDNumber == studentIdNumber);
+    }
+
+    public async Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
+    int pageNumber,
+    int pageSize,
+    StudentProfileStatus? profileStatusFilter,
+    string? facultyFilter,
+    bool? isFreshmanFilter)
+    {
+        var query = _context.Students
+            .AsNoTracking()
+            .Include(s => s.FinancialStatus)
+            .AsQueryable();
+
+        if (profileStatusFilter.HasValue)
+            query = query.Where(s => s.ProfileStatus == profileStatusFilter.Value);
+
+        if (!string.IsNullOrWhiteSpace(facultyFilter))
+            query = query.Where(s => s.FacultyName != null && s.FacultyName.Contains(facultyFilter));
+
+        var totalCount = await query.CountAsync();
+
+        // IsFreshman je computed property (DateTime.Now.Year - YearOfEnrollment + 1 == 1),
+        // ne postoji kao kolona u bazi, pa filter mora da se primeni nad materijalizovanom listom
+        var students = await query
+            .OrderBy(s => s.Surname)
+            .ThenBy(s => s.Name)
+            .ToListAsync();
+
+        if (isFreshmanFilter.HasValue)
+            students = students.Where(s => s.IsFreshman == isFreshmanFilter.Value).ToList();
+
+        // Paginacija se radi NAKON IsFreshman filtera, jer je on in-memory
+        var totalCountAfterFreshmanFilter = isFreshmanFilter.HasValue ? students.Count : totalCount;
+
+        var pagedStudents = students
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var items = pagedStudents.Select(s => new StudentGetDto
+        {
+            Id = s.Id,
+            Name = s.Name,
+            Surname = s.Surname,
+            Email = s.Email,
+            JMBG = s.JMBG,
+            StudentIDNumber = s.StudentIDNumber,
+            HomeAddress = s.HomeAddress,
+            MunicipalityOfResidence = s.MunicipalityOfResidence,
+            Age = s.Age,
+            Gender = s.Gender,
+            YearOfEnrollment = s.YearOfEnrollment,
+            StudyLevel = s.StudyLevel,
+            Status = s.Status,
+            FacultyId = s.FacultyId,
+            FacultyName = s.FacultyName,
+            ESPB = s.ESPB,
+            AverageGrade = s.AverageGrade,
+            HighSchoolAverageGrade = s.HighSchoolAverageGrade,
+            IsBudgetStudent = s.IsBudgetStudent,
+            DormitoryRoomId = s.DormitoryRoomId,
+            CurrentYearOfStudy = s.CurrentYearOfStudy,
+            IsFreshman = s.IsFreshman,
+            ProfileStatus = s.ProfileStatus,
+            IsEligibleToApply = s.IsEligibleToApply
+        }).ToList();
+
+        return new PagedResultDto<StudentGetDto>
+        {
+            Items = items,
+            TotalCount = totalCountAfterFreshmanFilter,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
     }
 
 }

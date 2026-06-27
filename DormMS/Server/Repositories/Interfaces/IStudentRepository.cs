@@ -1,3 +1,4 @@
+using DormMS.Server.DTOs;
 using DormMS.Server.Models;
 
 namespace DormMS.Server.Repositories.Interfaces;
@@ -20,4 +21,11 @@ public interface IStudentRepository
     Task<bool> DeleteAsync(int id);
     Task<bool> DormitoryRoomExistsAsync(int roomId);
     Task<Student?> GetByStudentIdNumberAsync(string studentIdNumber);
+
+    Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
+    int pageNumber,
+    int pageSize,
+    StudentProfileStatus? profileStatusFilter,
+    string? facultyFilter,
+    bool? isFreshmanFilter); //za admina
 }

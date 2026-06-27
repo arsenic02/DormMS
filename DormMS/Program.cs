@@ -97,6 +97,8 @@ builder.Services.AddScoped<IRoomSwapRequestRepository, RoomSwapRequestRepository
 builder.Services.AddScoped<IRoomSwapRequestService, RoomSwapRequestService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IDormManagerRepository, DormManagerRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

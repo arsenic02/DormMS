@@ -21,6 +21,9 @@ import DormManagerRooms from './pages/DormManagerDashBoard/DormManagerRooms/Dorm
 import DormManagerCompetitionApplications from './pages/DormManagerDashBoard/DormManagerCompetitionApplications/DormManagerCompetitionApplications'
 import RoomSwapRequest from './pages/StudentDashboard/StudentRoom/RoomSwapRequest/RoomSwapRequest'
 import DormManagerNotifications from './pages/DormManagerDashBoard/DormManagerNotifications/DormManagerNotifications'
+import AdminDorm from './pages/AdminDashBoard/AdminDorm/AdminDorm'
+import AdminUsers from './pages/AdminDashBoard/AdminUsers/AdminUsers'
+import AdminStudents from './pages/AdminDashBoard/AdminStudents/AdminStudents'
 
 function App() {
   return (
@@ -42,6 +45,9 @@ function App() {
 
         <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/dorm" element={<AdminDorm />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/students" element={<AdminStudents />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={['DormManager']} />}>

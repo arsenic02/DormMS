@@ -1,0 +1,75 @@
+namespace DormMS.Server.Repositories.Implementations;
+
+using DormMS.Server.DTOs;
+using DormMS.Server.Models;
+using DormMS.Server.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+public class UserRepository : IUserRepository
+{
+    private readonly AppDbContext _context;
+
+    public UserRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<PagedResultDto<UserGetDto>> GetPagedAsync(int pageNumber, int pageSize, UserRole? roleFilter)
+    {
+        var query = _context.Users.AsNoTracking();
+
+        if (roleFilter.HasValue)
+            query = query.Where(u => u.Role == roleFilter.Value);
+
+        var totalCount = await query.CountAsync();
+
+        var users = await query
+            .OrderBy(u => u.Id)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        // Pribavi profile po tipu, posebno za svaku rolu zastupljenu u trenutnoj stranici
+        var studentIds = users.Where(u => u.StudentId.HasValue).Select(u => u.StudentId!.Value).ToList();
+        var dormManagerIds = users.Where(u => u.DormManagerId.HasValue).Select(u => u.DormManagerId!.Value).ToList();
+        var adminIds = users.Where(u => u.AdminId.HasValue).Select(u => u.AdminId!.Value).ToList();
+
+        var students = await _context.Students
+            .AsNoTracking()
+            .Where(s => studentIds.Contains(s.Id))
+            .ToDictionaryAsync(s => s.Id, s => $"{s.Name} {s.Surname}");
+
+        var dormManagers = await _context.DormManagers
+            .AsNoTracking()
+            .Where(dm => dormManagerIds.Contains(dm.Id))
+            .ToDictionaryAsync(dm => dm.Id, dm => $"{dm.Name} {dm.Surname}");
+
+        var admins = await _context.Admins
+            .AsNoTracking()
+            .Where(a => adminIds.Contains(a.Id))
+            .ToDictionaryAsync(a => a.Id, a => $"{a.Name} {a.Surname}");
+
+        var items = users.Select(u => new UserGetDto
+        {
+            Id = u.Id,
+            Email = u.Email,
+            Role = u.Role,
+            IsActive = u.IsActive,
+            ProfileName = u.StudentId.HasValue && students.TryGetValue(u.StudentId.Value, out var studentName)
+                ? studentName
+                : u.DormManagerId.HasValue && dormManagers.TryGetValue(u.DormManagerId.Value, out var managerName)
+                    ? managerName
+                    : u.AdminId.HasValue && admins.TryGetValue(u.AdminId.Value, out var adminName)
+                        ? adminName
+                        : null
+        }).ToList();
+
+        return new PagedResultDto<UserGetDto>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
+}

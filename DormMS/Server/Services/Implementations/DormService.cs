@@ -168,6 +168,7 @@ public class DormService : IDormService
 
         dorm.Name = dto.Name;
         dorm.Location = dto.Location;
+        dorm.Municipality=dto.Municipality;
 
         return dorm;
     }
@@ -177,6 +178,7 @@ public class DormService : IDormService
         Id = dorm.Id,
         Name = dorm.Name,
         Location = dorm.Location,
+        Municipality = dorm.Municipality,
         Capacity = dorm.Capacity,
         CurrentOccupancy = dorm.CurrentOccupancy,
         AvailableSpots = dorm.AvailableSpots,

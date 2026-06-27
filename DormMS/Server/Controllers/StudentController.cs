@@ -47,7 +47,7 @@ public class StudentController : ControllerBase
 
         return profile;
     }
-    
+
     [Authorize(Roles = "Student")]
     [HttpGet("me/room")]
     public async Task<ActionResult<MyRoomGetDto>> GetMyRoom()
@@ -57,6 +57,22 @@ public class StudentController : ControllerBase
             return Unauthorized();
 
         var result = await _studentService.GetMyRoomAsync(userId.Value);
+        return Ok(result);
+    }
+
+    [HttpGet("paged")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<PagedResultDto<StudentGetDto>>> GetStudentsPaged(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] StudentProfileStatus? profileStatus = null,
+    [FromQuery] string? faculty = null,
+    [FromQuery] bool? isFreshman = null)
+    {
+        if (pageNumber < 1) pageNumber = 1;
+        if (pageSize < 1 || pageSize > 100) pageSize = 10;
+
+        var result = await _studentService.GetPagedAsync(pageNumber, pageSize, profileStatus, faculty, isFreshman);
         return Ok(result);
     }
 

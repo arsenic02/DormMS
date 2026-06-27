@@ -922,7 +922,9 @@ public class StudentService : IStudentService
             .ToList();
     }
 
-
+public Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
+    int pageNumber, int pageSize, StudentProfileStatus? profileStatusFilter, string? facultyFilter, bool? isFreshmanFilter)
+    => _repository.GetPagedAsync(pageNumber, pageSize, profileStatusFilter, facultyFilter, isFreshmanFilter);
     private static Student MapToEntity(StudentCreateUpdateDto dto, Student? existing = null)
     {
         var student = existing ?? new Student();

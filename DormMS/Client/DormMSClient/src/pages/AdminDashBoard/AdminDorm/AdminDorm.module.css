@@ -1,0 +1,299 @@
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+}
+
+.subtitle {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    color: #1a1a1a;
+}
+
+.emptyCard {
+    background: #fff;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.emptyText {
+    color: #777;
+    margin-bottom: 1rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.field input {
+    padding: 0.6rem 0.85rem;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.field input:focus {
+    outline: none;
+    border-color: #4a7c59;
+}
+
+.field input[type="range"] {
+    padding: 0;
+    accent-color: #4a7c59;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.formActions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn {
+    align-self: flex-start;
+    padding: 0.65rem 1.6rem;
+    background: #4a7c59;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+    background: #3a6347;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.cancelBtn {
+    align-self: flex-start;
+    padding: 0.65rem 1.6rem;
+    background: #fff;
+    color: #555;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.cancelBtn:hover {
+    border-color: #999;
+}
+
+.deleteBtn {
+    align-self: flex-start;
+    padding: 0.65rem 1.6rem;
+    background: #fff;
+    color: #c0392b;
+    border: 1.5px solid #e3a8a8;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.deleteBtn:hover:not(:disabled) {
+    background: #fdf0ef;
+}
+
+.deleteBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.error {
+    color: #c0392b;
+    font-size: 0.9rem;
+    background: #fdf0ef;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border-left: 3px solid #c0392b;
+}
+
+.success {
+    color: #27ae60;
+    font-size: 0.9rem;
+    background: #edfaf3;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border-left: 3px solid #27ae60;
+}
+
+.dormCard {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+
+.dormHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.2rem;
+}
+
+.dormName {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 0.3rem;
+}
+
+.dormLocation {
+    font-size: 0.9rem;
+    color: #777;
+    margin: 0;
+}
+
+.editBtn {
+    border: 1.5px solid #ddd;
+    background: #fff;
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.editBtn:hover {
+    border-color: #4a7c59;
+    color: #4a7c59;
+}
+
+.dormStats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.statValue {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #4a7c59;
+}
+
+.statLabel {
+    font-size: 0.78rem;
+    color: #777;
+}
+
+.roomsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.9rem;
+}
+
+.roomCard {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.roomCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.roomNumber {
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 0.95rem;
+}
+
+.roomMeta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: #777;
+}
+
+.badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+}
+
+.badge.available {
+    background: #edfaf3;
+    color: #27ae60;
+}
+
+.badge.full {
+    background: #fef9ec;
+    color: #d4a017;
+}
+
+.badge.maintenance {
+    background: #fff4e5;
+    color: #d97706;
+}
+
+.badge.closed {
+    background: #fdf0ef;
+    color: #c0392b;
+}
+
+.info {
+    color: #777;
+    font-size: 0.9rem;
+}

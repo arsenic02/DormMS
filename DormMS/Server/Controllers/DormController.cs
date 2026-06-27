@@ -72,6 +72,7 @@ public class DormController : ControllerBase
     }
 
     [HttpPost("{id}/generate-rooms")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GenerateRooms(int id, GenerateRoomsDto dto)
     {
         if (id != dto.DormId)

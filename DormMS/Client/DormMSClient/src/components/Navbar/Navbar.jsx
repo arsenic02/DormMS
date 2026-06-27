@@ -39,9 +39,10 @@ function Navbar() {
             {auth?.role === 'Admin' && (
                 <ul className={styles.navLinks}>
                     <li><Link to="/admin">Početna</Link></li>
-                    <li><Link to="/admin/students">Studenti</Link></li>
-                    <li><Link to="/admin/rooms">Sobe</Link></li>
-                    <li><Link to="/admin/competitions">Konkursi</Link></li>
+                    <li><Link to="admin/dorm">Dom</Link></li>
+                    <li><Link to="/admin/users">Korisnici</Link></li>
+                     <li><Link to="/admin/students">Studenti</Link></li> 
+
                 </ul>
             )}
 

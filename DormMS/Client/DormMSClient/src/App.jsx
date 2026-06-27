@@ -20,6 +20,7 @@ import DormManagerRanking from './components/Ranking/DormManagerRanking'
 import DormManagerRooms from './pages/DormManagerDashBoard/DormManagerRooms/DormManagerRooms'
 import DormManagerCompetitionApplications from './pages/DormManagerDashBoard/DormManagerCompetitionApplications/DormManagerCompetitionApplications'
 import RoomSwapRequest from './pages/StudentDashboard/StudentRoom/RoomSwapRequest/RoomSwapRequest'
+import DormManagerNotifications from './pages/DormManagerDashBoard/DormManagerNotifications/DormManagerNotifications'
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
           <Route path="/dorm-manager/rankings/:id" element={<DormManagerRankingPage />} />
           <Route path="/dorm-manager/rooms" element={<DormManagerRooms />} />
           <Route path="/dorm-manager/competitions/:competitionId/applications" element={<DormManagerCompetitionApplications />} />
+          <Route path="/dorm-manager/notifications" element={<DormManagerNotifications />} />
         </Route>
 
       </Routes>

@@ -61,7 +61,7 @@ public class NotificationService : INotificationService
             .ToListAsync();
     }
 
-    public async Task<List<NotificationDto>> GetForDormAsync(int dormId, bool unreadOnly = false)
+    public async Task<PagedResultDto<NotificationDto>> GetForDormPagedAsync(int dormId, int pageNumber, int pageSize, bool unreadOnly = false)
     {
         var query = _context.Notifications
             .AsNoTracking()
@@ -70,8 +70,12 @@ public class NotificationService : INotificationService
         if (unreadOnly)
             query = query.Where(n => !n.IsRead);
 
-        return await query
+        var totalCount = await query.CountAsync();
+
+        var items = await query
             .OrderByDescending(n => n.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .Select(n => new NotificationDto
             {
                 Id = n.Id,
@@ -80,6 +84,14 @@ public class NotificationService : INotificationService
                 CreatedAt = n.CreatedAt
             })
             .ToListAsync();
+
+        return new PagedResultDto<NotificationDto>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
     }
 
     public async Task MarkAsReadAsync(int notificationId)

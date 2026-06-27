@@ -1,5 +1,6 @@
 namespace DormMS.Server.Controllers;
 
+using DormMS.Server.Repositories.Interfaces;
 using DormMS.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,17 @@ using Microsoft.AspNetCore.Mvc;
 public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
+    private readonly IStudentRepository _studentRepository;
+    private readonly IDormManagerRepository _dormManagerRepository;
 
-    public NotificationController(INotificationService notificationService)
+    public NotificationController(
+        INotificationService notificationService,
+        IStudentRepository studentRepository,
+        IDormManagerRepository dormManagerRepository)
     {
         _notificationService = notificationService;
+        _studentRepository = studentRepository;
+        _dormManagerRepository = dormManagerRepository;
     }
 
     private int GetCurrentUserId()
@@ -27,16 +35,30 @@ public class NotificationController : ControllerBase
     [Authorize(Roles = "Student")]
     public async Task<IActionResult> GetMyNotifications([FromQuery] bool unreadOnly = false)
     {
-        var studentId = GetCurrentUserId();
-        var result = await _notificationService.GetForStudentAsync(studentId, unreadOnly);
+        var userId = GetCurrentUserId();
+
+        var student = await _studentRepository.GetByUserIdAsync(userId);
+        if (student is null)
+            return NotFound("Vaš studentski profil nije pronađen.");
+
+        var result = await _notificationService.GetForStudentAsync(student.Id, unreadOnly);
         return Ok(result);
     }
 
-    [HttpGet("dorm/{dormId}")]
+    [HttpGet("my-dorm")]
     [Authorize(Roles = "DormManager")]
-    public async Task<IActionResult> GetDormNotifications(int dormId, [FromQuery] bool unreadOnly = false)
+    public async Task<IActionResult> GetMyDormNotifications(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] bool unreadOnly = false)
     {
-        var result = await _notificationService.GetForDormAsync(dormId, unreadOnly);
+        var userId = GetCurrentUserId();
+
+        var dormManager = await _dormManagerRepository.GetByUserIdAsync(userId);
+        if (dormManager is null)
+            return NotFound("Vaš DormManager profil nije pronađen.");
+
+        var result = await _notificationService.GetForDormPagedAsync(dormManager.DormId, pageNumber, pageSize, unreadOnly);
         return Ok(result);
     }
 

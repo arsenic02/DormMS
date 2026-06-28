@@ -1,0 +1,76 @@
+.container {
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+}
+
+.dormCard {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+
+.cardTitle {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 1.1rem;
+}
+
+.contactsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+.contactCard {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.6rem 1.8rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.infoRow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 0.9rem;
+}
+
+.infoRow:last-child {
+    margin-bottom: 0;
+}
+
+.label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.value {
+    font-size: 0.98rem;
+    color: #1a1a1a;
+    text-decoration: none;
+}
+
+a.value:hover {
+    color: #4a7c59;
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .contactsGrid {
+        grid-template-columns: 1fr;
+    }
+}

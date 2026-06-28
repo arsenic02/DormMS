@@ -1,0 +1,145 @@
+.container {
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+}
+
+.section {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 1rem;
+}
+
+.text {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.6;
+    margin: 0 0 0.8rem;
+}
+
+.text:last-child {
+    margin-bottom: 0;
+}
+
+.list {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.7;
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.ctaSection {
+    text-align: center;
+    padding: 2rem;
+    background: #f4f9f6;
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+
+.ctaText {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 1.2rem;
+}
+
+.ctaButtons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.primaryBtn {
+    padding: 0.65rem 1.6rem;
+    background: #4a7c59;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.primaryBtn:hover {
+    background: #3a6347;
+}
+
+.secondaryBtn {
+    padding: 0.65rem 1.6rem;
+    background: #fff;
+    color: #4a7c59;
+    border: 1.5px solid #4a7c59;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.secondaryBtn:hover {
+    background: #f4f9f6;
+}
+
+.faqList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.faqItem {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.faqQuestion {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9rem 1.1rem;
+    background: #fafafa;
+    border: none;
+    cursor: pointer;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: left;
+    transition: background 0.15s;
+}
+
+.faqQuestion:hover {
+    background: #f0f5f1;
+}
+
+.faqIcon {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #4a7c59;
+}
+
+.faqAnswer {
+    padding: 0.9rem 1.1rem;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.6;
+    background: #fff;
+}

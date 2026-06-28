@@ -20,9 +20,8 @@ function Navbar() {
             {!auth && (
                 <ul className={styles.navLinks}>
                     <li><Link to="/">Početna</Link></li>
-                    <li><Link to="/news">Vesti</Link></li>
                     <li><Link to="/info">Informacije</Link></li>
-                    <li><Link to="/competitions">Konkursi</Link></li>
+                    <li><Link to="/contact">Kontakt</Link></li>
                 </ul>
             )}
 
@@ -41,7 +40,7 @@ function Navbar() {
                     <li><Link to="/admin">Početna</Link></li>
                     <li><Link to="admin/dorm">Dom</Link></li>
                     <li><Link to="/admin/users">Korisnici</Link></li>
-                     <li><Link to="/admin/students">Studenti</Link></li> 
+                    <li><Link to="/admin/students">Studenti</Link></li>
 
                 </ul>
             )}

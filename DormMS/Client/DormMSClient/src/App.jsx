@@ -24,6 +24,8 @@ import DormManagerNotifications from './pages/DormManagerDashBoard/DormManagerNo
 import AdminDorm from './pages/AdminDashBoard/AdminDorm/AdminDorm'
 import AdminUsers from './pages/AdminDashBoard/AdminUsers/AdminUsers'
 import AdminStudents from './pages/AdminDashBoard/AdminStudents/AdminStudents'
+import Information from './pages/Information/Information'
+import Contact from './pages/Contact/Contact'
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/info" element={<Information />} />
+        <Route path="/contact" element={<Contact />} />
 
         <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
           <Route path="/student" element={<StudentDashboard />} />

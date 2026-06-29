@@ -48,7 +48,7 @@
 .ctaSection {
     text-align: center;
     padding: 2rem;
-    background: #f4f9f6;
+    background: #fff;
     border-radius: 10px;
     margin-top: 2rem;
 }
@@ -68,7 +68,7 @@
 
 .primaryBtn {
     padding: 0.65rem 1.6rem;
-    background: #4a7c59;
+    background: #1a3a5c;
     color: #fff;
     border-radius: 6px;
     font-size: 0.95rem;
@@ -78,14 +78,16 @@
 }
 
 .primaryBtn:hover {
-    background: #3a6347;
+    background: #1a3a5c;
 }
 
 .secondaryBtn {
     padding: 0.65rem 1.6rem;
     background: #fff;
-    color: #4a7c59;
-    border: 1.5px solid #4a7c59;
+    color:#1a3a5c;
+    border:1px solid #1a3a5c;
+    /* color: #4a7c59; */
+    /* border: 1.5px solid #4a7c59; */
     border-radius: 6px;
     font-size: 0.95rem;
     font-weight: 600;
@@ -132,7 +134,8 @@
 .faqIcon {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #4a7c59;
+    /* color: #4a7c59; */
+    color:#1a3a5c;
 }
 
 .faqAnswer {

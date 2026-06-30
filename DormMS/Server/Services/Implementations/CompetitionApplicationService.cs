@@ -258,24 +258,6 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         return result;
     }
 
-    // public async Task<CompetitionImportResultDto> BulkApplyByFreshmanStatusAsync(ApplyByFreshmanStatusDto dto)
-    // {
-    //     var students = await _studentRepository.GetAllAsync();
-
-    //     var studentIds = students
-    //         .Where(s => s.IsFreshman == dto.IsFreshman)
-    //         .Select(s => s.Id)
-    //         .ToList();
-
-    //     var bulkDto = new BulkApplicationDto
-    //     {
-    //         CompetitionId = dto.CompetitionId,
-    //         StudentIds = studentIds
-    //     };
-
-    //     return await BulkApplyAsync(bulkDto); // poziva postojecu metodu iz istog servisa
-    // }
-
     public async Task<BulkVerifyApplicationsResultDto> BulkVerifyApplicationsAsync(BulkVerifyApplicationsDto dto)
     {
         var result = new BulkVerifyApplicationsResultDto();
@@ -332,25 +314,8 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         return result;
     }
 
-    // public async Task<BulkVerifyApplicationsResultDto> BulkVerifyAllForCompetitionAsync(int competitionId, ApplicationStatus status)
-    // {
-    //     var applications = await _repository.GetApplicationsByCompetitionIdAsync(competitionId);
-    //     var applicationIds = applications.Select(a => a.Id).ToList();
-
-    //     var dto = new BulkVerifyApplicationsDto
-    //     {
-    //         ApplicationIds = applicationIds,
-    //         Status = status
-    //     };
-
-    //     return await BulkVerifyApplicationsAsync(dto);
-    // }
-
     public async Task<BulkVerifyApplicationsResultDto> BulkVerifyAllForCompetitionAsync(int competitionId, ApplicationStatus status)
     {
-        //var applications = await _repository.GetApplicationsByCompetitionIdAsync(competitionId);
-        //var applicationIds = applications.Select(a => a.Id).ToList();
-
         var applicationIds = await _repository.GetApplicationIdsByCompetitionIdAsync(competitionId);
 
         var dto = new BulkVerifyApplicationsDto

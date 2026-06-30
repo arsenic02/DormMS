@@ -28,25 +28,25 @@ public class AppDbContext : DbContext
             .HasOne(r => r.Sender)
             .WithMany(s => s.SentSwapRequests)
             .HasForeignKey(r => r.SenderId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<RoomSwapRequest>()
             .HasOne(r => r.Receiver)
             .WithMany(s => s.ReceivedSwapRequests)
             .HasForeignKey(r => r.ReceiverId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<RoomSwapRequest>()
             .HasOne(r => r.SenderRoom)
             .WithMany()
             .HasForeignKey(r => r.SenderRoomId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<RoomSwapRequest>()
             .HasOne(r => r.ReceiverRoom)
             .WithMany()
             .HasForeignKey(r => r.ReceiverRoomId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Student)

@@ -48,8 +48,6 @@ public class CompetitionService : ICompetitionService
     {
         var competitions = await _repository.GetOpenCompetitionsAsync();
         return competitions.Select(c => MapToGetDto(c, studentId));
-        //return competitions.Select(MapToGetDto);
-
     }
 
     public async Task<CompetitionGetDto?> OpenCompetitionAsync(int id)

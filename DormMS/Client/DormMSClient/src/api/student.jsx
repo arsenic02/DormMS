@@ -94,7 +94,7 @@ export async function getAllStudents(token) {
 }
 
 export async function verifyStudentProfile(studentId, status, token) {
-  const response = await fetchWithAuth(`${BASE_URL}/Student/${studentId}/verify-profile`, {
+  const response = await fetchWithAuth(`${BASE_URL}/${studentId}/verify-profile`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ export async function verifyStudentProfile(studentId, status, token) {
 }
 
 export async function verifyStudentFinancialStatus(studentId, isVerified, token) {
-  const response = await fetchWithAuth(`${BASE_URL}/Student/${studentId}/verify-financial-status`, {
+  const response = await fetchWithAuth(`${BASE_URL}/${studentId}/verify-financial-status`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

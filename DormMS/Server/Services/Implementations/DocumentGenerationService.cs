@@ -15,10 +15,6 @@ public class DocumentGenerationService : IDocumentGenerationService
     private readonly IWebHostEnvironment _env;
     private readonly AppDbContext _context;
 
-    // private readonly ICompetitionRepository _competitionRepository;
-    // private readonly ICompetitionApplicationRepository _applicationRepository;
-    // private readonly IWebHostEnvironment _env;
-
     public DocumentGenerationService(
            ICompetitionApplicationRepository applicationRepository,
            IWebHostEnvironment env,
@@ -29,21 +25,10 @@ public class DocumentGenerationService : IDocumentGenerationService
         _context = context;
     }
 
-    // public DocumentGenerationService(
-    //     ICompetitionRepository competitionRepository,
-    //     ICompetitionApplicationRepository applicationRepository,
-    //     IWebHostEnvironment env)
-    // {
-    //     _competitionRepository = competitionRepository;
-    //     _applicationRepository = applicationRepository;
-    //     _env = env;
-    // }
-
     public async Task<GenerateDocumentsResultDto> GenerateDocumentsForCompetitionAsync(int competitionId)
     {
         var result = new GenerateDocumentsResultDto();
 
-        // Trackable upit - BEZ AsNoTracking, da EF Core prati promene
         var applicationsWithoutDocument = await _context.CompetitionApplications
             .Include(a => a.Student)
             .Where(a => a.CompetitionId == competitionId && string.IsNullOrWhiteSpace(a.DocumentUrl))
@@ -83,66 +68,10 @@ public class DocumentGenerationService : IDocumentGenerationService
             }
         }
 
-        await _context.SaveChangesAsync(); // jedan SaveChanges za sve, EF Core prati promene jer nije AsNoTracking
+        await _context.SaveChangesAsync(); 
 
         return result;
     }
-    // public async Task<GenerateDocumentsResultDto> GenerateDocumentsForCompetitionAsync(int competitionId)
-    // {
-    //     var result = new GenerateDocumentsResultDto();
-    //     var competition = await _competitionRepository.GetByIdAsync(competitionId);
-
-    //     if (competition is null)
-    //     {
-    //         result.Errors.Add("Competition not found");
-    //         return result;
-    //     }
-
-    //     var applicationsWithoutDocument = competition.Applications
-    //         .Where(a => string.IsNullOrWhiteSpace(a.DocumentUrl))
-    //         .ToList();
-
-    //     result.TotalProcessed = applicationsWithoutDocument.Count;
-
-    //     var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "documents");
-    //     Directory.CreateDirectory(uploadsFolder);
-
-    //     foreach (var application in applicationsWithoutDocument)
-    //     {
-    //         try
-    //         {
-    //             var student = application.Student;
-
-    //             var safeFileName = SanitizeFileName($"{student.StudentIDNumber}_{student.Name}_{student.Surname}");
-    //             var fileName = $"{safeFileName}.pdf";
-    //             var filePath = Path.Combine(uploadsFolder, fileName);
-    //             // var fileName = $"{Guid.NewGuid()}.pdf";
-    //             // var filePath = Path.Combine(uploadsFolder, fileName);
-
-    //             if (student.IsFreshman)
-    //             {
-    //                 GenerateFreshmanCertificate(filePath, student);
-    //             }
-    //             else
-    //             {
-    //                 GenerateUniversityCertificate(filePath, student);
-    //             }
-
-    //             application.DocumentUrl = $"/uploads/documents/{fileName}";
-    //             await _applicationRepository.UpdateAsync(application);
-
-    //             result.SuccessfullyGenerated++;
-    //         }
-    //         catch (Exception ex)
-    //         {
-    //             result.Errors.Add($"Error generating document for application {application.Id}: {ex.Message}");
-    //             result.Failed++;
-    //         }
-    //     }
-
-    //     return result;
-    // }
-
     private void GenerateFreshmanCertificate(string filePath, Student student)
     {
         var document = QuestPDF.Fluent.Document.Create(container =>

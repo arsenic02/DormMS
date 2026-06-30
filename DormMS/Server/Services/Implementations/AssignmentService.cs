@@ -33,7 +33,6 @@ public class AssignmentService : IAssignmentService
         return result;
     }
 
-
     /// Raspodeljuje sobe STARIJIM studentima na osnovu vec sacuvanog rang-rezultata
     /// (RankingResult tabela). Uzima u obzir SAMO studente sa statusom Assigned
     /// (oni unutar kvote) - studenti na cekanju (Waitlisted) ne ulaze u raspodelu.
@@ -51,11 +50,9 @@ public class AssignmentService : IAssignmentService
         return await AssignFromRankingResultsAsync(competitionId, isFreshmanView: true);
     }
 
-    /// <summary>
     /// Zajednicka logika - cita sacuvane RankingResult redove za konkurs (filtrirano po
     /// isFreshmanView i Status == Assigned), pa pokusava da dodeli sobu svakom studentu
     /// koji jos nema dodeljenu sobu.
-    /// </summary>
     private async Task<AssignmentResultDto> AssignFromRankingResultsAsync(int competitionId, bool isFreshmanView)
     {
         var result = new AssignmentResultDto();
@@ -86,7 +83,7 @@ public class AssignmentService : IAssignmentService
             return result;
         }
 
-        // Zastita od ponovne raspodele: ako bar jedan od ovih studenata vec ima sobu, smatramo
+        // Zastita od ponovne raspodele: ako bar jedan od ovih studenata vec ima sobu, smatra se
         // da je raspodela vec izvrsena za ovaj konkurs.
         var alreadyAssignedCount = assignedResults.Count(r => r.Student.DormitoryRoomId != null);
         if (alreadyAssignedCount > 0)
@@ -104,7 +101,7 @@ public class AssignmentService : IAssignmentService
             return result;
         }
 
-        // Sortiramo po bodovima opadajuce da bi redosled dodele sobe pratio rang
+        // Sortiranje po bodovima opadajuce da bi redosled dodele sobe pratio rang
         // (vec su Assigned, ali medju njima i dalje vazi prioritet po bodovima)
         var orderedResults = assignedResults
             .OrderByDescending(r => r.CalculatedPoints)
@@ -135,8 +132,6 @@ public class AssignmentService : IAssignmentService
             }
             else
             {
-                // Iako je student bio "Assigned" u rang listi, fizicki nema vise mesta
-                // (npr. nema slobodne sobe odgovarajuceg pola) - ide na cekanje za sobu.
                 result.Waitlisted++;
                 assignment.Status = AssignmentStatus.Waitlisted;
             }
@@ -161,10 +156,8 @@ public class AssignmentService : IAssignmentService
         return RoomStatus.Available;
     }
 
-    /// <summary>
     /// Rangira starije studente (ne brucose) po fakultetima.
     /// Formula: (averageGrade * 5) + (espb / yearsOfStudy * 0.8) + espbBonus + financialBonus
-    /// </summary>
     public async Task<OlderStudentsRankingResultDto> RankOlderStudentsAsync(int competitionId)
     {
         var result = new OlderStudentsRankingResultDto();
@@ -185,7 +178,6 @@ public class AssignmentService : IAssignmentService
             return result;
         }
 
-        // Samo stariji studenti (ne brucosi), budzetski
         var approvedApplications = competition.Applications
             .Where(a => a.Status == ApplicationStatus.Approved
                         && a.Student.IsBudgetStudent
@@ -201,7 +193,7 @@ public class AssignmentService : IAssignmentService
 
             if (yearsOfStudy <= 0)
             {
-                continue; // preskacemo greske za sada, mozemo dodati error handling
+                continue; 
             }
 
             var calculatedPoints = CalculateOlderStudentPoints(
@@ -230,7 +222,6 @@ public class AssignmentService : IAssignmentService
             studentAssignments.Add(assignment);
         }
 
-        // Grupisemo po fakultetima pa sortiramo svaki fakultet posebno
         var groupedByFaculty = studentAssignments
             .GroupBy(s => s.FacultyName ?? "Unknown")
             .ToDictionary(
@@ -294,11 +285,9 @@ public class AssignmentService : IAssignmentService
         return result;
     }
 
-    /// <summary>
     /// Rangira brucose po fakultetima.
     /// Formula: bb = po * 8 (po = prosecna ocena iz srednje skole, bb = bodovi brucosa)
     /// + socijalni bonus (1 bod ako je prihod po clanu < 50% prosecne plate)
-    /// </summary>
     public async Task<FreshmanRankingResultDto> RankFreshmenAsync(int competitionId)
     {
         var result = new FreshmanRankingResultDto();
@@ -363,7 +352,7 @@ public class AssignmentService : IAssignmentService
             freshmanAssignments.Add(assignment);
         }
 
-        // Grupisemo po fakultetima pa sortiramo svaki fakultet posebno
+        // Grupisанје po fakultetima pa sortiraнје svakог fakultetа posebno
         var groupedByFaculty = freshmanAssignments
             .GroupBy(s => s.FacultyName ?? "Unknown")
             .ToDictionary(
@@ -552,14 +541,6 @@ public class AssignmentService : IAssignmentService
         }
     }
 
-
-    // public async Task<List<StudentAssignmentDto>> RankStudentsAsync(int competitionId)
-    // {
-    //     // Poziva novu metodu za starije studente radi kompatibilnosti
-    //     var result = await RankOlderStudentsAsync(competitionId);
-    //     return result.RankingsByFaculty.Values.SelectMany(x => x).ToList();
-    // }
-
     public async Task<AssignmentResultDto> AssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents)
     {
         var result = new AssignmentResultDto();
@@ -612,30 +593,6 @@ public class AssignmentService : IAssignmentService
 
             result.Assignments.Add(assignment);
         }
-        // foreach (var assignment in rankedStudents)
-        // {
-        //     if (assignment.Status == AssignmentStatus.Error)
-        //     {
-        //         result.Failed++;
-        //         result.Assignments.Add(assignment);
-        //         continue;
-        //     }
-
-        //     var assigned = await TryAssignStudentAsync(assignment, student, dorms);
-
-        //     if (assigned)
-        //     {
-        //         result.SuccessfullyAssigned++;
-        //         assignment.Status = AssignmentStatus.Assigned;
-        //     }
-        //     else
-        //     {
-        //         result.Waitlisted++;
-        //         assignment.Status = AssignmentStatus.Waitlisted;
-        //     }
-
-        //     result.Assignments.Add(assignment);
-        // }
 
         return result;
     }

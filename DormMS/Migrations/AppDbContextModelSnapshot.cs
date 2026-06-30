@@ -627,25 +627,25 @@ namespace DormMS.Migrations
                     b.HasOne("DormMS.Server.Models.Student", "Receiver")
                         .WithMany("ReceivedSwapRequests")
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DormMS.Server.Models.DormitoryRoom", "ReceiverRoom")
                         .WithMany()
                         .HasForeignKey("ReceiverRoomId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DormMS.Server.Models.Student", "Sender")
                         .WithMany("SentSwapRequests")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DormMS.Server.Models.DormitoryRoom", "SenderRoom")
                         .WithMany()
                         .HasForeignKey("SenderRoomId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Receiver");

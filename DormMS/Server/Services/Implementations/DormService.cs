@@ -28,7 +28,6 @@ public class DormService : IDormService
             return null;
 
         return MapToGetDto(dorm);
-        //return dorm is null ? null : MapToGetDto(dorm);
     }
 
     public async Task<Dorm?> CreateAsync(DormCreateUpdateDto dto)
@@ -81,7 +80,6 @@ public class DormService : IDormService
         var rooms = new List<DormitoryRoom>();
         int counter = dorm.Rooms.Count + 1;
 
-        // Dvokrevetne sobe - podela po polu
         int doubleMaleCount = (int)Math.Round(dto.DoubleRooms * dto.MalePercentage / 100.0);
         int doubleFemaleCount = dto.DoubleRooms - doubleMaleCount;
 
@@ -111,7 +109,6 @@ public class DormService : IDormService
             });
         }
 
-        // Trokrevetne sobe - podela po polu (isti procenat, racuna se odvojeno)
         int tripleMaleCount = (int)Math.Round(dto.TripleRooms * dto.MalePercentage / 100.0);
         int tripleFemaleCount = dto.TripleRooms - tripleMaleCount;
 
@@ -193,7 +190,6 @@ public class DormService : IDormService
         Capacity = room.Capacity,
         CurrentOccupancy = room.CurrentOccupancy,
         AvailableSpots = room.AvailableSpots,
-        //IsOccupied = room.IsOccupied,
         Gender = room.Gender,
         Status = room.Status,
         DormId = room.DormId

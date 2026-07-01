@@ -172,28 +172,6 @@ public class StudentController : ControllerBase
         return Ok(new { Message = $"Financial status for student {studentId} has been {(isVerified ? "verified" : "unverified")}." });
     }
 
-    [HttpPost("import-financial-status")]
-    [Authorize(Roles = "Admin,DormManager")]
-    public async Task<ActionResult<BulkFinancialStatusImportResultDto>> ImportFinancialStatus(IFormFile csvFile)
-    {
-        if (csvFile == null || csvFile.Length == 0)
-            return BadRequest("No file uploaded");
-
-        if (!csvFile.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
-            return BadRequest("Only CSV files are allowed");
-
-        var result = await _studentService.BulkImportFinancialStatusAsync(csvFile);
-        return Ok(result);
-    }
-
-    [HttpPost("fix-bulk-data")]
-    [Authorize(Roles = "Admin,DormManager")]
-    public async Task<ActionResult<int>> FixBulkData()
-    {
-        var count = await _studentService.FixBulkImportedStudentsAsync();
-        return Ok(new { Message = $"Successfully updated {count} students with realistic data.", Count = count });
-    }
-
     [HttpDelete("all")]
     [Authorize(Roles = "Admin,DormManager")]
     public async Task<ActionResult<int>> ClearAllStudents()
@@ -217,11 +195,8 @@ public class StudentController : ControllerBase
         return Ok(students);
     }
 
-
-
     private int? GetCurrentUserId()
     {
-        // Kada je MapInboundClaims = false, tipovi claim-ova su identični onima u JWT (npr. "sub", "role")
         var idValue = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
             ?? User.FindFirstValue("sub")
             ?? User.FindFirstValue(ClaimTypes.NameIdentifier);

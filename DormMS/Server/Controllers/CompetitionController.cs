@@ -41,17 +41,6 @@ public class CompetitionController : ControllerBase
     }
 
     [Authorize(Roles = "Admin,DormManager")]
-    [HttpPut("{id}/open")]
-    public async Task<ActionResult<CompetitionGetDto>> OpenCompetition(int id)
-    {
-        var competition = await _competitionService.OpenCompetitionAsync(id);
-        if (competition is null)
-            return BadRequest("Competition not found or cannot be opened");
-
-        return Ok(competition);
-    }
-
-    [Authorize(Roles = "Admin,DormManager")]
     [HttpPut("{id}/toggle-status")]
     public async Task<ActionResult<CompetitionGetDto>> ToggleCompetitionStatus(int id)
     {
@@ -104,26 +93,6 @@ public class CompetitionController : ControllerBase
 
         return CreatedAtAction(nameof(GetCompetition), new { id = result.Competition!.Id }, result.Competition);
     }
-
-    // [Authorize(Roles = "Admin,DormManager")]
-    // [HttpPost]
-    // public async Task<ActionResult<CompetitionGetDto>> CreateCompetition(CompetitionCreateDto dto)
-    // {
-    //     var userId = GetCurrentUserId();
-    //     if (userId is null)
-    //         return Unauthorized();
-
-    //     var userRole = GetUserRole();
-    //     if (string.IsNullOrEmpty(userRole))
-    //         return Unauthorized();
-
-    //     var competition = await _competitionService.CreateAsync(dto, userId.Value, userRole);
-    //     if (competition is null)
-    //         return BadRequest("Failed to create competition");
-
-    //     return CreatedAtAction(nameof(GetCompetition), new { id = competition.Id }, competition);
-    // }
-
 
     [Authorize(Roles = "Admin,DormManager")]
     [HttpPut("{id}")]

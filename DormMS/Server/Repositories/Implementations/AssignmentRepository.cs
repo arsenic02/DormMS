@@ -67,11 +67,6 @@ public class AssignmentRepository : IAssignmentRepository
         if (room == null)
             return;
 
-        // if(student.Gender != (Gender)room.Gender)
-        // {
-        //     return;
-        // }
-
         student.DormitoryRoomId = room.Id;
         room.CurrentOccupancy++;
         room.Status = CalculateStatus(room);

@@ -140,13 +140,6 @@ public class CompetitionApplicationController : ControllerBase
         return Ok(result);
     }
 
-    // [HttpPost("bulk-apply-by-freshman-status")]
-    // public async Task<ActionResult<CompetitionImportResultDto>> BulkApplyByFreshmanStatus(ApplyByFreshmanStatusDto dto)
-    // {
-    //     var result = await _applicationService.BulkApplyByFreshmanStatusAsync(dto);
-    //     return Ok(result);
-    // }
-
     //poziva ga bulk-verify all, nema potrebe da se zove ovako
     [Authorize(Roles = "Admin,DormManager")]
     [HttpPost("bulk-verify")]
@@ -155,13 +148,6 @@ public class CompetitionApplicationController : ControllerBase
         var result = await _applicationService.BulkVerifyApplicationsAsync(dto);
         return Ok(result);
     }
-
-    // [HttpPost("competition/{competitionId}/bulk-verify-all")]
-    // public async Task<ActionResult<BulkVerifyApplicationsResultDto>> BulkVerifyAllForCompetition(int competitionId, [FromQuery] ApplicationStatus status)
-    // {
-    //     var result = await _applicationService.BulkVerifyAllForCompetitionAsync(competitionId, status);
-    //     return Ok(result);
-    // }
 
     [Authorize(Roles = "Admin,DormManager")]
     [HttpPost("competition/{competitionId}/bulk-verify-all")]
@@ -179,7 +165,6 @@ public class CompetitionApplicationController : ControllerBase
         var result = await _documentGenerationService.GenerateDocumentsForCompetitionAsync(competitionId);
         return Ok(result);
     }
-
     private int? GetCurrentUserId()
     {
         var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier)

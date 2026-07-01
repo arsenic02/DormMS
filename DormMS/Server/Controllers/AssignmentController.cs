@@ -15,18 +15,6 @@ public class AssignmentController : ControllerBase
     }
 
     [Authorize(Roles = "Admin,DormManager")]
-    [HttpPost("assign")]
-    public async Task<ActionResult<AssignmentResultDto>> AssignStudentsToDorms(AssignmentRequestDto dto)
-    {
-        var result = await _assignmentService.AssignStudentsToDormsAsync(dto.CompetitionId);
-
-        if (result.Errors.Any() && result.SuccessfullyAssigned == 0)
-            return BadRequest(result);
-
-        return Ok(result);
-    }
-
-    [Authorize(Roles = "Admin,DormManager")]
     [HttpPost("assign-older")]
     public async Task<ActionResult<AssignmentResultDto>> AssignOlderStudentsToDorms(AssignmentRequestDto dto)
     {
@@ -49,15 +37,6 @@ public class AssignmentController : ControllerBase
 
         return Ok(result);
     }
-
-    //mislim da mi nece trebati, stara metoda, jer sam napravio novu za starije i brucose
-    // [Authorize(Roles = "Admin,DormManager")]
-    // [HttpPost("rank")]
-    // public async Task<ActionResult<List<StudentAssignmentDto>>> RankStudents(AssignmentRequestDto dto)
-    // {
-    //     var rankedStudents = await _assignmentService.RankStudentsAsync(dto.CompetitionId);
-    //     return Ok(rankedStudents);
-    // }
 
     /// <summary>
     /// Rangira starije studente (ne brucose) za konkurs - grupisano po fakultetima
@@ -95,30 +74,6 @@ public class AssignmentController : ControllerBase
     public async Task<ActionResult> GetSavedResults(int competitionId, [FromQuery] bool isFreshmanView)
     {
         var result = await _assignmentService.GetSavedRankingResultsAsync(competitionId, isFreshmanView);
-        return Ok(result);
-    }
-
-    [Authorize(Roles = "Admin,DormManager")]
-    [HttpPost("assign-ranked")]
-    public async Task<ActionResult<AssignmentResultDto>> AssignRankedStudents([FromBody] List<StudentAssignmentDto> rankedStudents)
-    {
-        var result = await _assignmentService.AssignRankedStudentsAsync(rankedStudents);
-
-        if (result.Errors.Any() && result.SuccessfullyAssigned == 0)
-            return BadRequest(result);
-
-        return Ok(result);
-    }
-
-    [Authorize(Roles = "Admin,DormManager")]
-    [HttpPost("bulk-assign-ranked")]
-    public async Task<ActionResult<AssignmentResultDto>> BulkAssignRankedStudents([FromBody] List<StudentAssignmentDto> rankedStudents)
-    {
-        var result = await _assignmentService.BulkAssignRankedStudentsAsync(rankedStudents);
-
-        if (result.Errors.Any() && result.SuccessfullyAssigned == 0)
-            return BadRequest(result);
-
         return Ok(result);
     }
 

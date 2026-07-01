@@ -20,43 +20,6 @@ public class StudentService : IStudentService
         _passwordHasher = new PasswordHasher<User>();
     }
 
-    private static readonly string[] MaleNames = new[]
-   {
-        "Marko", "Nikola", "Stefan", "Jovan", "Luka", "Milos", "Aleksandar",
-        "Nemanja", "Dusan", "Vuk", "Ivan", "Filip", "Petar", "Bogdan",
-        "Lazar", "Sava", "Andrej", "Uros", "Pavle", "Djordje", "Zeljko",
-        "Milan", "Nenad", "Ognjen"
-    };
-
-    private static readonly string[] FemaleNames = new[]
-    {
-        "Milica", "Ana", "Jovana", "Sara", "Teodora", "Jelena", "Marija",
-        "Kristina", "Ivana", "Katarina", "Tamara", "Nina", "Andrea", "Sofija",
-        "Lena", "Miljana", "Nevena", "Tijana", "Andjela", "Dunja", "Hana",
-        "Masa", "Olga", "Danica", "Ljubica"
-    };
-
-    // Pravi listu Gender vrednosti duzine 'count', sa tacnom (ili sto blizom moguce)
-    // 50/50 podelom, izmesanom (shuffle) da redosled ne bude predvidiv.
-    private static List<Gender> BuildBalancedGenderAssignments(int count, Random random)
-    {
-        var maleCount = count / 2;
-        var femaleCount = count - maleCount;
-
-        var assignments = new List<Gender>(count);
-        assignments.AddRange(Enumerable.Repeat(Gender.Male, maleCount));
-        assignments.AddRange(Enumerable.Repeat(Gender.Female, femaleCount));
-
-        // Fisher-Yates shuffle
-        for (int i = assignments.Count - 1; i > 0; i--)
-        {
-            int j = random.Next(i + 1);
-            (assignments[i], assignments[j]) = (assignments[j], assignments[i]);
-        }
-
-        return assignments;
-    }
-
     public async Task<IEnumerable<StudentGetDto>> GetAllAsync()
     {
         var students = await _repository.GetAllAsync();
@@ -353,17 +316,6 @@ public class StudentService : IStudentService
         }
     }
 
-    public async Task<int> FixBulkImportedStudentsAsync()
-    {
-        var students = await _context.Students
-            .Include(s => s.FinancialStatus)
-            .ToListAsync();
-        var random = new Random();
-        foreach (var student in students) ApplyRealisticData(student, random);
-        await _context.SaveChangesAsync();
-        return students.Count;
-    }
-
     public async Task<int> ClearAllStudentsAsync()
     {
         var students = await _context.Students.ToListAsync();
@@ -456,89 +408,6 @@ public class StudentService : IStudentService
         };
     }
 
-    public async Task<BulkFinancialStatusImportResultDto> BulkImportFinancialStatusAsync(IFormFile csvFile)
-    {
-        var result = new BulkFinancialStatusImportResultDto();
-
-        try
-        {
-            using var reader = new StreamReader(csvFile.OpenReadStream());
-            using var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
-
-            var records = csv.GetRecords<BulkFinancialStatusImportDto>().ToList();
-            result.TotalProcessed = records.Count;
-
-            var financialStatusesToAdd = new List<StudentFinancialStatus>();
-
-            foreach (var record in records)
-            {
-                try
-                {
-                    var studentIdNumber = record.StudentIDNumber.Trim();
-
-                    var student = await _context.Students
-                        .FirstOrDefaultAsync(s => s.StudentIDNumber == studentIdNumber);
-
-                    if (student is null)
-                    {
-                        result.Errors.Add($"Student with ID {studentIdNumber} not found");
-                        result.Failed++;
-                        continue;
-                    }
-
-                    var existingFinancialStatus = await _repository.GetFinancialStatusByStudentIdAsync(student.Id);
-                    if (existingFinancialStatus is not null)
-                    {
-                        result.Errors.Add($"Student {studentIdNumber} already has financial status");
-                        result.Failed++;
-                        continue;
-                    }
-
-                    if (record.FamilyMemberCount <= 0)
-                    {
-                        result.Errors.Add($"Invalid family member count for student {studentIdNumber}");
-                        result.Failed++;
-                        continue;
-                    }
-
-                    if (record.TotalFamilyIncome < 0)
-                    {
-                        result.Errors.Add($"Invalid total family income for student {studentIdNumber}");
-                        result.Failed++;
-                        continue;
-                    }
-
-                    var financialStatus = new StudentFinancialStatus
-                    {
-                        StudentId = student.Id,
-                        TotalFamilyIncome = record.TotalFamilyIncome,
-                        FamilyMemberCount = record.FamilyMemberCount,
-                        IsVerified = true,
-                        VerifiedAt = DateTime.UtcNow
-                    };
-
-                    financialStatusesToAdd.Add(financialStatus);
-                    result.SuccessfullyImported++;
-                }
-                catch (Exception ex)
-                {
-                    result.Errors.Add($"Error processing student {record.StudentIDNumber}: {ex.Message}");
-                    result.Failed++;
-                }
-            }
-
-            if (financialStatusesToAdd.Any())
-            {
-                await _repository.BulkAddFinancialStatusesAsync(financialStatusesToAdd);
-            }
-        }
-        catch (Exception ex)
-        {
-            result.Errors.Add($"Import failed: {ex.Message} | Inner: {ex.InnerException?.Message}");
-        }
-
-        return result;
-    }
     private async Task<bool> IsDormitoryRoomValidAsync(int? dormitoryRoomId)
     {
         if (!dormitoryRoomId.HasValue)
@@ -610,32 +479,6 @@ public class StudentService : IStudentService
 
         return 0;
     }
-
-    private static string? GetFacultyNameById(int facultyId)
-    {
-        var faculties = new[]
-        {
-            "Građevinsko-arhitektonski fakultet (GAF)",
-            "Elektronski fakultet",
-            "Mašinski fakultet",
-            "Pravni fakultet",
-            "Filozofski fakultet",
-            "Fakultet sporta i fizičkog vaspitanja (DIF)",
-            "Fakultet zaštite na radu",
-            "Ekonomski fakultet",
-            "Medicinski fakultet",
-            "Prirodno-matematički fakultet (PMF)",
-            "Fakultet umetnosti"
-        };
-
-        if (facultyId >= 1 && facultyId <= faculties.Length)
-        {
-            return faculties[facultyId - 1];
-        }
-
-        return null;
-    }
-
     public async Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status)
     {
         var student = await _repository.GetByIdTrackedAsync(studentId);

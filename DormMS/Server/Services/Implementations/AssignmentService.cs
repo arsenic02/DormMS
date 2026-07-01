@@ -17,22 +17,6 @@ public class AssignmentService : IAssignmentService
         _context = context;
     }
 
-    public async Task<AssignmentResultDto> AssignStudentsToDormsAsync(int competitionId)
-    {
-        var competition = await _assignmentRepository.GetCompetitionWithApplicationsAsync(competitionId);
-        var rankingResult = await RankOlderStudentsAsync(competitionId);
-        var rankedStudents = rankingResult.RankingsByFaculty.Values.SelectMany(x => x).ToList();
-        var result = await AssignRankedStudentsAsync(rankedStudents);
-
-        if (competition != null)
-        {
-            result.CompetitionId = competition.Id;
-            result.CompetitionName = competition.Name;
-        }
-
-        return result;
-    }
-
     /// Raspodeljuje sobe STARIJIM studentima na osnovu vec sacuvanog rang-rezultata
     /// (RankingResult tabela). Uzima u obzir SAMO studente sa statusom Assigned
     /// (oni unutar kvote) - studenti na cekanju (Waitlisted) ne ulaze u raspodelu.
@@ -142,6 +126,7 @@ public class AssignmentService : IAssignmentService
         return result;
     }
 
+    //mozda ce biti potrebna metoda prilikom upgrade-a
     private RoomStatus CalculateRoomStatus(DormitoryRoom room)
     {
         if (room.Status == RoomStatus.Maintenance)
@@ -541,133 +526,6 @@ public class AssignmentService : IAssignmentService
         }
     }
 
-    public async Task<AssignmentResultDto> AssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents)
-    {
-        var result = new AssignmentResultDto();
-
-        var dorms = await _assignmentRepository.GetAllDormsWithRoomsAsync();
-        var totalAvailableSpots = dorms.Sum(d => d.AvailableSpots);
-
-        if (totalAvailableSpots == 0)
-        {
-            result.Errors.Add("No available spots in any dormitory");
-            return result;
-        }
-
-        result.TotalStudents = rankedStudents.Count;
-
-        var studentIds = rankedStudents.Where(s => s.Status != AssignmentStatus.Error).Select(s => s.StudentId).ToList();
-        var students = await _assignmentRepository.GetStudentsByIdsAsync(studentIds);
-        var studentsDict = students.ToDictionary(s => s.Id);
-
-        foreach (var assignment in rankedStudents)
-        {
-            if (assignment.Status == AssignmentStatus.Error)
-            {
-                result.Failed++;
-                result.Assignments.Add(assignment);
-                continue;
-            }
-
-            if (!studentsDict.TryGetValue(assignment.StudentId, out var student))
-            {
-                assignment.Status = AssignmentStatus.Error;
-                result.Errors.Add($"Student with ID {assignment.StudentId} not found in database.");
-                result.Failed++;
-                result.Assignments.Add(assignment);
-                continue;
-            }
-
-            var assigned = await TryAssignStudentAsync(assignment, student, dorms);
-
-            if (assigned)
-            {
-                result.SuccessfullyAssigned++;
-                assignment.Status = AssignmentStatus.Assigned;
-            }
-            else
-            {
-                result.Waitlisted++;
-                assignment.Status = AssignmentStatus.Waitlisted;
-            }
-
-            result.Assignments.Add(assignment);
-        }
-
-        return result;
-    }
-
-    public async Task<AssignmentResultDto> BulkAssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents)
-    {
-        var result = new AssignmentResultDto();
-        var dorms = await _assignmentRepository.GetAllDormsWithRoomsAsync();
-
-        var studentIds = rankedStudents.Where(s => s.Status != AssignmentStatus.Error).Select(s => s.StudentId).ToList();
-        var students = await _assignmentRepository.GetStudentsByIdsAsync(studentIds);
-        var studentsDict = students.ToDictionary(s => s.Id);
-
-        result.TotalStudents = rankedStudents.Count;
-
-        foreach (var assignment in rankedStudents)
-        {
-            if (assignment.Status == AssignmentStatus.Error)
-            {
-                result.Failed++;
-                result.Assignments.Add(assignment);
-                continue;
-            }
-
-            if (!studentsDict.TryGetValue(assignment.StudentId, out var student))
-            {
-                assignment.Status = AssignmentStatus.Error;
-                result.Errors.Add($"Student with ID {assignment.StudentId} not found in database.");
-                result.Failed++;
-                result.Assignments.Add(assignment);
-                continue;
-            }
-
-            var assigned = TryAssignStudentInMemory(assignment, student, dorms);
-
-            if (assigned)
-            {
-                result.SuccessfullyAssigned++;
-                assignment.Status = AssignmentStatus.Assigned;
-            }
-            else
-            {
-                result.Waitlisted++;
-                assignment.Status = AssignmentStatus.Waitlisted;
-            }
-
-            result.Assignments.Add(assignment);
-        }
-
-        await _assignmentRepository.SaveChangesAsync();
-        return result;
-    }
-
-    private bool TryAssignStudentInMemory(StudentAssignmentDto assignment, Student student, List<Dorm> dorms)
-    {
-        foreach (var dorm in dorms.Where(d => !d.IsFull))
-        {
-            var room = dorm.Rooms.FirstOrDefault(r =>
-                r.CurrentOccupancy < r.Capacity &&
-                (int)r.Gender == (int)student.Gender);
-
-            if (room != null)
-            {
-                student.DormitoryRoomId = room.Id;
-                room.CurrentOccupancy++;
-
-                assignment.AssignedDormId = dorm.Id;
-                assignment.AssignedDormName = dorm.Name;
-                assignment.AssignedRoomId = room.Id;
-                return true;
-            }
-        }
-        return false;
-    }
-
     public async Task<bool> ResetFlowAsync()
     {
         var studentsWithRooms = await _context.Students
@@ -689,7 +547,7 @@ public class AssignmentService : IAssignmentService
         return true;
     }
 
-    // 2. Novi metod -  reset SAMO za jedan konkurs.
+    // reset SAMO za jedan konkurs.
     public async Task<bool> ResetAssignmentAsync(int competitionId)
     {
         var assignedResults = await _context.RankingResults
@@ -777,36 +635,4 @@ public class AssignmentService : IAssignmentService
 
         return false;
     }
-    // private async Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, Student student, List<Dorm> dorms)
-    // {
-    //     foreach (var dorm in dorms.Where(d => !d.IsFull))
-    //     {
-    //         //prvo da se nadje soba istog pola
-    //         var room = await _assignmentRepository.GetAvailableRoomAsync(dorm.Id, student.Gender);
-    //         var isMixed = false;
-
-    //         // dozvoli bilo koju slobodnu sobu u istom domu (mesovita dodela)
-    //         if (room == null)
-    //         {
-    //             room = await _assignmentRepository.GetAnyAvailableRoomAsync(dorm.Id);
-    //             isMixed = room != null;
-    //         }
-
-    //         if (room != null)
-    //         {
-    //             await _assignmentRepository.AssignStudentToRoomAsync(assignment.StudentId, room.Id);
-
-    //             room.CurrentOccupancy++;
-    //             await _context.SaveChangesAsync();
-
-    //             assignment.AssignedDormId = dorm.Id;
-    //             assignment.AssignedDormName = dorm.Name;
-    //             assignment.AssignedRoomId = room.Id;
-    //             assignment.IsMixedGenderAssignment = isMixed;
-    //             return true;
-    //         }
-    //     }
-
-    //     return false;
-    // }
 }

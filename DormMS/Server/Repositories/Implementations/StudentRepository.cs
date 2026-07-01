@@ -76,12 +76,6 @@ public class StudentRepository : IStudentRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task BulkAddFinancialStatusesAsync(List<StudentFinancialStatus> financialStatuses)
-    {
-        await _context.StudentFinancialStatuses.AddRangeAsync(financialStatuses);
-        await _context.SaveChangesAsync();
-    }
-
     public async Task AddAsync(Student student)
     {
         _context.Students.Add(student);
@@ -151,7 +145,6 @@ public class StudentRepository : IStudentRepository
         if (isFreshmanFilter.HasValue)
             students = students.Where(s => s.IsFreshman == isFreshmanFilter.Value).ToList();
 
-        // Paginacija se radi NAKON IsFreshman filtera, jer je on in-memory
         var totalCountAfterFreshmanFilter = isFreshmanFilter.HasValue ? students.Count : totalCount;
 
         var pagedStudents = students

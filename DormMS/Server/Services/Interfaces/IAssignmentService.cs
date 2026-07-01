@@ -5,7 +5,7 @@ namespace DormMS.Server.Services.Interfaces;
 
 public interface IAssignmentService
 {
-    Task<AssignmentResultDto> AssignStudentsToDormsAsync(int competitionId);
+    //Task<AssignmentResultDto> AssignStudentsToDormsAsync(int competitionId);
 
     Task<AssignmentResultDto> AssignOlderStudentsToDormsAsync(int competitionId);
     Task<AssignmentResultDto> AssignFreshmenToDormsAsync(int competitionId);
@@ -22,8 +22,8 @@ public interface IAssignmentService
     // Kompatibilnost sa starim endpoint-om
     // Task<List<StudentAssignmentDto>> RankStudentsAsync(int competitionId);
 
-    Task<AssignmentResultDto> AssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents);
-    Task<AssignmentResultDto> BulkAssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents);
+    //Task<AssignmentResultDto> AssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents);
+   // Task<AssignmentResultDto> BulkAssignRankedStudentsAsync(List<StudentAssignmentDto> rankedStudents);
     Task<bool> ResetFlowAsync();    
     //Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, Student student,List<Dorm> dorms); //ne treba da se poziva kao endpoint
     Task<bool> ResetAssignmentAsync(int competitionId);

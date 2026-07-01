@@ -50,20 +50,6 @@ public class CompetitionService : ICompetitionService
         return competitions.Select(c => MapToGetDto(c, studentId));
     }
 
-    public async Task<CompetitionGetDto?> OpenCompetitionAsync(int id)
-    {
-        var competition = await _repository.GetByIdTrackedAsync(id);
-        if (competition is null)
-            return null;
-
-        if (competition.Status != CompetitionStatus.Draft)
-            return null;
-
-        competition.Status = CompetitionStatus.Open;
-        await _repository.UpdateAsync(competition);
-        return MapToGetDto(competition);
-    }
-
     public async Task<CompetitionGetDto?> ToggleCompetitionStatusAsync(int id)
     {
         var competition = await _repository.GetByIdTrackedAsync(id);

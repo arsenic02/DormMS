@@ -17,10 +17,10 @@ public interface IStudentService
     Task<StudentFinancialStatusGetDto?> SubmitFinancialStatusAsync(
     int userId,
     StudentFinancialStatusCreateDto dto);
-    Task<BulkFinancialStatusImportResultDto> BulkImportFinancialStatusAsync(IFormFile csvFile);
+    //Task<BulkFinancialStatusImportResultDto> BulkImportFinancialStatusAsync(IFormFile csvFile);
     Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status);
     Task<bool> VerifyFinancialStatusAsync(int studentId, bool isVerified);
-    Task<int> FixBulkImportedStudentsAsync();
+    //Task<int> FixBulkImportedStudentsAsync();
     Task<int> ClearAllStudentsAsync();
     Task<int> BulkVerifyProfilesAsync(BulkVerifyProfilesDto dto);
     Task<List<StudentSummaryDto>> GetByFreshmanStatusAsync(bool? isFreshman);

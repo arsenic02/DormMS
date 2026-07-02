@@ -119,6 +119,22 @@ export async function getUsersPaged(pageNumber, pageSize, role) {
     return res.json()
 }
 
+
+export async function deleteUser(id, token) {
+  const response = await fetchWithAuth(`${USERS_URL}/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => null)
+    throw new Error(data?.message || 'Greška pri brisanju korisnika')
+  }
+}
+
+
 const STUDENTS_URL = 'http://localhost:5153/api/student'
 
 export async function getStudentsPaged(pageNumber, pageSize, profileStatus, faculty, isFreshman) {
@@ -148,3 +164,4 @@ export async function getStudentsPaged(pageNumber, pageSize, profileStatus, facu
 
     return res.json()
 }
+

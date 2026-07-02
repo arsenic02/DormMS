@@ -13,5 +13,6 @@ public interface IAssignmentRepository
     Task<List<Student>> GetStudentsByIdsAsync(List<int> studentIds);
     Task<DormitoryRoom?> GetAvailableRoomAsync(int dormId, Gender studentGender);
     Task<DormitoryRoom?> GetAnyAvailableRoomAsync(int dormId);
+    Task ReleaseRoomAsync(int studentId);
     Task SaveChangesAsync();
 }

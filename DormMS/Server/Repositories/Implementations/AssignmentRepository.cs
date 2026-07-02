@@ -110,6 +110,22 @@ public class AssignmentRepository : IAssignmentRepository
             .Where(s => studentIds.Contains(s.Id))
             .ToListAsync();
     }
+    public async Task ReleaseRoomAsync(int studentId)
+    {
+        var student = await _context.Students.FindAsync(studentId);
+        if (student == null || student.DormitoryRoomId == null)
+            return;
+
+        var room = await _context.DormitoryRooms.FindAsync(student.DormitoryRoomId.Value);
+        if (room != null)
+        {
+            room.CurrentOccupancy = Math.Max(0, room.CurrentOccupancy - 1);
+            room.Status = CalculateStatus(room);
+        }
+
+        student.DormitoryRoomId = null;
+        await _context.SaveChangesAsync();
+    }
 
     public async Task SaveChangesAsync()
     {

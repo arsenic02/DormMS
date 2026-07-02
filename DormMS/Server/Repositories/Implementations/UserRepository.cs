@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
+    private readonly IAssignmentRepository _assignmentRepository;
 
-    public UserRepository(AppDbContext context)
+    public UserRepository(AppDbContext context, IAssignmentRepository assignmentRepository)
     {
         _context = context;
+        _assignmentRepository = assignmentRepository;
     }
     public async Task<User?> GetByIdTrackedAsync(int id)
     => await _context.Users.FindAsync(id);
@@ -20,6 +22,8 @@ public class UserRepository : IUserRepository
     {
         if (user.Role == UserRole.Student && user.StudentId.HasValue)
         {
+            await _assignmentRepository.ReleaseRoomAsync(user.StudentId.Value);
+
             var student = await _context.Students.FindAsync(user.StudentId.Value);
             if (student is not null)
                 _context.Students.Remove(student);
@@ -34,6 +38,24 @@ public class UserRepository : IUserRepository
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
     }
+    // public async Task DeleteUserAndProfileAsync(User user)
+    // {
+    //     if (user.Role == UserRole.Student && user.StudentId.HasValue)
+    //     {
+    //         var student = await _context.Students.FindAsync(user.StudentId.Value);
+    //         if (student is not null)
+    //             _context.Students.Remove(student);
+    //     }
+    //     else if (user.Role == UserRole.DormManager && user.DormManagerId.HasValue)
+    //     {
+    //         var manager = await _context.DormManagers.FindAsync(user.DormManagerId.Value);
+    //         if (manager is not null)
+    //             _context.DormManagers.Remove(manager);
+    //     }
+
+    //     _context.Users.Remove(user);
+    //     await _context.SaveChangesAsync();
+    // }
     public async Task<PagedResultDto<UserGetDto>> GetPagedAsync(int pageNumber, int pageSize, UserRole? roleFilter)
     {
         var query = _context.Users.AsNoTracking();

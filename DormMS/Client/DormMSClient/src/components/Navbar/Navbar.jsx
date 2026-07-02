@@ -27,7 +27,6 @@ function Navbar() {
 
             {auth?.role === 'Student' && (
                 <ul className={styles.navLinks}>
-                    <li><Link to="/student">Početna</Link></li>
                     <li><Link to="/student/room">Soba</Link></li>
                     <li><Link to="/student/competitions">Konkursi</Link></li>
                     <li><Link to="/student/profile">Profil</Link></li>
@@ -37,7 +36,6 @@ function Navbar() {
 
             {auth?.role === 'Admin' && (
                 <ul className={styles.navLinks}>
-                    <li><Link to="/admin">Početna</Link></li>
                     <li><Link to="admin/dorm">Dom</Link></li>
                     <li><Link to="/admin/users">Korisnici</Link></li>
                     <li><Link to="/admin/students">Studenti</Link></li>
@@ -47,7 +45,6 @@ function Navbar() {
 
             {auth?.role === 'DormManager' && (
                 <ul className={styles.navLinks}>
-                    <li><Link to="/dorm-manager">Početna</Link></li>
                     <li><Link to="/dorm-manager/rooms">Sobe</Link></li>
                     <li><Link to="/dorm-manager/competitions">Konkursi</Link></li>
                     <li><Link to="/dorm-manager/rankings">Rang liste</Link></li>

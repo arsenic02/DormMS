@@ -3,17 +3,20 @@ namespace DormMS.Server.Repositories.Implementations;
 using DormMS.Server.DTOs;
 using DormMS.Server.Models;
 using DormMS.Server.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
     private readonly IAssignmentRepository _assignmentRepository;
+    private readonly PasswordHasher<User> _passwordHasher;
 
     public UserRepository(AppDbContext context, IAssignmentRepository assignmentRepository)
     {
         _context = context;
         _assignmentRepository = assignmentRepository;
+        _passwordHasher = new PasswordHasher<User>();
     }
     public async Task<User?> GetByIdTrackedAsync(int id)
     => await _context.Users.FindAsync(id);
@@ -113,5 +116,42 @@ public class UserRepository : IUserRepository
             PageNumber = pageNumber,
             PageSize = pageSize
         };
+    }
+
+    public async Task<User> CreateDormManagerAsync(DormManagerCreateDto dto)
+    {
+        var normalizedEmail = dto.Email.Trim().ToLowerInvariant();
+        
+        // Get first available dorm
+        var dorm = await _context.Dorms.FirstOrDefaultAsync();
+        if (dorm is null)
+            throw new InvalidOperationException("Nijedan dom ne postoji u sistemu.");
+        
+        var dormManager = new DormManager
+        {
+            Name = dto.Name.Trim(),
+            Surname = dto.Surname.Trim(),
+            Email = normalizedEmail,
+            PhoneNumber = dto.PhoneNumber.Trim(),
+            DormId = dorm.Id
+        };
+
+        _context.DormManagers.Add(dormManager);
+        await _context.SaveChangesAsync();
+
+        var user = new User
+        {
+            Email = normalizedEmail,
+            Role = UserRole.DormManager,
+            IsActive = true,
+            DormManagerId = dormManager.Id
+        };
+
+        user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        return user;
     }
 }

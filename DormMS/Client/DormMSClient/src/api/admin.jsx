@@ -134,6 +134,21 @@ export async function deleteUser(id, token) {
   }
 }
 
+export async function createDormManager(dto) {
+  const res = await fetchWithAuth(`${USERS_URL}/dorm-manager`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify(dto)
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(text || 'Greška prilikom kreiranja referenta.')
+  }
+
+  return res.json()
+}
+
 
 const STUDENTS_URL = 'http://localhost:5153/api/student'
 

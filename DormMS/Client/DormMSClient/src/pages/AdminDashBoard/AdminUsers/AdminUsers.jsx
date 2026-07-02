@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import styles from './AdminUsers.module.css'
-import { getUsersPaged, deleteUser } from '../../../api/admin'
+import { getUsersPaged, deleteUser, createDormManager } from '../../../api/admin'
 import { useAuth } from '../../../context/AuthContext'
 
 const roleLabel = {
@@ -32,6 +32,18 @@ function AdminUsers() {
     const [deletingId, setDeletingId] = useState(null)
     const [deleteError, setDeleteError] = useState(null)
 
+    const [showCreateModal, setShowCreateModal] = useState(false)
+    const [createError, setCreateError] = useState(null)
+    const [creating, setCreating] = useState(false)
+    
+    const [formData, setFormData] = useState({
+        name: '',
+        surname: '',
+        email: '',
+        phoneNumber: '',
+        password: ''
+    })
+
     const fetchUsers = async () => {
         setLoading(true)
         setError(null)
@@ -50,6 +62,41 @@ function AdminUsers() {
     useEffect(() => {
         fetchUsers()
     }, [pageNumber, roleFilter])
+
+    const handleOpenCreateModal = () => {
+        setShowCreateModal(true)
+        setCreateError(null)
+    }
+
+    const handleCreateSubmit = async (e) => {
+        e.preventDefault()
+        setCreateError(null)
+        setCreating(true)
+
+        try {
+            await createDormManager(formData)
+            setShowCreateModal(false)
+            setFormData({
+                name: '',
+                surname: '',
+                email: '',
+                phoneNumber: '',
+                password: ''
+            })
+            fetchUsers()
+        } catch (err) {
+            setCreateError(err.message)
+        } finally {
+            setCreating(false)
+        }
+    }
+
+    const handleFormChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    }
 
     const handleRoleFilterChange = (e) => {
         setRoleFilter(e.target.value)
@@ -87,6 +134,13 @@ function AdminUsers() {
                 <h1 className={styles.title}>Korisnici</h1>
 
                 <div className={styles.filters}>
+                    <button 
+                        type="button"
+                        className={styles.createButton}
+                        onClick={handleOpenCreateModal}
+                    >
+                        + Dodaj referenta
+                    </button>
                     <div className={styles.filterField}>
                         <label htmlFor="roleFilter">Tip:</label>
                         <select id="roleFilter" value={roleFilter} onChange={handleRoleFilterChange}>
@@ -159,6 +213,103 @@ function AdminUsers() {
                         </button>
                     </div>
                 </>
+            )}
+
+            {showCreateModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modal}>
+                        <div className={styles.modalHeader}>
+                            <h2>Dodaj referenta</h2>
+                            <button 
+                                className={styles.closeButton}
+                                onClick={() => setShowCreateModal(false)}
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <form onSubmit={handleCreateSubmit} className={styles.modalForm}>
+                            {createError && <p className={styles.error}>{createError}</p>}
+                            
+                            <div className={styles.formField}>
+                                <label htmlFor="name">Ime:</label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleFormChange}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className={styles.formField}>
+                                <label htmlFor="surname">Prezime:</label>
+                                <input
+                                    type="text"
+                                    id="surname"
+                                    name="surname"
+                                    value={formData.surname}
+                                    onChange={handleFormChange}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className={styles.formField}>
+                                <label htmlFor="email">Email:</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleFormChange}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className={styles.formField}>
+                                <label htmlFor="phoneNumber">Broj telefona:</label>
+                                <input
+                                    type="text"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
+                                    value={formData.phoneNumber}
+                                    onChange={handleFormChange}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className={styles.formField}>
+                                <label htmlFor="password">Lozinka:</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleFormChange}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className={styles.modalActions}>
+                                <button
+                                    type="button"
+                                    className={styles.cancelButton}
+                                    onClick={() => setShowCreateModal(false)}
+                                    disabled={creating}
+                                >
+                                    Otkaži
+                                </button>
+                                <button
+                                    type="submit"
+                                    className={styles.submitButton}
+                                    disabled={creating}
+                                >
+                                    {creating ? 'Kreiranje...' : 'Kreiraj'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             )}
         </div>
     )

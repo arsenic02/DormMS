@@ -60,11 +60,11 @@ function Login() {
             login(data)
 
             if (data.role === 'Admin') {
-                navigate('/admin')
+                navigate('/admin/dorm')
             } else if (data.role === 'DormManager') {
-                navigate('/dorm-manager')
+                navigate('/dorm-manager/rooms')
             } else {
-                navigate('/student')
+                navigate('/student/profile')
             }
         } catch (err) {
             setErrors({ general: err.message })

@@ -7,5 +7,5 @@ public interface IUserService
 {
     Task<PagedResultDto<UserGetDto>> GetPagedAsync(int pageNumber, int pageSize, UserRole? roleFilter);
     Task<UserDeleteResult> DeleteAsync(int id);
-  
+    Task<User> CreateDormManagerAsync(DormManagerCreateDto dto);
 }

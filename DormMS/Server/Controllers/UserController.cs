@@ -1,5 +1,6 @@
 namespace DormMS.Server.Controllers;
 
+using DormMS.Server.DTOs;
 using DormMS.Server.Models;
 using DormMS.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +17,20 @@ public class UserController : ControllerBase
     public UserController(IUserService userService)
     {
         _userService = userService;
+    }
+
+    [HttpPost("dorm-manager")]
+    public async Task<IActionResult> CreateDormManager([FromBody] DormManagerCreateDto dto)
+    {
+        var user = await _userService.CreateDormManagerAsync(dto);
+        return CreatedAtAction(nameof(GetPaged), new { id = user.Id }, new UserGetDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Role = user.Role,
+            IsActive = user.IsActive,
+            ProfileName = null
+        });
     }
 
     [HttpDelete("{id}")]

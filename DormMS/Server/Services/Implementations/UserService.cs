@@ -28,4 +28,7 @@ public class UserService : IUserService
 
     public Task<PagedResultDto<UserGetDto>> GetPagedAsync(int pageNumber, int pageSize, UserRole? roleFilter)
         => _userRepository.GetPagedAsync(pageNumber, pageSize, roleFilter);
+
+    public Task<User> CreateDormManagerAsync(DormManagerCreateDto dto)
+        => _userRepository.CreateDormManagerAsync(dto);
 }

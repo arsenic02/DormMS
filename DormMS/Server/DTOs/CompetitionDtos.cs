@@ -39,6 +39,7 @@ public class CompetitionGetDto
     public int ApplicationCount { get; set; }
     public int? MaxStudents { get; set; }
     public bool HasApplied { get; set; }
+    public ApplicationStatus? ApplicationStatus { get; set; }
 }
 
 public class CompetitionApplicationCreateDto

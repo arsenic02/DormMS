@@ -64,7 +64,7 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         if (student.FinancialStatus is null)
             return new(null, "Morate popuniti finansijski status pre prijave na konkurs.");
 
-        if (!student.FinancialStatus.IsVerified)
+        if (student.FinancialStatus.VerificationStatus != FinancialVerificationStatus.Verified)
             return new(null, "Vaš finansijski status još nije verifikovan od strane administratora.");
 
         // Provera opstine

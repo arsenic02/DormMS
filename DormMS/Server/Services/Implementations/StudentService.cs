@@ -128,7 +128,7 @@ public class StudentService : IStudentService
         return MapToGetDto(student);
     }
 
-    public Task<bool> DeleteAsync(int id) => _repository.DeleteAsync(id);
+   // public Task<bool> DeleteAsync(int id) => _repository.DeleteAsync(id);
 
     public async Task<StudentImportResultDto> ImportFromCsvAsync(IFormFile csvFile)
     {
@@ -209,7 +209,7 @@ public class StudentService : IStudentService
                             StudentId = student.Id,
                             TotalFamilyIncome = record.TotalFamilyIncome,
                             FamilyMemberCount = record.FamilyMemberCount,
-                            IsVerified = true,
+                            VerificationStatus = FinancialVerificationStatus.Verified,
                             VerifiedAt = DateTime.UtcNow
                         };
                         _context.StudentFinancialStatuses.Add(financialStatus);
@@ -311,7 +311,7 @@ public class StudentService : IStudentService
 
         if (student.FinancialStatus != null)
         {
-            student.FinancialStatus.IsVerified = true;
+            student.FinancialStatus.VerificationStatus = FinancialVerificationStatus.Verified;
             student.FinancialStatus.VerifiedAt = DateTime.UtcNow;
         }
     }
@@ -369,7 +369,7 @@ public class StudentService : IStudentService
         {
             existingFinancialStatus.TotalFamilyIncome = dto.TotalFamilyIncome;
             existingFinancialStatus.FamilyMemberCount = dto.FamilyMemberCount;
-            existingFinancialStatus.IsVerified = false;
+            existingFinancialStatus.VerificationStatus = FinancialVerificationStatus.Pending;
             existingFinancialStatus.SubmittedAt = DateTime.UtcNow;
             existingFinancialStatus.VerifiedAt = null;
 
@@ -380,7 +380,7 @@ public class StudentService : IStudentService
                 TotalFamilyIncome = existingFinancialStatus.TotalFamilyIncome,
                 FamilyMemberCount = existingFinancialStatus.FamilyMemberCount,
                 IncomePerMember = existingFinancialStatus.IncomePerMember,
-                IsVerified = existingFinancialStatus.IsVerified,
+                VerificationStatus = existingFinancialStatus.VerificationStatus,
                 SubmittedAt = existingFinancialStatus.SubmittedAt,
                 VerifiedAt = existingFinancialStatus.VerifiedAt
             };
@@ -391,7 +391,7 @@ public class StudentService : IStudentService
             StudentId = student.Id,
             TotalFamilyIncome = dto.TotalFamilyIncome,
             FamilyMemberCount = dto.FamilyMemberCount,
-            IsVerified = false,
+            VerificationStatus = FinancialVerificationStatus.Pending,
             SubmittedAt = DateTime.UtcNow
         };
 
@@ -402,7 +402,7 @@ public class StudentService : IStudentService
             TotalFamilyIncome = financialStatus.TotalFamilyIncome,
             FamilyMemberCount = financialStatus.FamilyMemberCount,
             IncomePerMember = financialStatus.IncomePerMember,
-            IsVerified = financialStatus.IsVerified,
+            VerificationStatus = financialStatus.VerificationStatus,
             SubmittedAt = financialStatus.SubmittedAt,
             VerifiedAt = financialStatus.VerifiedAt
         };
@@ -500,15 +500,15 @@ public class StudentService : IStudentService
         return updated != null ? MapToGetDto(updated) : null;
     }
 
-    public async Task<bool> VerifyFinancialStatusAsync(int studentId, bool isVerified)
+    public async Task<bool> VerifyFinancialStatusAsync(int studentId, FinancialVerificationStatus status)
     {
         var financialStatus = await _context.StudentFinancialStatuses
             .FirstOrDefaultAsync(fs => fs.StudentId == studentId);
 
         if (financialStatus == null) return false;
 
-        financialStatus.IsVerified = isVerified;
-        financialStatus.VerifiedAt = isVerified ? DateTime.UtcNow : null;
+        financialStatus.VerificationStatus = status;
+        financialStatus.VerifiedAt = status == FinancialVerificationStatus.Verified ? DateTime.UtcNow : null;
 
         await _context.SaveChangesAsync();
         return true;
@@ -596,7 +596,7 @@ public Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
             TotalFamilyIncome = student.FinancialStatus.TotalFamilyIncome,
             FamilyMemberCount = student.FinancialStatus.FamilyMemberCount,
             IncomePerMember = student.FinancialStatus.IncomePerMember,
-            IsVerified = student.FinancialStatus.IsVerified,
+            VerificationStatus = student.FinancialStatus.VerificationStatus,
             SubmittedAt = student.FinancialStatus.SubmittedAt,
             VerifiedAt = student.FinancialStatus.VerifiedAt
         }

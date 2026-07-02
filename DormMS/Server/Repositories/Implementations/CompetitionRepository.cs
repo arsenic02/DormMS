@@ -73,6 +73,24 @@ public class CompetitionRepository : ICompetitionRepository
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<Competition>> GetOpenAndAppliedCompetitionsAsync(int studentId, bool isFreshman)
+    {
+        var now = DateTime.UtcNow;
+        var studentCompetitionType = isFreshman ? CompetitionType.Freshmen : CompetitionType.General;
+
+        return await _context.Competitions
+            .Where(c =>
+                (c.Status == CompetitionStatus.Open
+                    && c.StartDate <= now
+                    && c.EndDate >= now
+                    && c.Type == studentCompetitionType)
+                || c.Applications.Any(a => a.StudentId == studentId))
+            .Include(c => c.Applications)
+            .AsNoTracking()
+            .OrderByDescending(c => c.StartDate)
+            .ToListAsync();
+    }
+
     public async Task AddAsync(Competition competition)
     {
         _context.Competitions.Add(competition);

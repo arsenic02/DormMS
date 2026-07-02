@@ -18,7 +18,7 @@ public interface IStudentRepository
     Task AddAsync(Student student);
     Task UpdateAsync(Student student);
     Task UpdateProfileAsync(Student student);
-    Task<bool> DeleteAsync(int id);
+    //Task<bool> DeleteAsync(int id);
     Task<bool> DormitoryRoomExistsAsync(int roomId);
     Task<Student?> GetByStudentIdNumberAsync(string studentIdNumber);
 

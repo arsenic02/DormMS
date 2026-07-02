@@ -78,7 +78,7 @@ export async function generateRooms(dto) {
         throw new Error(text || 'Greška prilikom generisanja soba.')
     }
 
-    return res.json()
+    return true
 }
 
 export async function deleteAllRooms(dormId) {

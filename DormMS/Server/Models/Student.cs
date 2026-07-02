@@ -34,7 +34,7 @@ public class Student
     public bool IsEligibleToApply =>
         ProfileStatus == StudentProfileStatus.Verified &&
         FinancialStatus != null &&
-        FinancialStatus.IsVerified &&
+        FinancialStatus.VerificationStatus == FinancialVerificationStatus.Verified &&
         IsBudgetStudent;
 
     //bolje da se racuna nego da se cuva u bazi, jer se menja svake godine

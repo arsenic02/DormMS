@@ -81,7 +81,7 @@ public class DormController : ControllerBase
         try
         {
             await _dormService.GenerateRoomsAsync(dto);
-            return Ok("Rooms generated successfully");
+            return Ok(new { message = "Sobe su uspešno generisane." });
         }
         catch (ArgumentException ex)
         {

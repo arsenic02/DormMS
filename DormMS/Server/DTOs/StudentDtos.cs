@@ -52,7 +52,7 @@ public class StudentFinancialStatusGetDto
     public decimal TotalFamilyIncome { get; set; }
     public int FamilyMemberCount { get; set; }
     public decimal IncomePerMember { get; set; }
-    public bool IsVerified { get; set; }
+    public FinancialVerificationStatus VerificationStatus { get; set; }
     public DateTime SubmittedAt { get; set; }
     public DateTime? VerifiedAt { get; set; }
 }

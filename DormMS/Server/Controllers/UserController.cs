@@ -4,6 +4,7 @@ using DormMS.Server.Models;
 using DormMS.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static DormMS.Server.Services.Interfaces.IUserService;
 
 [ApiController]
 [Route("api/users")]
@@ -15,6 +16,19 @@ public class UserController : ControllerBase
     public UserController(IUserService userService)
     {
         _userService = userService;
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var result = await _userService.DeleteAsync(id);
+
+        return result switch
+        {
+            UserDeleteResult.NotFound => NotFound(),
+            UserDeleteResult.CannotDeleteAdmin => BadRequest(new { message = "Administratorski nalog se ne može obrisati." }),
+            _ => NoContent()
+        };
     }
 
     [HttpGet]

@@ -9,7 +9,7 @@ public interface ICompetitionService
     Task<PagedResultDto<CompetitionGetDto>> GetPagedAsync(
     int pageNumber, int pageSize, CompetitionType? type, CompetitionStatus? status);
     Task<CompetitionGetDto?> GetByIdAsync(int id);
-    Task<IEnumerable<CompetitionGetDto>> GetOpenCompetitionsAsync(int studentId);
+    Task<IEnumerable<CompetitionGetDto>> GetOpenCompetitionsAsync(int studentId, bool isFreshman);
 
     //Task<CompetitionGetDto?> OpenCompetitionAsync(int id);
 

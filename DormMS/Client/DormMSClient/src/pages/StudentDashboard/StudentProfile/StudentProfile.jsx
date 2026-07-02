@@ -23,7 +23,14 @@ const studyLevelOptions = [
 const profileStatusLabel = {
     0: { text: 'Profil nije kompletan', color: '#e53e3e' },
     1: { text: 'Verifikacija u toku', color: '#d69e2e' },
-    2: { text: 'Verifikovan', color: '#2f855a' }
+    2: { text: 'Verifikovan', color: '#2f855a' },
+    3: { text: 'Odbijen', color: '#c53030' }
+}
+
+const financialStatusLabel = {
+    0: { text: 'Na čekanju', color: '#d69e2e' },
+    1: { text: 'Verifikovan', color: '#2f855a' },
+    2: { text: 'Odbijen', color: '#c53030' }
 }
 
 const facultyOptions = [
@@ -61,6 +68,7 @@ function StudentProfile() {
         formData,
         setFormData,
         profileStatus,
+        setProfileStatus,
         loading: profileLoading,
         error: profileError
     } = useStudentProfile(auth?.token)
@@ -209,7 +217,8 @@ function StudentProfile() {
         }
 
         try {
-            await updateStudentProfile(payload, auth.token)
+            const updatedProfile = await updateStudentProfile(payload, auth.token)
+            setProfileStatus(updatedProfile?.profileStatus ?? 1)
             setSuccessMessage('Profil uspesno azuriran!')
             setIsEditing(false)
             setTimeout(() => setSuccessMessage(''), 3000)
@@ -466,8 +475,11 @@ function StudentProfile() {
             <div className={styles.card}>
                 <div className={styles.cardHeader}>
                     <h2>Finansijski status</h2>
-                    <div className={financialData.isVerified ? styles.verifiedBadge : styles.unverifiedBadge}>
-                        {financialData.isVerified ? 'Verifikovan' : 'Nije verifikovan'}
+                    <div
+                        className={styles.statusBadge}
+                        style={{ color: financialStatusLabel[financialData.verificationStatus]?.color }}
+                    >
+                        {financialStatusLabel[financialData.verificationStatus]?.text || 'Status nije poznat'}
                     </div>
                 </div>
 
@@ -482,10 +494,10 @@ function StudentProfile() {
                             <ViewItem label="Ukupan prihod" value={financialData.totalFamilyIncome} />
                             <ViewItem label="Clanovi porodice" value={financialData.familyMemberCount} />
                             <ViewItem label="Po clanu" value={financialData.incomePerMember} />
-                            <ViewItem label="Status" value={financialData.isVerified ? 'Verifikovan' : 'Nije verifikovan'} />
+                            <ViewItem label="Status" value={financialStatusLabel[financialData.verificationStatus]?.text || 'Status nije poznat'} />
                         </div>
 
-                        {!financialData.isVerified ? (
+                        {financialData.verificationStatus !== 1 ? (
                             <button type="button" className={styles.editBtn} onClick={() => setIsFinancialEditing(true)}>
                                 Izmeni finansije
                             </button>

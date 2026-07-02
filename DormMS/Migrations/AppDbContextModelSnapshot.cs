@@ -465,9 +465,6 @@ namespace DormMS.Migrations
                     b.Property<int>("FamilyMemberCount")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
@@ -476,6 +473,9 @@ namespace DormMS.Migrations
 
                     b.Property<decimal>("TotalFamilyIncome")
                         .HasColumnType("numeric");
+
+                    b.Property<int>("VerificationStatus")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("VerifiedAt")
                         .HasColumnType("timestamp with time zone");

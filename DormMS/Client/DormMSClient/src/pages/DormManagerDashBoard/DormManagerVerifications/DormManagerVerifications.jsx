@@ -12,6 +12,12 @@ const PROFILE_STATUS = {
     Rejected: 3,
 }
 
+const FINANCIAL_STATUS = {
+    Pending: 0,
+    Verified: 1,
+    Rejected: 2,
+}
+
 function DormManagerVerifications() {
     const { auth } = useAuth()
 
@@ -44,7 +50,7 @@ function DormManagerVerifications() {
     )
 
     const pendingFinancial = students.filter(
-        (s) => s.financialStatus != null && s.financialStatus.isVerified === false
+        (s) => s.financialStatus != null && s.financialStatus.verificationStatus === FINANCIAL_STATUS.Pending
     )
 
     const handleProfileDecision = async (studentId, status) => {
@@ -65,16 +71,16 @@ function DormManagerVerifications() {
         }
     }
 
-    const handleFinancialDecision = async (studentId) => {
+    const handleFinancialDecision = async (studentId, status) => {
         const key = `financial-${studentId}`
         setActionError(null)
         setActionLoadingKey(key)
         try {
-            await verifyStudentFinancialStatus(studentId, true, auth.token)
+            await verifyStudentFinancialStatus(studentId, status, auth.token)
             setStudents((prev) =>
                 prev.map((s) =>
                     s.id === studentId
-                        ? { ...s, financialStatus: { ...s.financialStatus, isVerified: true } }
+                        ? { ...s, financialStatus: { ...s.financialStatus, verificationStatus: status } }
                         : s
                 )
             )
@@ -199,9 +205,16 @@ function DormManagerVerifications() {
                                         <button
                                             className={styles.btnApprove}
                                             disabled={isLoading}
-                                            onClick={() => handleFinancialDecision(s.id)}
+                                            onClick={() => handleFinancialDecision(s.id, FINANCIAL_STATUS.Verified)}
                                         >
                                             {isLoading ? 'Čuvanje...' : 'Verifikuj'}
+                                        </button>
+                                        <button
+                                            className={styles.btnReject}
+                                            disabled={isLoading}
+                                            onClick={() => handleFinancialDecision(s.id, FINANCIAL_STATUS.Rejected)}
+                                        >
+                                            Odbij
                                         </button>
                                     </div>
                                 </div>

@@ -113,15 +113,16 @@ public class StudentController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteStudent(int id)
-    {
-        var deleted = await _studentService.DeleteAsync(id);
-        if (!deleted)
-            return NotFound();
+//brise samo studenta, bez naloga
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeleteStudent(int id)
+    // {
+    //     var deleted = await _studentService.DeleteAsync(id);
+    //     if (!deleted)
+    //         return NotFound();
 
-        return NoContent();
-    }
+    //     return NoContent();
+    // }
 
     [HttpPost("import-csv")]
     public async Task<ActionResult<StudentImportResultDto>> ImportFromCsv(IFormFile csvFile)
@@ -165,11 +166,11 @@ public class StudentController : ControllerBase
 
     [HttpPatch("{studentId}/verify-financial-status")]
     [Authorize(Roles = "Admin,DormManager")]
-    public async Task<IActionResult> VerifyFinancialStatus(int studentId, [FromBody] bool isVerified)
+    public async Task<IActionResult> VerifyFinancialStatus(int studentId, [FromBody] FinancialVerificationStatus status)
     {
-        var result = await _studentService.VerifyFinancialStatusAsync(studentId, isVerified);
+        var result = await _studentService.VerifyFinancialStatusAsync(studentId, status);
         if (!result) return NotFound();
-        return Ok(new { Message = $"Financial status for student {studentId} has been {(isVerified ? "verified" : "unverified")}." });
+        return Ok(new { Message = $"Financial status for student {studentId} has been set to {status}." });
     }
 
     [HttpDelete("all")]

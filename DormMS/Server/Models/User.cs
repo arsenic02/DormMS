@@ -2,9 +2,15 @@ namespace DormMS.Server.Models;
 
 public enum UserRole
 {
-    Admin=0,
-    DormManager=1,
-    Student=2
+    Admin = 0,
+    DormManager = 1,
+    Student = 2
+}
+public enum UserDeleteResult
+{
+    Success = 0,
+    NotFound = 1,
+    CannotDeleteAdmin = 2
 }
 
 public class User

@@ -3,15 +3,34 @@ import styles from './StudentCompetitions.module.css'
 import { getOpenCompetitions } from '../../../api/competition'
 import { applyToCompetition, uploadDocument } from '../../../api/applyCompetition'
 
-const statusLabel = {
+const competitionStatusLabel = {
     0: 'Nacrt',
     1: 'Otvoren',
     2: 'Zatvoren',
     3: 'Završen',
 }
+
 const typeLabel = {
     0: 'Stariji studenti',
     1: 'Brucoši',
+}
+
+const applicationStatusLabel = {
+    0: 'Na čekanju',
+    1: 'Odobreno',
+    2: 'Odbijeno',
+}
+
+const applicationStatusClass = {
+    0: 'pending',
+    1: 'approved',
+    2: 'rejected',
+}
+
+const applicationStatusMessage = {
+    0: 'Vaša prijava je primljena i trenutno se razmatra.',
+    1: 'Čestitamo! Vaša prijava je odobrena.',
+    2: 'Nažalost, vaša prijava je odbijena.',
 }
 
 function StudentCompetitions() {
@@ -83,7 +102,9 @@ function StudentCompetitions() {
 
             setCompetitions((prev) =>
                 prev.map((c) =>
-                    c.id === competitionId ? { ...c, hasApplied: true } : c
+                    c.id === competitionId
+                        ? { ...c, hasApplied: true, applicationStatus: 0 }
+                        : c
                 )
             )
             setApplySuccessId(competitionId)
@@ -121,104 +142,60 @@ function StudentCompetitions() {
         return new Date(dateStr).toLocaleDateString('sr-RS')
     }
 
+    const myApplications = competitions.filter((c) => c.hasApplied)
+    const openForApply = competitions.filter((c) => c.isOpen && !c.hasApplied)
+
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Otvoreni konkursi</h1>
+            <h1 className={styles.title}>Konkursi</h1>
 
             {listLoading && <p className={styles.info}>Učitavanje...</p>}
             {listError && <p className={styles.error}>{listError}</p>}
 
-            {!listLoading && !listError && competitions.length === 0 && (
-                <p className={styles.info}>Trenutno nema otvorenih konkursa.</p>
-            )}
-
-            {!listLoading && !listError && competitions.length > 0 && (
-                <div className={styles.list}>
-                    {competitions.map((comp) => {
-                        const isApplying = applyingId === comp.id
-
-                        return (
-                            <div key={comp.id} className={styles.card}>
-                                <div className={styles.cardHeader}>
-                                    <span className={styles.cardName}>{comp.name}</span>
-                                    <div className={styles.badges}>
-                                        <span className={styles.typeBadge}>{typeLabel[comp.type] ?? 'N/A'}</span>
-                                        <span className={styles.badge}>{statusLabel[comp.status] ?? 'N/A'}</span>
-                                    </div>
-                                </div>
-
-                                <p className={styles.cardDesc}>{comp.description}</p>
-
-                                <div className={styles.cardDates}>
-                                    <span>Početak: {formatDate(comp.startDate)}</span>
-                                    <span>Završetak: {formatDate(comp.endDate)}</span>
-                                </div>
-
-                                {!comp.hasApplied && (
-
-                                    <div className={styles.fileField}>
-                                        <label htmlFor={`file-${comp.id}`} className={styles.fileLabel}>
-                                            Dokument (PDF)
-                                        </label>
-                                        <div className={styles.fileRow}>
-                                            <label htmlFor={`file-${comp.id}`} className={styles.fileButton}>
-                                                Izaberi fajl
-                                            </label>
-                                            <span className={styles.fileName}>
-                                                {selectedFiles[comp.id]?.name || 'Nije izabran fajl'}
-                                            </span>
-                                            <input
-                                                id={`file-${comp.id}`}
-                                                type="file"
-                                                accept=".pdf"
-                                                onChange={(e) => handleFileChange(comp.id, e)}
-                                                className={styles.fileInputHidden}
-                                            />
-                                        </div>
-                                        {fileErrors[comp.id] && (
-                                            <span className={styles.error}>{fileErrors[comp.id]}</span>
-                                        )}
-                                    </div>
-
-                                    // <div className={styles.fileField}>
-                                    //     <label htmlFor={`file-${comp.id}`} className={styles.fileLabel}>
-                                    //         Dokument (PDF)
-                                    //     </label>
-                                    //     <input
-                                    //         id={`file-${comp.id}`}
-                                    //         type="file"
-                                    //         accept=".pdf"
-                                    //         onChange={(e) => handleFileChange(comp.id, e)}
-                                    //         className={styles.fileInput}
-                                    //     />
-                                    //     {fileErrors[comp.id] && (
-                                    //         <span className={styles.error}>{fileErrors[comp.id]}</span>
-                                    //     )}
-                                    // </div>
-                                )}
-
-                                {applySuccessId === comp.id && (
-                                    <p className={styles.success}>Uspešno si se prijavio na konkurs!</p>
-                                )}
-                                {applyErrorId === comp.id && (
-                                    <p className={styles.error}>{applyError}</p>
-                                )}
-
-                                <button
-                                    className={styles.btn}
-                                    disabled={isApplying || comp.hasApplied}
-                                    onClick={() => handleApply(comp.id)}
-                                >
-                                    {comp.hasApplied
-                                        ? 'Prijavljen'
-                                        : isApplying
-                                            ? 'Prijavljivanje...'
-                                            : 'Prijavi se'}
-                                </button>
+            {!listLoading && !listError && (
+                <>
+                    {myApplications.length > 0 && (
+                        <section className={styles.section}>
+                            <h2 className={styles.sectionTitle}>Moje prijave</h2>
+                            <div className={styles.list}>
+                                {myApplications.map((comp) => (
+                                    <CompetitionCard
+                                        key={comp.id}
+                                        comp={comp}
+                                        formatDate={formatDate}
+                                        mode="applied"
+                                    />
+                                ))}
                             </div>
-                        )
-                    })}
-                </div>
+                        </section>
+                    )}
+
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>Otvoreni konkursi</h2>
+                        {openForApply.length === 0 ? (
+                            <p className={styles.info}>Trenutno nema otvorenih konkursa za prijavu.</p>
+                        ) : (
+                            <div className={styles.list}>
+                                {openForApply.map((comp) => (
+                                    <CompetitionCard
+                                        key={comp.id}
+                                        comp={comp}
+                                        formatDate={formatDate}
+                                        mode="apply"
+                                        selectedFiles={selectedFiles}
+                                        fileErrors={fileErrors}
+                                        onFileChange={handleFileChange}
+                                        onApply={handleApply}
+                                        applyingId={applyingId}
+                                        applySuccessId={applySuccessId}
+                                        applyErrorId={applyErrorId}
+                                        applyError={applyError}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </section>
+                </>
             )}
 
             {confirmModalId !== null && (
@@ -242,5 +219,95 @@ function StudentCompetitions() {
     )
 }
 
-export default StudentCompetitions
+function CompetitionCard({
+    comp,
+    formatDate,
+    mode,
+    selectedFiles,
+    fileErrors,
+    onFileChange,
+    onApply,
+    applyingId,
+    applySuccessId,
+    applyErrorId,
+    applyError,
+}) {
+    const isApplying = applyingId === comp.id
+    const status = comp.applicationStatus
+    const statusKey = applicationStatusClass[status] ?? 'pending'
 
+    return (
+        <div className={`${styles.card} ${mode === 'applied' && status === 1 ? styles.cardApproved : ''}`}>
+            <div className={styles.cardHeader}>
+                <span className={styles.cardName}>{comp.name}</span>
+                <div className={styles.badges}>
+                    <span className={styles.typeBadge}>{typeLabel[comp.type] ?? 'N/A'}</span>
+                    <span className={styles.badge}>{competitionStatusLabel[comp.status] ?? 'N/A'}</span>
+                    {mode === 'applied' && status !== undefined && status !== null && (
+                        <span className={`${styles.applicationBadge} ${styles[statusKey]}`}>
+                            {applicationStatusLabel[status] ?? 'N/A'}
+                        </span>
+                    )}
+                </div>
+            </div>
+
+            <p className={styles.cardDesc}>{comp.description}</p>
+
+            <div className={styles.cardDates}>
+                <span>Početak: {formatDate(comp.startDate)}</span>
+                <span>Završetak: {formatDate(comp.endDate)}</span>
+            </div>
+
+            {mode === 'applied' && status !== undefined && status !== null && (
+                <p className={`${styles.applicationMessage} ${styles[`message${statusKey.charAt(0).toUpperCase()}${statusKey.slice(1)}`]}`}>
+                    {applicationStatusMessage[status]}
+                </p>
+            )}
+
+            {mode === 'apply' && (
+                <>
+                    <div className={styles.fileField}>
+                        <label htmlFor={`file-${comp.id}`} className={styles.fileLabel}>
+                            Dokument (PDF)
+                        </label>
+                        <div className={styles.fileRow}>
+                            <label htmlFor={`file-${comp.id}`} className={styles.fileButton}>
+                                Izaberi fajl
+                            </label>
+                            <span className={styles.fileName}>
+                                {selectedFiles[comp.id]?.name || 'Nije izabran fajl'}
+                            </span>
+                            <input
+                                id={`file-${comp.id}`}
+                                type="file"
+                                accept=".pdf"
+                                onChange={(e) => onFileChange(comp.id, e)}
+                                className={styles.fileInputHidden}
+                            />
+                        </div>
+                        {fileErrors[comp.id] && (
+                            <span className={styles.error}>{fileErrors[comp.id]}</span>
+                        )}
+                    </div>
+
+                    {applySuccessId === comp.id && (
+                        <p className={styles.success}>Uspešno si se prijavio na konkurs!</p>
+                    )}
+                    {applyErrorId === comp.id && (
+                        <p className={styles.error}>{applyError}</p>
+                    )}
+
+                    <button
+                        className={styles.btn}
+                        disabled={isApplying}
+                        onClick={() => onApply(comp.id)}
+                    >
+                        {isApplying ? 'Prijavljivanje...' : 'Prijavi se'}
+                    </button>
+                </>
+            )}
+        </div>
+    )
+}
+
+export default StudentCompetitions

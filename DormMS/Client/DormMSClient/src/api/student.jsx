@@ -112,14 +112,14 @@ export async function verifyStudentProfile(studentId, status, token) {
   return data
 }
 
-export async function verifyStudentFinancialStatus(studentId, isVerified, token) {
+export async function verifyStudentFinancialStatus(studentId, status, token) {
   const response = await fetchWithAuth(`${BASE_URL}/${studentId}/verify-financial-status`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
-    body: JSON.stringify(isVerified)
+    body: JSON.stringify(status)
   })
 
   const data = await response.json().catch(() => null)

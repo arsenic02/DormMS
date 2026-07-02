@@ -62,7 +62,7 @@ public class CompetitionController : ControllerBase
         if (student is null)
             return NotFound("Student nije pronađen");
 
-        return Ok(await _competitionService.GetOpenCompetitionsAsync(student.Id));
+        return Ok(await _competitionService.GetOpenCompetitionsAsync(student.Id, student.IsFreshman));
     }
 
     [HttpGet("{id}")]

@@ -10,6 +10,7 @@ public interface ICompetitionRepository
     Task<Competition?> GetByIdAsync(int id);
     Task<Competition?> GetByIdTrackedAsync(int id);
     Task<IEnumerable<Competition>> GetOpenCompetitionsAsync();
+    Task<IEnumerable<Competition>> GetOpenAndAppliedCompetitionsAsync(int studentId, bool isFreshman);
     Task AddAsync(Competition competition);
     Task UpdateAsync(Competition competition);
     Task<bool> DeleteAsync(int id);

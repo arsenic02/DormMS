@@ -6,7 +6,7 @@ export function useFinancialStatus(token) {
         totalFamilyIncome: '',
         familyMemberCount: '',
         incomePerMember: '',
-        isVerified: false
+        verificationStatus: 0
     })
 
     const [loading, setLoading] = useState(true)
@@ -23,7 +23,7 @@ export function useFinancialStatus(token) {
                     totalFamilyIncome: status.totalFamilyIncome || '',
                     familyMemberCount: status.familyMemberCount || '',
                     incomePerMember: status.incomePerMember || '',
-                    isVerified: status.isVerified || false
+                    verificationStatus: status.verificationStatus ?? 0
                 })
             })
             .catch(err => setError(err))

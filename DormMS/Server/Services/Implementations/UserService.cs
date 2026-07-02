@@ -13,6 +13,18 @@ public class UserService : IUserService
     {
         _userRepository = userRepository;
     }
+    public async Task<UserDeleteResult> DeleteAsync(int id)
+    {
+        var user = await _userRepository.GetByIdTrackedAsync(id);
+        if (user is null)
+            return UserDeleteResult.NotFound;
+
+        if (user.Role == UserRole.Admin)
+            return UserDeleteResult.CannotDeleteAdmin;
+
+        await _userRepository.DeleteUserAndProfileAsync(user);
+        return UserDeleteResult.Success;
+    }
 
     public Task<PagedResultDto<UserGetDto>> GetPagedAsync(int pageNumber, int pageSize, UserRole? roleFilter)
         => _userRepository.GetPagedAsync(pageNumber, pageSize, roleFilter);

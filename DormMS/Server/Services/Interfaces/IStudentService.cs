@@ -12,14 +12,14 @@ public interface IStudentService
     Task<Student?> CreateAsync(StudentCreateUpdateDto dto);
     Task<bool?> UpdateAsync(int id, StudentCreateUpdateDto dto);
     Task<StudentGetDto?> CompleteProfileAsync(int userId, StudentProfileUpdateDto dto);
-    Task<bool> DeleteAsync(int id);
+    //Task<bool> DeleteAsync(int id);
     Task<StudentImportResultDto> ImportFromCsvAsync(IFormFile csvFile);
     Task<StudentFinancialStatusGetDto?> SubmitFinancialStatusAsync(
     int userId,
     StudentFinancialStatusCreateDto dto);
     //Task<BulkFinancialStatusImportResultDto> BulkImportFinancialStatusAsync(IFormFile csvFile);
     Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status);
-    Task<bool> VerifyFinancialStatusAsync(int studentId, bool isVerified);
+    Task<bool> VerifyFinancialStatusAsync(int studentId, FinancialVerificationStatus status);
     //Task<int> FixBulkImportedStudentsAsync();
     Task<int> ClearAllStudentsAsync();
     Task<int> BulkVerifyProfilesAsync(BulkVerifyProfilesDto dto);

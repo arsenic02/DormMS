@@ -93,6 +93,38 @@ export async function getAllStudents(token) {
   return data
 }
 
+export async function getStudentsPaged(token, pageNumber = 1, pageSize = 10, filters = {}) {
+  const queryParams = new URLSearchParams({
+    pageNumber: pageNumber.toString(),
+    pageSize: pageSize.toString(),
+  })
+
+  if (filters.profileStatus !== undefined && filters.profileStatus !== null) {
+    queryParams.append('profileStatus', filters.profileStatus.toString())
+  }
+  if (filters.faculty) {
+    queryParams.append('faculty', filters.faculty)
+  }
+  if (filters.isFreshman !== undefined && filters.isFreshman !== null) {
+    queryParams.append('isFreshman', filters.isFreshman.toString())
+  }
+
+  const response = await fetchWithAuth(`${BASE_URL}/paged?${queryParams.toString()}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data?.message || 'Greška pri učitavanju studenata')
+  }
+
+  return data
+}
+
 export async function verifyStudentProfile(studentId, status, token) {
   const response = await fetchWithAuth(`${BASE_URL}/${studentId}/verify-profile`, {
     method: 'PATCH',

@@ -61,20 +61,37 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet("paged")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,DormManager")]
     public async Task<ActionResult<PagedResultDto<StudentGetDto>>> GetStudentsPaged(
-    [FromQuery] int pageNumber = 1,
-    [FromQuery] int pageSize = 10,
-    [FromQuery] StudentProfileStatus? profileStatus = null,
-    [FromQuery] string? faculty = null,
-    [FromQuery] bool? isFreshman = null)
+[FromQuery] int pageNumber = 1,
+[FromQuery] int pageSize = 10,
+[FromQuery] StudentProfileStatus? profileStatus = null,
+[FromQuery] string? faculty = null,
+[FromQuery] bool? isFreshman = null,
+[FromQuery] FinancialVerificationStatus? financialStatus = null)
     {
         if (pageNumber < 1) pageNumber = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 10;
 
-        var result = await _studentService.GetPagedAsync(pageNumber, pageSize, profileStatus, faculty, isFreshman);
+        var result = await _studentService.GetPagedAsync(pageNumber, pageSize, profileStatus, faculty, isFreshman, financialStatus);
         return Ok(result);
     }
+
+    // [HttpGet("paged")]
+    // [Authorize(Roles = "Admin,DormManager")]
+    // public async Task<ActionResult<PagedResultDto<StudentGetDto>>> GetStudentsPaged(
+    // [FromQuery] int pageNumber = 1,
+    // [FromQuery] int pageSize = 10,
+    // [FromQuery] StudentProfileStatus? profileStatus = null,
+    // [FromQuery] string? faculty = null,
+    // [FromQuery] bool? isFreshman = null)
+    // {
+    //     if (pageNumber < 1) pageNumber = 1;
+    //     if (pageSize < 1 || pageSize > 100) pageSize = 10;
+
+    //     var result = await _studentService.GetPagedAsync(pageNumber, pageSize, profileStatus, faculty, isFreshman);
+    //     return Ok(result);
+    // }
 
     [Authorize(Roles = "Student")]
     [HttpPut("me/profile")]
@@ -113,7 +130,7 @@ public class StudentController : ControllerBase
         return NoContent();
     }
 
-//brise samo studenta, bez naloga
+    //brise samo studenta, bez naloga
     // [HttpDelete("{id}")]
     // public async Task<IActionResult> DeleteStudent(int id)
     // {

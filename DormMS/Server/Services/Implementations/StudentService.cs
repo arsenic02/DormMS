@@ -128,7 +128,7 @@ public class StudentService : IStudentService
         return MapToGetDto(student);
     }
 
-   // public Task<bool> DeleteAsync(int id) => _repository.DeleteAsync(id);
+    // public Task<bool> DeleteAsync(int id) => _repository.DeleteAsync(id);
 
     public async Task<StudentImportResultDto> ImportFromCsvAsync(IFormFile csvFile)
     {
@@ -534,9 +534,13 @@ public class StudentService : IStudentService
             .ToList();
     }
 
-public Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
-    int pageNumber, int pageSize, StudentProfileStatus? profileStatusFilter, string? facultyFilter, bool? isFreshmanFilter)
-    => _repository.GetPagedAsync(pageNumber, pageSize, profileStatusFilter, facultyFilter, isFreshmanFilter);
+    public Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
+    int pageNumber, int pageSize, StudentProfileStatus? profileStatusFilter, string? facultyFilter, bool? isFreshmanFilter, FinancialVerificationStatus? financialStatusFilter = null)
+    => _repository.GetPagedAsync(pageNumber, pageSize, profileStatusFilter, facultyFilter, isFreshmanFilter, financialStatusFilter);
+
+    // public Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
+    //     int pageNumber, int pageSize, StudentProfileStatus? profileStatusFilter, string? facultyFilter, bool? isFreshmanFilter)
+    //     => _repository.GetPagedAsync(pageNumber, pageSize, profileStatusFilter, facultyFilter, isFreshmanFilter);
     private static Student MapToEntity(StudentCreateUpdateDto dto, Student? existing = null)
     {
         var student = existing ?? new Student();

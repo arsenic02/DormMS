@@ -22,10 +22,11 @@ public interface IStudentRepository
     Task<bool> DormitoryRoomExistsAsync(int roomId);
     Task<Student?> GetByStudentIdNumberAsync(string studentIdNumber);
 
-    Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
+   Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
     int pageNumber,
     int pageSize,
     StudentProfileStatus? profileStatusFilter,
     string? facultyFilter,
-    bool? isFreshmanFilter); //za admina
+    bool? isFreshmanFilter,
+    FinancialVerificationStatus? financialStatusFilter = null); //za admina
 }

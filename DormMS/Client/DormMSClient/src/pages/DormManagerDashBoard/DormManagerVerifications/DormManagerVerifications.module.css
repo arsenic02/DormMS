@@ -11,6 +11,45 @@
     color: #1a1a1a;
 }
 
+.filters {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filterGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filterGroup label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.filterSelect {
+    padding: 0.4rem 0.75rem;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #555;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.filterSelect:hover {
+    border-color: #ced4da;
+}
+
+.filterSelect:focus {
+    outline: none;
+    border-color: #4a7c59;
+}
+
 .columns {
     display: flex;
     gap: 2rem;
@@ -132,4 +171,187 @@
 .btnReject:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+}
+
+.pageBtn {
+    padding: 0.5rem 1rem;
+    background: #4a7c59;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.pageBtn:hover:not(:disabled) {
+    background: #3a6347;
+}
+
+.pageBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pageInfo {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.tableContainer {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    text-align: left;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6b7280;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.table td {
+    padding: 0.9rem 1.2rem;
+    font-size: 0.9rem;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover td {
+    background: #fafbfc;
+}
+
+.statusCell {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.statusBadge {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.profileStatus0, .financialStatus0 { background: #fdf0ef; color: #c0392b; }
+.profileStatus1, .financialStatus1 { background: #fff7e6; color: #b8860b; }
+.profileStatus2, .financialStatus2 { background: #edfaf3; color: #27ae60; }
+.profileStatus3 { background: #fdf0ef; color: #c0392b; }
+
+.verifyBtn {
+    padding: 0.3rem 0.75rem;
+    background: #4a7c59;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.verifyBtn:hover {
+    background: #3a6347;
+}
+
+.noData {
+    color: #999;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.modalHeader h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #1a1a1a;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.closeBtn:hover {
+    color: #333;
+}
+
+.modalContent {
+    padding: 1.2rem 1.5rem 1.5rem;
+}
+
+.modalContent h3 {
+    margin: 0 0 0.75rem;
+    color: #1a1a1a;
+}
+
+.modalContent p {
+    margin: 0.4rem 0;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+.modalActions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.2rem;
 }

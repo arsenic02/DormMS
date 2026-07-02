@@ -24,7 +24,13 @@ public interface IStudentService
     Task<int> ClearAllStudentsAsync();
     Task<int> BulkVerifyProfilesAsync(BulkVerifyProfilesDto dto);
     Task<List<StudentSummaryDto>> GetByFreshmanStatusAsync(bool? isFreshman);
-    Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
-    int pageNumber, int pageSize, StudentProfileStatus? profileStatusFilter, string? facultyFilter, bool? isFreshmanFilter);
+    // Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
+    // int pageNumber, int pageSize, StudentProfileStatus? profileStatusFilter, string? facultyFilter, bool? isFreshmanFilter);
     
+    Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
+    int pageNumber, int pageSize,
+    StudentProfileStatus? profileStatusFilter,
+    string? facultyFilter,
+    bool? isFreshmanFilter,
+    FinancialVerificationStatus? financialStatusFilter = null);
 }

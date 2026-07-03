@@ -217,3 +217,30 @@
   color: #555;
   font-weight: 500;
 }
+
+.badgeNoRoom {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #fde3c0;
+  color: #7a3e02;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.rowNoRoom {
+  background: #fdf3e6;
+}
+
+.noRoomHighlight {
+  color: #7a3e02;
+  font-weight: 600;
+}
+
+.summaryNoRoom {
+  color: #7a3e02;
+  font-weight: 600;
+}

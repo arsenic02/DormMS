@@ -88,6 +88,7 @@ public enum AssignmentStatus
     Assigned,
     Waitlisted,
     NotAssigned,
-    Error
+    Error,
+    AssignedNoRoomAvailable // prosao po rangu/kvoti, ali nema slobodne sobe odgovarajuceg pola
 }
 

@@ -117,29 +117,31 @@ public class AssignmentService : IAssignmentService
             else
             {
                 result.Waitlisted++;
-                assignment.Status = AssignmentStatus.Waitlisted;
+                // assignment.Status = AssignmentStatus.Waitlisted;
+                assignment.Status = AssignmentStatus.AssignedNoRoomAvailable;
+                rankingResult.Status = AssignmentStatus.AssignedNoRoomAvailable;
             }
 
             result.Assignments.Add(assignment);
         }
-
+        await _context.SaveChangesAsync();
         return result;
     }
 
-    //mozda ce biti potrebna metoda prilikom upgrade-a
-    private RoomStatus CalculateRoomStatus(DormitoryRoom room)
-    {
-        if (room.Status == RoomStatus.Maintenance)
-            return RoomStatus.Maintenance;
+    // //mozda ce biti potrebna metoda prilikom upgrade-a
+    // private RoomStatus CalculateRoomStatus(DormitoryRoom room)
+    // {
+    //     if (room.Status == RoomStatus.Maintenance)
+    //         return RoomStatus.Maintenance;
 
-        if (room.Status == RoomStatus.Closed)
-            return RoomStatus.Closed;
+    //     if (room.Status == RoomStatus.Closed)
+    //         return RoomStatus.Closed;
 
-        if (room.CurrentOccupancy >= room.Capacity)
-            return RoomStatus.FullyOccupied;
+    //     if (room.CurrentOccupancy >= room.Capacity)
+    //         return RoomStatus.FullyOccupied;
 
-        return RoomStatus.Available;
-    }
+    //     return RoomStatus.Available;
+    // }
 
     /// Rangira starije studente (ne brucose) po fakultetima.
     /// Formula: (averageGrade * 5) + (espb / yearsOfStudy * 0.8) + espbBonus + financialBonus
@@ -178,7 +180,7 @@ public class AssignmentService : IAssignmentService
 
             if (yearsOfStudy <= 0)
             {
-                continue; 
+                continue;
             }
 
             var calculatedPoints = CalculateOlderStudentPoints(
@@ -628,7 +630,7 @@ public class AssignmentService : IAssignmentService
             assignment.AssignedDormId = dorm.Id;
             assignment.AssignedDormName = dorm.Name;
             assignment.AssignedRoomId = room.Id;
-          
+
             return true;
 
         }

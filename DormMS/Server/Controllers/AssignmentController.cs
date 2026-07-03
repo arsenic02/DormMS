@@ -92,6 +92,21 @@ public class AssignmentController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("remove-from-room/{studentId}")]
+    public async Task<IActionResult> RemoveStudentFromRoom(int studentId)
+    {
+        try
+        {
+            await _assignmentService.RemoveStudentFromRoomAsync(studentId);
+            return Ok(new { message = "Student je uklonjen iz sobe." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     // [Authorize(Roles = "Admin,DormManager")]
     [HttpPost("reset-flow")]
     [Authorize(Roles = "Admin")]

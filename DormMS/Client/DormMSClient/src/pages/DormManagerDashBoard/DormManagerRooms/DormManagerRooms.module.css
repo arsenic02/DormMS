@@ -136,6 +136,7 @@
     align-items: center;
     font-size: 0.88rem;
     padding: 4px 0;
+    gap:8px;
 }
 
 .studentName {
@@ -197,4 +198,29 @@
 
 .error {
     color: #c62828;
+}
+
+.removeButton {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: #fdecea;
+    color: #c62828;
+    font-size: 0.75rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.removeButton:hover:not(:disabled) {
+    background: #fbd4d1;
+}
+
+.removeButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 // import { getRoomsPaged } from '../api/room'
 import { getRoomsPaged } from '../../../api/dormitoryRoom'
+import { removeStudentFromRoom } from '../../../api/ranking'
 import styles from './DormManagerRooms.module.css'
 
 const STATUS_LABELS = {
@@ -32,32 +33,30 @@ export default function DormManagerRooms() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
 
-    useEffect(() => {
-        let active = true
+    const loadRooms = async () => {
+        setLoading(true)
+        setError('')
+        try {
+            const data = await getRoomsPaged(pageNumber, PAGE_SIZE)
+            console.log("API RESPONSE:", data)
 
-        const loadRooms = async () => {
-            setLoading(true)
-            setError('')
-            try {
-                const data = await getRoomsPaged(pageNumber, PAGE_SIZE)
-                console.log("API RESPONSE:", data)
-
-                if (!active) return
-                setRooms(data.items)
-                console.log(data.items)
-
-
-                setTotalPages(data.totalPages)
-                setTotalCount(data.totalCount)
-            } catch (err) {
-                if (active) setError(err.message)
-            } finally {
-                if (active) setLoading(false)
-            }
+           // if (!active) return
+            setRooms(data.items)
+            console.log(data.items)
+            setTotalPages(data.totalPages)
+            setTotalCount(data.totalCount)
+        } catch (err) {
+             setError(err.message)
+        } finally {
+             setLoading(false)
         }
+    }
 
+
+    useEffect(() => {
+        // let active = true
         loadRooms()
-        return () => { active = false }
+        //return () => { active = false }
     }, [pageNumber])
 
     return (
@@ -79,7 +78,7 @@ export default function DormManagerRooms() {
                 <>
                     <div className={styles.grid}>
                         {rooms.map((room) => (
-                            <RoomCard key={room.id} room={room} />
+                            <RoomCard key={room.id} room={room} onStudentRemoved={loadRooms} />
                         ))}
                     </div>
 
@@ -108,7 +107,25 @@ export default function DormManagerRooms() {
     )
 }
 
-function RoomCard({ room }) {
+function RoomCard({ room, onStudentRemoved }) {
+
+    const [removingId, setRemovingId] = useState(null)
+    const [removeError, setRemoveError] = useState(null)
+
+    const handleRemove = async (studentId) => {
+        if (!window.confirm('Da li ste sigurni da želite da uklonite ovog studenta iz sobe?')) return
+
+        setRemovingId(studentId)
+        setRemoveError(null)
+        try {
+            await removeStudentFromRoom(studentId)
+            onStudentRemoved()
+        } catch (err) {
+            setRemoveError(err.message)
+        } finally {
+            setRemovingId(null)
+        }
+    }
     const statusKey = STATUS_CLASS[room.status] ?? 'Available'
     const occupancyPercent = room.capacity > 0
         ? Math.min(100, Math.round((room.currentOccupancy / room.capacity) * 100))
@@ -140,6 +157,35 @@ function RoomCard({ room }) {
 
             <div className={styles.studentsList}>
                 <p className={styles.studentsLabel}>Studenti</p>
+                {removeError && <p className={styles.error}>{removeError}</p>}
+                {room.students.length === 0 ? (
+                    <p className={styles.emptyRoom}>Soba je trenutno prazna.</p>
+                ) : (
+                    room.students.map((student) => (
+                        <div key={student.id} className={styles.studentRow}>
+                            <span className={styles.studentName}>
+                                {student.name} {student.surname}
+                                {student.isFreshman && (
+                                    <span className={styles.freshmanTag}>brucoš</span>
+                                )}
+                            </span>
+                            <span className={styles.studentFaculty}>{student.facultyName}</span>
+                            <button
+                                className={styles.removeButton}
+                                onClick={() => handleRemove(student.id)}
+                                disabled={removingId === student.id}
+                                type="button"
+                                title="Ukloni studenta iz sobe"
+                            >
+                                {removingId === student.id ? '...' : '✕'}
+                            </button>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* <div className={styles.studentsList}>
+                <p className={styles.studentsLabel}>Studenti</p>
                 {room.students.length === 0 ? (
                     <p className={styles.emptyRoom}>Soba je trenutno prazna.</p>
                 ) : (
@@ -155,7 +201,7 @@ function RoomCard({ room }) {
                         </div>
                     ))
                 )}
-            </div>
+            </div> */}
         </div>
     )
 }

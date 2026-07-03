@@ -9,11 +9,13 @@ namespace DormMS.Server.Services.Implementations;
 public class AssignmentService : IAssignmentService
 {
     private readonly IAssignmentRepository _assignmentRepository;
+    private readonly INotificationService _notificationService;
     private readonly AppDbContext _context;
 
-    public AssignmentService(IAssignmentRepository assignmentRepository, AppDbContext context)
+    public AssignmentService(IAssignmentRepository assignmentRepository, INotificationService notificationService, AppDbContext context)
     {
         _assignmentRepository = assignmentRepository;
+        _notificationService = notificationService;
         _context = context;
     }
 
@@ -127,21 +129,6 @@ public class AssignmentService : IAssignmentService
         await _context.SaveChangesAsync();
         return result;
     }
-
-    // //mozda ce biti potrebna metoda prilikom upgrade-a
-    // private RoomStatus CalculateRoomStatus(DormitoryRoom room)
-    // {
-    //     if (room.Status == RoomStatus.Maintenance)
-    //         return RoomStatus.Maintenance;
-
-    //     if (room.Status == RoomStatus.Closed)
-    //         return RoomStatus.Closed;
-
-    //     if (room.CurrentOccupancy >= room.Capacity)
-    //         return RoomStatus.FullyOccupied;
-
-    //     return RoomStatus.Available;
-    // }
 
     /// Rangira starije studente (ne brucose) po fakultetima.
     /// Formula: (averageGrade * 5) + (espb / yearsOfStudy * 0.8) + espbBonus + financialBonus
@@ -593,6 +580,25 @@ public class AssignmentService : IAssignmentService
             AssignedRoomId = foundRoom.Id,
             Status = AssignmentStatus.Assigned
         };
+    }
+
+    public async Task RemoveStudentFromRoomAsync(int studentId)
+    {
+        var student = await _context.Students
+            .Include(s => s.DormitoryRoom)
+            .FirstOrDefaultAsync(s => s.Id == studentId)
+            ?? throw new KeyNotFoundException("Student nije pronađen.");
+
+        if (student.DormitoryRoomId == null)
+            throw new InvalidOperationException("Student trenutno nema dodeljenu sobu.");
+
+        var roomNumber = student.DormitoryRoom?.RoomNumber ?? "";
+
+        await _assignmentRepository.ReleaseRoomAsync(studentId);
+
+        await _notificationService.NotifyStudentAsync(
+            studentId,
+            $"Uklonjeni ste iz sobe {roomNumber}. Za dodatne informacije obratite se referentu doma.");
     }
 
     public async Task<bool> ResetFlowAsync()

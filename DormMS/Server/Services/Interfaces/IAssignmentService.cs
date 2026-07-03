@@ -28,4 +28,5 @@ public interface IAssignmentService
     //Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, Student student,List<Dorm> dorms); //ne treba da se poziva kao endpoint
     Task<bool> ResetAssignmentAsync(int competitionId);
     Task<StudentAssignmentDto> AssignSingleStudentAsync(int rankingResultId);
+    Task RemoveStudentFromRoomAsync(int studentId);
 }

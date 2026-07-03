@@ -77,6 +77,21 @@ public class AssignmentController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpPost("assign-single/{rankingResultId}")]
+    public async Task<ActionResult<StudentAssignmentDto>> AssignSingle(int rankingResultId)
+    {
+        try
+        {
+            var result = await _assignmentService.AssignSingleStudentAsync(rankingResultId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     // [Authorize(Roles = "Admin,DormManager")]
     [HttpPost("reset-flow")]
     [Authorize(Roles = "Admin")]

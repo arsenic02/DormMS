@@ -9,6 +9,7 @@ public class AssignmentRequestDto
 
 public class StudentAssignmentDto
 {
+    public int RankingResultId { get; set; } 
     public int StudentId { get; set; }
     public string StudentName { get; set; } = string.Empty;
     public string StudentSurname { get; set; } = string.Empty;
@@ -31,6 +32,7 @@ public class StudentAssignmentDto
 // DTO za rangiranje brucosa
 public class FreshmanAssignmentDto
 {
+    public int RankingResultId { get; set; }
     public int StudentId { get; set; }
     public string StudentName { get; set; } = string.Empty;
     public string StudentSurname { get; set; } = string.Empty;

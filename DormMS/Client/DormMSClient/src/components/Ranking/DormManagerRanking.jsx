@@ -5,6 +5,7 @@ import {
   getSavedRankingResults,
   assignOlderStudentsToDorms,
   assignFreshmenToDorms,
+  assignSingleStudent
 } from '../../api/ranking';
 import styles from './DormManagerRanking.module.css';
 
@@ -52,7 +53,9 @@ function StatusBadge({ status }) {
   return <span className={styles.badgeNeutral}>{status}</span>;
 }
 
-function OlderStudentsTable({ students }) {
+function OlderStudentsTable({ students, onAssign, assigningId, assignError }) {
+  const firstUnassignedIdx = students.findIndex((s) => s.status !== ASSIGNMENT_STATUS.ASSIGNED);
+
   return (
     <table className={styles.table}>
       <thead>
@@ -69,9 +72,8 @@ function OlderStudentsTable({ students }) {
         </tr>
       </thead>
       <tbody>
-        {students.map((s) => (
+        {students.map((s, idx) => (
           <tr key={s.studentId}
-            // className={s.status === ASSIGNMENT_STATUS.ASSIGNED ? styles.rowAssigned : undefined}
             className={
               s.status === ASSIGNMENT_STATUS.ASSIGNED
                 ? styles.rowAssigned
@@ -87,15 +89,91 @@ function OlderStudentsTable({ students }) {
             <td className={styles.numeric}>{getSocialBonus(s.incomePerMember)}</td>
             <td className={styles.numeric}>{getEspbBonus(s.espb)}</td>
             <td className={styles.numericBold}>{formatNumber(s.calculatedPoints)}</td>
-            <td className={styles.statusCell}><StatusBadge status={s.status} /></td>
+            <td className={styles.statusCell}>
+              <StatusBadge status={s.status} />
+              {idx === firstUnassignedIdx && (
+                <div className={styles.assignBox}>
+                  <button
+                    className={styles.assignSingleButton}
+                    onClick={() => onAssign(s.rankingResultId)}
+                    disabled={assigningId === s.rankingResultId}
+                    type="button"
+                  >
+                    <i className="ti ti-door-enter" aria-hidden="true" />
+                    {assigningId === s.rankingResultId ? 'Ubacujem...' : 'Ubaci u dom'}
+                  </button>
+                  {/* {assignError?.rankingResultId === s.rankingResultId && (
+                    <span className={styles.assignErrorText}>{assignError.message}</span>
+                  )} */}
+                </div>
+              )}
+            </td>
+            {/* <td className={styles.statusCell}>
+              <StatusBadge status={s.status} />
+              {idx === firstUnassignedIdx && (
+                <button
+                  className={styles.assignSingleButton}
+                  onClick={() => onAssign(s.rankingResultId)}
+                  disabled={assigningId === s.rankingResultId}
+                  type="button"
+                >
+                   <i className="ti ti-door-enter" aria-hidden="true" />
+                  {assigningId === s.rankingResultId ? 'Ubacujem...' : 'Ubaci u dom'}
+                </button>
+
+              )}
+            </td> */}
           </tr>
         ))}
       </tbody>
     </table>
   );
 }
+// function OlderStudentsTable({ students }) {
+//   return (
+//     <table className={styles.table}>
+//       <thead>
+//         <tr>
+//           <th>Ime i prezime</th>
+//           <th>Broj indeksa</th>
+//           <th>Prosek (fakultet)</th>
+//           <th>ESPB</th>
+//           <th>Godina studija</th>
+//           <th>Socijalni bonus</th>
+//           <th>Dodatak</th>
+//           <th>Ukupno</th>
+//           <th className={styles.statusCell}>Status</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//         {students.map((s) => (
+//           <tr key={s.studentId}
+//             // className={s.status === ASSIGNMENT_STATUS.ASSIGNED ? styles.rowAssigned : undefined}
+//             className={
+//               s.status === ASSIGNMENT_STATUS.ASSIGNED
+//                 ? styles.rowAssigned
+//                 : s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM
+//                   ? styles.rowNoRoom
+//                   : undefined
+//             }>
+//             <td>{s.studentName} {s.studentSurname}</td>
+//             <td className={styles.muted}>{s.studentIDNumber}</td>
+//             <td className={styles.numeric}>{formatNumber(s.averageGrade)}</td>
+//             <td className={styles.numeric}>{s.espb}</td>
+//             <td className={styles.numeric}>{s.yearsOfStudy}</td>
+//             <td className={styles.numeric}>{getSocialBonus(s.incomePerMember)}</td>
+//             <td className={styles.numeric}>{getEspbBonus(s.espb)}</td>
+//             <td className={styles.numericBold}>{formatNumber(s.calculatedPoints)}</td>
+//             <td className={styles.statusCell}><StatusBadge status={s.status} /></td>
+//           </tr>
+//         ))}
+//       </tbody>
+//     </table>
+//   );
+// }
 
-function FreshmenTable({ students }) {
+function FreshmenTable({ students, onAssign, assigningId, assignError }) {
+  const firstUnassignedIdx = students.findIndex((s) => s.status !== ASSIGNMENT_STATUS.ASSIGNED);
   return (
     <table className={styles.table}>
       <thead>
@@ -109,7 +187,7 @@ function FreshmenTable({ students }) {
         </tr>
       </thead>
       <tbody>
-        {students.map((s) => (
+        {students.map((s, idx) => (
           <tr key={s.studentId}
             // className={s.status === ASSIGNMENT_STATUS.ASSIGNED ? styles.rowAssigned : undefined}
             className={
@@ -124,7 +202,40 @@ function FreshmenTable({ students }) {
             <td className={styles.numeric}>{formatNumber(s.highSchoolAverageGrade)}</td>
             <td className={styles.numeric}>{getSocialBonus(s.incomePerMember)}</td>
             <td className={styles.numericBold}>{formatNumber(s.calculatedPoints)}</td>
-            <td className={styles.statusCell}><StatusBadge status={s.status} /></td>
+
+            <td className={styles.statusCell}>
+              <StatusBadge status={s.status} />
+              {idx === firstUnassignedIdx && (
+                <div className={styles.assignBox}>
+                  <button
+                    className={styles.assignSingleButton}
+                    onClick={() => onAssign(s.rankingResultId)}
+                    disabled={assigningId === s.rankingResultId}
+                    type="button"
+                  >
+                    <i className="ti ti-door-enter" aria-hidden="true" />
+                    {assigningId === s.rankingResultId ? 'Ubacujem...' : 'Ubaci u dom'}
+                  </button>
+                  {/* {assignError?.rankingResultId === s.rankingResultId && (
+                    <span className={styles.assignErrorText}>{assignError.message}</span>
+                  )} */}
+                </div>
+              )}
+            </td>
+            {/* <td className={styles.statusCell}>
+              <StatusBadge status={s.status} />
+              {idx === firstUnassignedIdx && (
+                <button
+                  className={styles.assignSingleButton}
+                  onClick={() => onAssign(s.rankingResultId)}
+                  disabled={assigningId === s.rankingResultId}
+                  type="button"
+                >
+                  <i className="ti ti-door-enter" aria-hidden="true" />
+                  {assigningId === s.rankingResultId ? 'Ubacujem...' : 'Ubaci u dom'}
+                </button>
+              )}
+            </td> */}
           </tr>
         ))}
       </tbody>
@@ -132,7 +243,7 @@ function FreshmenTable({ students }) {
   );
 }
 
-function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onToggle }) {
+function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onToggle, onAssign, assigningId, assignError }) {
   const assignedCount = students.filter((s) => s.status === ASSIGNMENT_STATUS.ASSIGNED).length;
   const noRoomCount = students.filter((s) => s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM).length;
 
@@ -152,17 +263,14 @@ function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onTog
             </>
           )}
         </span>
-        {/* <span className={styles.summary}>
-          {students.length} prijavljenih &middot; {assignedCount} primljeno
-        </span> */}
       </button>
 
       {isOpen && (
         <div className={styles.cardBody}>
           {isFreshmanView ? (
-            <FreshmenTable students={students} />
+            <FreshmenTable students={students} onAssign={onAssign} assigningId={assigningId} assignError={assignError} />
           ) : (
-            <OlderStudentsTable students={students} />
+            <OlderStudentsTable students={students} onAssign={onAssign} assigningId={assigningId} assignError={assignError} />
           )}
         </div>
       )}
@@ -180,20 +288,15 @@ export default function DormManagerRanking({ competitionId, isFreshmanView, isCo
   const [assignmentResult, setAssignmentResult] = useState(null);
   const [assigningRooms, setAssigningRooms] = useState(false);
   const [assignmentError, setAssignmentError] = useState(null);
-  // roomsAssigned se postavlja lokalno odmah nakon uspesne dodele (da dugme
-  // odmah pokaze "Sobe su raspodeljene" bez cekanja na refresh), ali se
-  // takodje racuna iz rankingData.roomsAssigned koji backend vraca - to
-  // pokriva slucaj kad korisnik otvori/refreshuje stranicu nakon sto su
-  // sobe vec ranije dodeljene.
+
   const [roomsAssignedLocally, setRoomsAssignedLocally] = useState(false);
   const roomsAssigned = roomsAssignedLocally || !!rankingData?.roomsAssigned;
 
-  // justRanked pokriva slucaj kada se rangiranje upravo izvrsi u OVOJ sesiji
-  // (klikom na "Pokreni rangiranje") - isCompleted prop dolazi spolja (sa
-  // DormManagerRankingPage) i ne osvezava se automatski dok se stranica ne
-  // refreshuje, pa bez ovog flag-a UI ne bi odmah znao da je konkurs zavrsen.
   const [justRanked, setJustRanked] = useState(false);
   const effectivelyCompleted = isCompleted || justRanked;
+
+  const [assigningStudentId, setAssigningStudentId] = useState(null);
+  const [singleAssignError, setSingleAssignError] = useState(null);
 
   // Ako je konkurs vec zavrsen (Completed), automatski ucitaj sacuvane rezultate
   // umesto da korisnik mora da klikne "Pokreni rangiranje" (sto vise ne bi smelo
@@ -253,6 +356,21 @@ export default function DormManagerRanking({ competitionId, isFreshmanView, isCo
       setAssignmentError(err.message);
     } finally {
       setAssigningRooms(false);
+    }
+  }
+
+  async function handleAssignSingle(rankingResultId) {
+    setAssigningStudentId(rankingResultId);
+    setSingleAssignError(null);
+    try {
+      await assignSingleStudent(rankingResultId);
+      const refreshed = await getSavedRankingResults(competitionId, isFreshmanView);
+      setRankingData(refreshed);
+    } catch (err) {
+      setSingleAssignError({ rankingResultId, message: err.message }); //ubaci gdde treba to
+      setTimeout(() => setSingleAssignError(null), 3000);
+    } finally {
+      setAssigningStudentId(null);
     }
   }
 
@@ -317,6 +435,8 @@ export default function DormManagerRanking({ competitionId, isFreshmanView, isCo
         </div>
       )}
 
+      {/* {singleAssignError && <p className={styles.error}>{singleAssignError}</p>} */}
+
       {faculties
         .sort(([, a], [, b]) => b.length - a.length)
         .map(([facultyName, students]) => (
@@ -327,8 +447,17 @@ export default function DormManagerRanking({ competitionId, isFreshmanView, isCo
             isFreshmanView={isFreshmanView}
             isOpen={!!openFaculties[facultyName]}
             onToggle={() => toggleFaculty(facultyName)}
+            onAssign={handleAssignSingle}
+            assigningId={assigningStudentId}
+            assignError={singleAssignError}
           />
         ))}
+        {singleAssignError && (
+        <div className={styles.toast}>
+          {singleAssignError.message}
+        </div>
+      )}
     </div>
+    
   );
 }

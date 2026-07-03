@@ -452,6 +452,7 @@ public class AssignmentService : IAssignmentService
         {
             var freshmanAssignments = savedResults.Select(r => new FreshmanAssignmentDto
             {
+                RankingResultId = r.Id,
                 StudentId = r.StudentId,
                 StudentName = r.Student.Name,
                 StudentSurname = r.Student.Surname,
@@ -490,6 +491,7 @@ public class AssignmentService : IAssignmentService
         {
             var studentAssignments = savedResults.Select(r => new StudentAssignmentDto
             {
+                RankingResultId = r.Id,
                 StudentId = r.StudentId,
                 StudentName = r.Student.Name,
                 StudentSurname = r.Student.Surname,
@@ -526,6 +528,71 @@ public class AssignmentService : IAssignmentService
                 RankingsByFaculty = groupedByFaculty
             };
         }
+    }
+
+    public async Task<StudentAssignmentDto> AssignSingleStudentAsync(int rankingResultId)
+    {
+        var rankingResult = await _context.RankingResults
+            .Include(r => r.Student)
+            .FirstOrDefaultAsync(r => r.Id == rankingResultId)
+            ?? throw new KeyNotFoundException("Rezultat rangiranja nije pronađen.");
+
+        if (rankingResult.Student.DormitoryRoomId != null)
+            throw new InvalidOperationException("Student već ima dodeljenu sobu.");
+
+        var dorms = await _assignmentRepository.GetAllDormsWithRoomsAsync();
+
+        DormitoryRoom? foundRoom = null;
+        Dorm? foundDorm = null;
+
+        foreach (var dorm in dorms)
+        {
+            var room = await _assignmentRepository.GetAvailableRoomAsync(dorm.Id, rankingResult.Student.Gender);
+            if (room != null)
+            {
+                foundRoom = room;
+                foundDorm = dorm;
+                break;
+            }
+        }
+
+        if (foundRoom == null)
+        {
+            bool anyRoomAnywhere = false;
+            foreach (var dorm in dorms)
+            {
+                if (await _assignmentRepository.GetAnyAvailableRoomAsync(dorm.Id) != null)
+                {
+                    anyRoomAnywhere = true;
+                    break;
+                }
+            }
+
+            throw new InvalidOperationException(
+                anyRoomAnywhere
+                    ? "Trenutno nema slobodne sobe odgovarajućeg pola."
+                    : "Nema slobodnih mesta u domu.");
+            //  throw new InvalidOperationException("Trenutno nema slobodne sobe odgovarajućeg pola.");
+        }
+
+
+        await _assignmentRepository.AssignStudentToRoomAsync(rankingResult.StudentId, foundRoom.Id);
+
+        rankingResult.Status = AssignmentStatus.Assigned;
+        await _context.SaveChangesAsync();
+
+        return new StudentAssignmentDto
+        {
+            RankingResultId = rankingResult.Id,
+            StudentId = rankingResult.StudentId,
+            StudentName = rankingResult.Student.Name,
+            StudentSurname = rankingResult.Student.Surname,
+            StudentIDNumber = rankingResult.Student.StudentIDNumber,
+            AssignedDormId = foundDorm!.Id,
+            AssignedDormName = foundDorm.Name,
+            AssignedRoomId = foundRoom.Id,
+            Status = AssignmentStatus.Assigned
+        };
     }
 
     public async Task<bool> ResetFlowAsync()

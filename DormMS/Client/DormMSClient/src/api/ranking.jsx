@@ -97,6 +97,22 @@ export const assignFreshmenToDorms = async (competitionId) => {
     return res.json()
 }
 
+export const assignSingleStudent = async (rankingResultId) => {
+    const res = await fetchWithAuth(`${API_URL}/assign-single/${rankingResultId}`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${getToken()}`,
+        },
+    })
+
+    if (!res.ok) {
+        const text = await res.text().catch(() => null)
+        throw new Error(extractErrorMessage(text) || 'Greška prilikom dodele sobe studentu.')
+    }
+
+    return res.json()
+}
+
 // Backend nekad vrati ceo AssignmentResultDto kao JSON (BadRequest(result)) umesto
 // plain teksta. Ova funkcija pokusava da izvuce citljivu poruku iz "errors" niza,
 // a ako ne uspe (npr. ako JE plain tekst), vraca originalni string.

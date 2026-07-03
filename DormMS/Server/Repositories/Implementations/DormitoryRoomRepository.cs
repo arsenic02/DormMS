@@ -34,6 +34,7 @@ public class DormitoryRoomRepository : IDormitoryRoomRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(r => r.Id == roomId);
     }
+    
 
     public async Task AddAsync(DormitoryRoom room)
     {

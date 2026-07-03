@@ -231,6 +231,46 @@ namespace DormMS.Migrations
                     b.ToTable("DormitoryRooms");
                 });
 
+            modelBuilder.Entity("DormMS.Server.Models.MoveOutRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DormNameSnapshot")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RespondedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RoomNumberSnapshot")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("MoveOutRequests");
+                });
+
             modelBuilder.Entity("DormMS.Server.Models.Notification", b =>
                 {
                     b.Property<int>("Id")
@@ -584,6 +624,25 @@ namespace DormMS.Migrations
                         .IsRequired();
 
                     b.Navigation("Dorm");
+                });
+
+            modelBuilder.Entity("DormMS.Server.Models.MoveOutRequest", b =>
+                {
+                    b.HasOne("DormMS.Server.Models.DormitoryRoom", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DormMS.Server.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("DormMS.Server.Models.Notification", b =>

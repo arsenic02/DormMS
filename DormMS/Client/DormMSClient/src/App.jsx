@@ -17,6 +17,8 @@ import DormManagerRooms from './pages/DormManagerDashBoard/DormManagerRooms/Dorm
 import DormManagerCompetitionApplications from './pages/DormManagerDashBoard/DormManagerCompetitionApplications/DormManagerCompetitionApplications'
 import DormManagerRoomSwaps from './pages/DormManagerDashBoard/DormManagerRoomSwaps/DormManagerRoomSwaps'
 import RoomSwapRequest from './pages/StudentDashboard/StudentRoom/RoomSwapRequest/RoomSwapRequest'
+import MoveOutRequest from './pages/StudentDashboard/StudentRoom/MoveOutRequest/MoveOutRequest'
+import DormManagerMoveOuts from './pages/DormManagerDashBoard/DormManagerMoveOuts/DormManagerMoveOuts'
 import DormManagerNotifications from './pages/DormManagerDashBoard/DormManagerNotifications/DormManagerNotifications'
 import AdminDorm from './pages/AdminDashBoard/AdminDorm/AdminDorm'
 import AdminUsers from './pages/AdminDashBoard/AdminUsers/AdminUsers'
@@ -42,6 +44,7 @@ function App() {
           <Route path="/student/notifications" element={<StudentNotifications />} />
           <Route path="/student/competitions" element={<StudentCompetitions />} />
           <Route path="/student/room-swap" element={<RoomSwapRequest />} />
+          <Route path="/student/move-out" element={<MoveOutRequest />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
@@ -59,6 +62,7 @@ function App() {
           <Route path="/dorm-manager/competitions/:competitionId/applications" element={<DormManagerCompetitionApplications />} />
           <Route path="/dorm-manager/notifications" element={<DormManagerNotifications />} />
           <Route path="/dorm-manager/room-swap-requests" element={<DormManagerRoomSwaps />} />
+          <Route path="/dorm-manager/move-out-requests" element={<DormManagerMoveOuts />} />
         </Route>
 
       </Routes>

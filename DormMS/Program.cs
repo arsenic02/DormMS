@@ -95,6 +95,8 @@ builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IDocumentGenerationService, DocumentGenerationService>();
 builder.Services.AddScoped<IRoomSwapRequestRepository, RoomSwapRequestRepository>();
 builder.Services.AddScoped<IRoomSwapRequestService, RoomSwapRequestService>();
+builder.Services.AddScoped<IMoveOutRequestRepository, MoveOutRequestRepository>();
+builder.Services.AddScoped<IMoveOutRequestService, MoveOutRequestService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IDormManagerRepository, DormManagerRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

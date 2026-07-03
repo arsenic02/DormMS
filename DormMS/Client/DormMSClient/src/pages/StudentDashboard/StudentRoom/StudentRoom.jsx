@@ -63,6 +63,9 @@ function StudentRoom() {
                         <Link to="/student/room-swap" className={styles.swapLink}>
                             Zameni sobu →
                         </Link>
+                        <Link to="/student/move-out" className={styles.swapLink}>
+                            Iseli se →
+                        </Link>
                     </div>
 
                     <h2 className={styles.subtitle}>Cimeri</h2>

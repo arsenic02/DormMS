@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
     public DbSet<StudentFinancialStatus> StudentFinancialStatuses { get; set; }
     public DbSet<RankingResult> RankingResults { get; set; }
     public DbSet<RoomSwapRequest> RoomSwapRequests { get; set; }
+    public DbSet<MoveOutRequest> MoveOutRequests { get; set; }
     public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -58,6 +59,18 @@ public class AppDbContext : DbContext
             .HasOne(n => n.Dorm)
             .WithMany()
             .HasForeignKey(n => n.DormId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MoveOutRequest>()
+            .HasOne(r => r.Student)
+            .WithMany()
+            .HasForeignKey(r => r.StudentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MoveOutRequest>()
+            .HasOne(r => r.Room)
+            .WithMany()
+            .HasForeignKey(r => r.RoomId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

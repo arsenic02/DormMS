@@ -107,6 +107,37 @@ public class DormitoryRoomService : IDormitoryRoomService
         };
     }
 
+    public async Task<DormitoryRoomGetDto?> GetRoomWithStudentsAsync(int id)
+    {
+        var room = await _repository.GetByIdAsync(id);
+        if (room is null)
+            return null;
+
+        var students = await _repository.GetStudentsByRoomIdsAsync(new List<int> { id });
+        var dormNames = await _repository.GetDormNamesByIdsAsync(new List<int> { room.DormId });
+
+        return new DormitoryRoomGetDto
+        {
+            Id = room.Id,
+            RoomNumber = room.RoomNumber,
+            Capacity = room.Capacity,
+            CurrentOccupancy = room.CurrentOccupancy,
+            AvailableSpots = room.AvailableSpots,
+            Gender = room.Gender,
+            Status = room.Status,
+            DormId = room.DormId,
+            DormName = dormNames.TryGetValue(room.DormId, out var name) ? name : null,
+            Students = students.Select(s => new StudentSummaryDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Surname = s.Surname,
+                FacultyName = s.FacultyName,
+                IsFreshman = s.IsFreshman
+            }).ToList()
+        };
+    }
+
 
     private static DormitoryRoom MapToEntity(DormitoryRoomCreateUpdateDto dto, DormitoryRoom? existing = null)
     {

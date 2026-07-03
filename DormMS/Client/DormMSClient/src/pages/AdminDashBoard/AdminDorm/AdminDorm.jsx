@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import styles from './AdminDorm.module.css'
 import { getDorms, createDorm, updateDorm, generateRooms, deleteAllRooms } from '../../../api/admin'
-
+import { getRoomsPaged, getRoomDetails } from '../../../api/dormitoryRoom'
+import { resetFlow } from '../../../api/ranking'
 const genderLabel = {
     0: 'Muška',
     1: 'Ženska'
@@ -35,8 +36,15 @@ function AdminDorm() {
     const [generating, setGenerating] = useState(false)
     const [roomsFormError, setRoomsFormError] = useState(null)
     const [roomsFormSuccess, setRoomsFormSuccess] = useState(null)
-    
+
+    const [selectedRoom, setSelectedRoom] = useState(null)
+    const [modalOpen, setModalOpen] = useState(false)
+    const [modalLoading, setModalLoading] = useState(false)
+    const [modalError, setModalError] = useState(null)
+
     const [deleting, setDeleting] = useState(false)
+
+    const [resettingFlow, setResettingFlow] = useState(false)
 
     const loadDorm = async () => {
         setLoading(true)
@@ -137,6 +145,28 @@ function AdminDorm() {
         }
     }
 
+    const handleRoomClick = async (room) => {
+        setModalOpen(true)
+        setSelectedRoom(room)
+        setModalLoading(true)
+        setModalError(null)
+
+        try {
+            const fullRoom = await getRoomDetails(room.id)
+            setSelectedRoom(fullRoom)
+        } catch (err) {
+            setModalError(err.message)
+        } finally {
+            setModalLoading(false)
+        }
+    }
+
+    const closeModal = () => {
+        setModalOpen(false)
+        setSelectedRoom(null)
+        setModalError(null)
+    }
+
     const handleDeleteAllRooms = async () => {
         if (!window.confirm('Da li ste sigurni da želite da obrišete SVE sobe u ovom domu? Ova akcija se ne može opozvati.')) {
             return
@@ -150,6 +180,22 @@ function AdminDorm() {
             setError(err.message)
         } finally {
             setDeleting(false)
+        }
+    }
+
+    const handleResetFlow = async () => {
+        if (!window.confirm('Da li ste sigurni da želite da iselite SVE studente iz svih soba? Ova akcija resetuje rangiranje i dodelu za sve studente.')) {
+            return
+        }
+
+        setResettingFlow(true)
+        try {
+            await resetFlow()
+            await loadDorm()
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setResettingFlow(false)
         }
     }
 
@@ -340,6 +386,14 @@ function AdminDorm() {
                                 >
                                     {deleting ? 'Brisanje...' : 'Obriši sve sobe'}
                                 </button>
+                                <button
+                                    type="button"
+                                    className={styles.deleteBtn}
+                                    onClick={handleResetFlow}
+                                    disabled={resettingFlow}
+                                >
+                                    {resettingFlow ? 'Iseljavanje...' : 'Iseli sve studente'}
+                                </button>
                             </div>
                         </form>
 
@@ -349,7 +403,12 @@ function AdminDorm() {
                         ) : (
                             <div className={styles.roomsList}>
                                 {dorm.rooms.map((room) => (
-                                    <div key={room.id} className={styles.roomCard}>
+                                    <div
+                                        key={room.id}
+                                        className={styles.roomCard}
+                                        onClick={() => handleRoomClick(room)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
                                         <div className={styles.roomCardHeader}>
                                             <span className={styles.roomNumber}>Soba {room.roomNumber}</span>
                                             <span className={`${styles.badge} ${styles[statusClass[room.status]]}`}>
@@ -362,6 +421,53 @@ function AdminDorm() {
                                         </div>
                                     </div>
                                 ))}
+
+                                {modalOpen && (
+                                    <div className={styles.modalOverlay} onClick={closeModal}>
+                                        <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                                            <div className={styles.modalHeader}>
+                                                <h3 className={styles.modalTitle}>
+                                                    Soba {selectedRoom?.roomNumber}
+                                                </h3>
+                                                <button className={styles.modalCloseBtn} onClick={closeModal}>✕</button>
+                                            </div>
+
+                                            {modalLoading && <p className={styles.info}>Učitavanje...</p>}
+                                            {modalError && <p className={styles.error}>{modalError}</p>}
+
+                                            {!modalLoading && !modalError && selectedRoom && (
+                                                <>
+                                                    <div className={styles.modalMeta}>
+                                                        <span>{genderLabel[selectedRoom.gender]}</span>
+                                                        <span>{selectedRoom.currentOccupancy}/{selectedRoom.capacity} mesta</span>
+                                                        <span className={`${styles.badge} ${styles[statusClass[selectedRoom.status]]}`}>
+                                                            {statusLabel[selectedRoom.status]}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className={styles.modalStudents}>
+                                                        <p className={styles.studentsLabel}>Studenti</p>
+                                                        {(!selectedRoom.students || selectedRoom.students.length === 0) ? (
+                                                            <p className={styles.info}>Soba je trenutno prazna.</p>
+                                                        ) : (
+                                                            selectedRoom.students.map((student) => (
+                                                                <div key={student.id} className={styles.studentRow}>
+                                                                    <span className={styles.studentName}>
+                                                                        {student.name} {student.surname}
+                                                                        {student.isFreshman && (
+                                                                            <span className={styles.freshmanTag}>brucoš</span>
+                                                                        )}
+                                                                    </span>
+                                                                    <span className={styles.studentFaculty}>{student.facultyName}</span>
+                                                                </div>
+                                                            ))
+                                                        )}
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </>

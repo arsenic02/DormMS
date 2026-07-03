@@ -11,3 +11,12 @@ export const getRoomsPaged = async (pageNumber = 1, pageSize = 12) => {
     if (!res.ok) throw new Error('Greška prilikom učitavanja soba.')
     return res.json()
 }
+
+export const getRoomDetails = async (id) => {
+    const response = await fetch(`${API_URL}/${id}/details`, {
+           headers: { Authorization: `Bearer ${getToken()}` },
+        // headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    })
+    if (!response.ok) throw new Error('Greška prilikom učitavanja sobe.')
+    return response.json()
+}

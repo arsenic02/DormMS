@@ -70,7 +70,7 @@ public class DormitoryRoomController : ControllerBase
     }
 
     [HttpGet("rooms-paged")]
-    [Authorize(Roles = "DormManager")]
+    [Authorize(Roles = "Admin,DormManager")]
     public async Task<ActionResult<PagedResultDto<DormitoryRoomGetDto>>> GetDormitoryRoomsPaged(
     [FromQuery] int pageNumber = 1,
     [FromQuery] int pageSize = 12)
@@ -80,5 +80,16 @@ public class DormitoryRoomController : ControllerBase
 
         var result = await _dormitoryRoomService.GetPagedWithStudentsAsync(pageNumber, pageSize);
         return Ok(result);
+    }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpGet("{id}/details")]
+    public async Task<IActionResult> GetRoomDetails(int id)
+    {
+        var room = await _dormitoryRoomService.GetRoomWithStudentsAsync(id);
+        if (room == null)
+            return NotFound();
+
+        return Ok(room);
     }
 }

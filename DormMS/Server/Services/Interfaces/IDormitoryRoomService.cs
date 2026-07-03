@@ -11,4 +11,5 @@ public interface IDormitoryRoomService
     Task<bool?> UpdateAsync(int id, DormitoryRoomCreateUpdateDto dto);
     Task<bool> DeleteAsync(int id);
     Task<PagedResultDto<DormitoryRoomGetDto>> GetPagedWithStudentsAsync(int pageNumber, int pageSize);
+    Task<DormitoryRoomGetDto?> GetRoomWithStudentsAsync(int id);
 }

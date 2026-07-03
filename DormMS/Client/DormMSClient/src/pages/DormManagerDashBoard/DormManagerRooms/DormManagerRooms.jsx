@@ -183,25 +183,6 @@ function RoomCard({ room, onStudentRemoved }) {
                     ))
                 )}
             </div>
-
-            {/* <div className={styles.studentsList}>
-                <p className={styles.studentsLabel}>Studenti</p>
-                {room.students.length === 0 ? (
-                    <p className={styles.emptyRoom}>Soba je trenutno prazna.</p>
-                ) : (
-                    room.students.map((student) => (
-                        <div key={student.id} className={styles.studentRow}>
-                            <span className={styles.studentName}>
-                                {student.name} {student.surname}
-                                {student.isFreshman && (
-                                    <span className={styles.freshmanTag}>brucoš</span>
-                                )}
-                            </span>
-                            <span className={styles.studentFaculty}>{student.facultyName}</span>
-                        </div>
-                    ))
-                )}
-            </div> */}
         </div>
     )
 }

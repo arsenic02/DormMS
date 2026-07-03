@@ -129,6 +129,15 @@ export const removeStudentFromRoom = async (studentId) => {
     return res.json()
 }
 
+export const resetFlow = async () => {
+    const response = await fetch(`${API_URL}/reset-flow`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    })
+    if (!response.ok) throw new Error('Greška prilikom iseljavanja studenata.')
+    return response.json()
+}
+
 // Backend nekad vrati ceo AssignmentResultDto kao JSON (BadRequest(result)) umesto
 // plain teksta. Ova funkcija pokusava da izvuce citljivu poruku iz "errors" niza,
 // a ako ne uspe (npr. ako JE plain tekst), vraca originalni string.

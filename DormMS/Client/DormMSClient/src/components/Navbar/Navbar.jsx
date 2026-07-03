@@ -50,6 +50,7 @@ function Navbar() {
                     <li><Link to="/dorm-manager/rankings">Rang liste</Link></li>
                     <li><Link to="/dorm-manager/verifications">Verifikacije</Link></li>
                     <li><Link to="/dorm-manager/notifications">Obaveštenja</Link></li>
+                    <li><Link to="/dorm-manager/room-swap-requests">Zahtevi za zamenu soba</Link></li>
                 </ul>
             )}
 

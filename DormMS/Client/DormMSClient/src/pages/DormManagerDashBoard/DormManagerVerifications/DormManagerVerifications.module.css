@@ -260,10 +260,29 @@
     white-space: nowrap;
 }
 
-.profileStatus0, .financialStatus0 { background: #fdf0ef; color: #c0392b; }
+.profileStatus0,
+.profileStatus3,
+.financialStatus2 {
+    background: #fdf0ef;
+    color: #c0392b;
+}
+
+.profileStatus1,
+.financialStatus0 {
+    background: #fff7e6;
+    color: #b8860b;
+}
+
+.profileStatus2,
+.financialStatus1 {
+    background: #edfaf3;
+    color: #27ae60;
+}
+
+/* .profileStatus0, .financialStatus0 { background: #fdf0ef; color: #c0392b; }
 .profileStatus1, .financialStatus1 { background: #fff7e6; color: #b8860b; }
 .profileStatus2, .financialStatus2 { background: #edfaf3; color: #27ae60; }
-.profileStatus3 { background: #fdf0ef; color: #c0392b; }
+.profileStatus3 { background: #fdf0ef; color: #c0392b; } */
 
 .verifyBtn {
     padding: 0.3rem 0.75rem;

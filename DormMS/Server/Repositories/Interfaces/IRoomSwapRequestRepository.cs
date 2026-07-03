@@ -12,16 +12,5 @@ public interface IRoomSwapRequestRepository
     Task<bool> HasAnyPendingRequestInvolvingAsync(int studentId);
     Task AddAsync(RoomSwapRequest request);
     Task UpdateAsync(RoomSwapRequest request);
+    Task<List<RoomSwapRequest>> GetPendingManagerApprovalForDormAsync(int dormId);
 }
-
-// public interface IRoomSwapRequestRepository
-// {
-//     Task<RoomSwapRequest?> GetByIdAsync(int id);
-//     Task<RoomSwapRequest?> GetByIdTrackedAsync(int id);
-//     Task<List<RoomSwapRequest>> GetIncomingForStudentAsync(int studentId);
-//     Task<List<RoomSwapRequest>> GetOutgoingForStudentAsync(int studentId);
-//     Task<bool> HasPendingRequestBetweenAsync(int senderId, int receiverId);
-//     Task<bool> HasAnyPendingRequestInvolvingAsync(int studentId);
-//     Task AddAsync(RoomSwapRequest request);
-//     Task UpdateAsync(RoomSwapRequest request);
-// }

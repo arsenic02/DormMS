@@ -127,6 +127,11 @@
     color: #a13c3c;
 }
 
+.statusPendingManager {
+    background: #fff3e0;
+    color: #e65100;
+}
+
 .actions {
     display: flex;
     gap: 8px;

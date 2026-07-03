@@ -1,0 +1,120 @@
+.container {
+    padding: 24px;
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.card {
+    border-radius: 10px;
+    background: #fff;
+    padding: 18px 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.swapRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.studentBlock {
+    flex: 1;
+}
+
+.studentName {
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.roomInfo {
+    color: #666;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.arrow {
+    font-size: 1.4rem;
+    color: #4a7c59;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.date {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.approveButton {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 999px;
+    background: #4a7c59;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.approveButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.rejectButton {
+    padding: 6px 16px;
+    border: 1px solid #c62828;
+    border-radius: 999px;
+    background: #fff;
+    color: #c62828;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.rejectButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.loading, .error, .empty {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.error {
+    color: #c62828;
+}

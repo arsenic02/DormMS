@@ -102,6 +102,9 @@ export async function getStudentsPaged(token, pageNumber = 1, pageSize = 10, fil
   if (filters.profileStatus !== undefined && filters.profileStatus !== null) {
     queryParams.append('profileStatus', filters.profileStatus.toString())
   }
+  if (filters.financialStatus !== undefined && filters.financialStatus !== null) {
+    queryParams.append('financialStatus', filters.financialStatus.toString())
+  }
   if (filters.faculty) {
     queryParams.append('faculty', filters.faculty)
   }
@@ -166,9 +169,9 @@ export async function verifyStudentFinancialStatus(studentId, status, token) {
 // Vraca informacije o sobi ulogovanog studenta (broj sobe, dom, cimeri).
 // Ako student jos nema dodeljenu sobu, vraceni objekat ima hasRoom: false.
 export const getMyRoom = async () => {
-    const res = await fetchWithAuth(`${BASE_URL}/me/room`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-    })
-    if (!res.ok) throw new Error('Greška prilikom učitavanja podataka o sobi.')
-    return res.json()
+  const res = await fetchWithAuth(`${BASE_URL}/me/room`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  })
+  if (!res.ok) throw new Error('Greška prilikom učitavanja podataka o sobi.')
+  return res.json()
 }

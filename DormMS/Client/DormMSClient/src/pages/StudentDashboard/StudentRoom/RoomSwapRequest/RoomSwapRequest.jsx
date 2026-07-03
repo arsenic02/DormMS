@@ -10,7 +10,9 @@ import {
 const STATUS_LABELS = {
     0: { text: 'Na čekanju', className: 'statusPending' },
     1: { text: 'Prihvaćeno', className: 'statusAccepted' },
-    2: { text: 'Odbijeno', className: 'statusRejected' }
+    2: { text: 'Odbio student', className: 'statusRejected' },
+    3: { text: 'Čeka odobrenje referenta', className: 'statusPendingManager' },
+    4: { text: 'Odbio referent', className: 'statusRejected' }
 }
 
 function StatusBadge({ status }) {

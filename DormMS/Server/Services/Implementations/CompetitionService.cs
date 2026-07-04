@@ -127,8 +127,10 @@ public class CompetitionService : ICompetitionService
         {
             Name = dto.Name.Trim(),
             Description = dto.Description.Trim(),
-            StartDate = dto.StartDate.ToUniversalTime(),
-            EndDate = dto.EndDate.ToUniversalTime(),
+            StartDate = DateTime.SpecifyKind(dto.StartDate, DateTimeKind.Unspecified),
+            EndDate = DateTime.SpecifyKind(dto.EndDate, DateTimeKind.Unspecified),
+            // StartDate = dto.StartDate.ToUniversalTime(),
+            // EndDate = dto.EndDate.ToUniversalTime(),
             Status = CompetitionStatus.Draft,
             Type = dto.Type,
             CreatedByAdminId = adminId,
@@ -158,8 +160,8 @@ public class CompetitionService : ICompetitionService
 
         competition.Name = dto.Name.Trim();
         competition.Description = dto.Description.Trim();
-        competition.StartDate = dto.StartDate;
-        competition.EndDate = dto.EndDate;
+        competition.StartDate = DateTime.SpecifyKind(dto.StartDate, DateTimeKind.Unspecified);
+        competition.EndDate = DateTime.SpecifyKind(dto.EndDate, DateTimeKind.Unspecified);
         competition.Status = dto.Status;
         competition.Type = dto.Type;
         competition.MaxStudents = dto.MaxStudents;

@@ -51,7 +51,7 @@ public class MoveOutRequestService : IMoveOutRequestService
             RoomNumberSnapshot = room.RoomNumber,
             DormNameSnapshot = room.Dorm?.Name ?? "",
             Status = MoveOutStatus.Pending,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
         };
 
         await _moveOutRepository.AddAsync(request);
@@ -111,7 +111,7 @@ public class MoveOutRequestService : IMoveOutRequestService
             await _studentRepository.UpdateAsync(student);
 
             request.Status = MoveOutStatus.Approved;
-            request.RespondedAt = DateTime.UtcNow;
+            request.RespondedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
             await _moveOutRepository.UpdateAsync(request);
 
             await transaction.CommitAsync();
@@ -138,7 +138,7 @@ public class MoveOutRequestService : IMoveOutRequestService
             throw new InvalidOperationException("Ovaj zahtev ne čeka odobrenje.");
 
         request.Status = MoveOutStatus.Rejected;
-        request.RespondedAt = DateTime.UtcNow;
+        request.RespondedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
         await _moveOutRepository.UpdateAsync(request);
 
         await _notificationService.NotifyStudentAsync(

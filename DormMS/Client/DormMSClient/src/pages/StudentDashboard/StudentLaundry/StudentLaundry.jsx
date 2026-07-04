@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getAllMachines, getAvailableSlots, createReservation, getStudentReservations, cancelReservation } from '../../../api/laundry'
+import { getMyRoom } from '../../../api/student'
 import styles from './StudentLaundry.module.css'
 
 function StudentLaundry() {
@@ -11,6 +12,7 @@ function StudentLaundry() {
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState('') // 'success' or 'error'
+  const [hasRoom, setHasRoom] = useState(false)
 
   // Auto-skrivanje poruka nakon 3 sekundi
   useEffect(() => {
@@ -24,9 +26,20 @@ function StudentLaundry() {
   }, [message])
 
   useEffect(() => {
+    loadRoomInfo()
     loadMachines()
     loadReservations()
   }, [])
+
+  async function loadRoomInfo() {
+    try {
+      const roomData = await getMyRoom()
+      setHasRoom(roomData.hasRoom)
+    } catch (error) {
+      console.error('Greška pri učitavanju sobe:', error)
+      setHasRoom(false)
+    }
+  }
 
   useEffect(() => {
     if (selectedMachine) {
@@ -160,6 +173,18 @@ function StudentLaundry() {
   }
 
   if (loading) return <div className={styles.container}>Učitavanje...</div>
+
+  if (!hasRoom) {
+    return (
+      <div className={styles.container}>
+        <h1>Veš mašine</h1>
+        <div className={styles.noRoomMessage}>
+          <h2>Ne možete koristiti veš mašine</h2>
+          <p>Da biste rezervisali veš mašinu, morate imati dodeljenu sobu u domu.</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={styles.container}>

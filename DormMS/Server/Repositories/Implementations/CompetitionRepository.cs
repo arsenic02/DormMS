@@ -63,7 +63,8 @@ public class CompetitionRepository : ICompetitionRepository
 
     public async Task<IEnumerable<Competition>> GetOpenCompetitionsAsync()
     {
-        var now = DateTime.UtcNow;
+        // var now = DateTime.UtcNow;
+        var now=DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
         return await _context.Competitions
             .Where(c => c.Status == CompetitionStatus.Open
                 && c.StartDate <= now
@@ -75,7 +76,8 @@ public class CompetitionRepository : ICompetitionRepository
 
     public async Task<IEnumerable<Competition>> GetOpenAndAppliedCompetitionsAsync(int studentId, bool isFreshman)
     {
-        var now = DateTime.UtcNow;
+       // var now = DateTime.UtcNow;
+        var now=DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
         var studentCompetitionType = isFreshman ? CompetitionType.Freshmen : CompetitionType.General;
 
         return await _context.Competitions

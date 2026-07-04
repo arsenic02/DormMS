@@ -210,7 +210,7 @@ public class StudentService : IStudentService
                             TotalFamilyIncome = record.TotalFamilyIncome,
                             FamilyMemberCount = record.FamilyMemberCount,
                             VerificationStatus = FinancialVerificationStatus.Verified,
-                            VerifiedAt = DateTime.UtcNow
+                            VerifiedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
                         };
                         _context.StudentFinancialStatuses.Add(financialStatus);
                         await _context.SaveChangesAsync();
@@ -312,7 +312,7 @@ public class StudentService : IStudentService
         if (student.FinancialStatus != null)
         {
             student.FinancialStatus.VerificationStatus = FinancialVerificationStatus.Verified;
-            student.FinancialStatus.VerifiedAt = DateTime.UtcNow;
+            student.FinancialStatus.VerifiedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
         }
     }
 
@@ -370,7 +370,7 @@ public class StudentService : IStudentService
             existingFinancialStatus.TotalFamilyIncome = dto.TotalFamilyIncome;
             existingFinancialStatus.FamilyMemberCount = dto.FamilyMemberCount;
             existingFinancialStatus.VerificationStatus = FinancialVerificationStatus.Pending;
-            existingFinancialStatus.SubmittedAt = DateTime.UtcNow;
+            existingFinancialStatus.SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
             existingFinancialStatus.VerifiedAt = null;
 
             await _context.SaveChangesAsync();
@@ -392,7 +392,7 @@ public class StudentService : IStudentService
             TotalFamilyIncome = dto.TotalFamilyIncome,
             FamilyMemberCount = dto.FamilyMemberCount,
             VerificationStatus = FinancialVerificationStatus.Pending,
-            SubmittedAt = DateTime.UtcNow
+            SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
         };
 
         await _repository.AddFinancialStatusAsync(financialStatus);
@@ -508,7 +508,7 @@ public class StudentService : IStudentService
         if (financialStatus == null) return false;
 
         financialStatus.VerificationStatus = status;
-        financialStatus.VerifiedAt = status == FinancialVerificationStatus.Verified ? DateTime.UtcNow : null;
+        financialStatus.VerifiedAt = status == FinancialVerificationStatus.Verified ? DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified) : null;
 
         await _context.SaveChangesAsync();
         return true;

@@ -15,7 +15,7 @@ public class StudentFinancialStatus
         : 0;
 
     public FinancialVerificationStatus VerificationStatus { get; set; } = FinancialVerificationStatus.Pending;
-    public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
+    public DateTime SubmittedAt { get; set; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
     public DateTime? VerifiedAt { get; set; }
 }
 

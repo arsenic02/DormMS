@@ -92,7 +92,8 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             Notes = dto.Notes,
             DocumentUrl = dto.DocumentUrl,
             Status = ApplicationStatus.Pending,
-            AppliedAt = DateTime.UtcNow
+            // AppliedAt = DateTime.UtcNow
+            AppliedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
         };
 
         await _repository.AddAsync(application);

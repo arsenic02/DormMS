@@ -162,3 +162,22 @@
   font-weight: normal;
   font-size: 0.85rem;
 }
+
+.noRoomMessage {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.noRoomMessage h2 {
+  color: #856404;
+  margin-bottom: 1rem;
+}
+
+.noRoomMessage p {
+  color: #856404;
+  font-size: 1.1rem;
+}

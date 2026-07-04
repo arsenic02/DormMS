@@ -152,6 +152,10 @@ public class LaundryService : ILaundryService
         if (student is null)
             return ServiceResult<LaundryReservationGetDto>.Fail("Student nije pronađen");
 
+        // Provera da li student ima dodeljenu sobu
+        if (!student.DormitoryRoomId.HasValue)
+            return ServiceResult<LaundryReservationGetDto>.Fail("Ne možete rezervisati veš mašinu jer nemate dodeljenu sobu u domu");
+
         var machine = await _context.LaundryMachines.FindAsync(dto.LaundryMachineId);
         if (machine is null)
             return ServiceResult<LaundryReservationGetDto>.Fail("Mašina nije pronađena");
@@ -260,16 +264,44 @@ public class LaundryService : ILaundryService
         DormName = machine.Dorm.Name
     };
 
-    private static LaundryReservationGetDto MapToReservationDto(LaundryReservation reservation) => new()
-  {
-    Id = reservation.Id,
-    LaundryMachineId = reservation.LaundryMachineId,
-    LaundryMachineName = reservation.LaundryMachine.Name,
-    StudentId = reservation.StudentId,
-    StudentName = $"{reservation.Student.Name} {reservation.Student.Surname}",
-    StartTime = reservation.StartTime,
-    EndTime = reservation.EndTime,
-    Status = reservation.Status.ToString(),
-    CreatedAt = reservation.CreatedAt
-  };
+    private static LaundryReservationGetDto MapToReservationDto(LaundryReservation reservation)
+    {
+        // Dinamički određujemo status
+        var now = DateTime.Now;
+        string dynamicStatus;
+        
+        if (reservation.Status == LaundryReservationStatus.Cancelled)
+        {
+            // Ako je već otkazana, zadržavamo status Cancelled
+            dynamicStatus = LaundryReservationStatus.Cancelled.ToString();
+        }
+        else if (now < reservation.StartTime)
+        {
+            // Rezeravcija još nije počela
+            dynamicStatus = LaundryReservationStatus.Upcoming.ToString();
+        }
+        else if (now >= reservation.StartTime && now <= reservation.EndTime)
+        {
+            // Rezervacija je aktivna upravo sada
+            dynamicStatus = LaundryReservationStatus.Active.ToString();
+        }
+        else
+        {
+            // Rezervacija je završena
+            dynamicStatus = LaundryReservationStatus.Completed.ToString();
+        }
+
+        return new LaundryReservationGetDto
+        {
+            Id = reservation.Id,
+            LaundryMachineId = reservation.LaundryMachineId,
+            LaundryMachineName = reservation.LaundryMachine.Name,
+            StudentId = reservation.StudentId,
+            StudentName = $"{reservation.Student.Name} {reservation.Student.Surname}",
+            StartTime = reservation.StartTime,
+            EndTime = reservation.EndTime,
+            Status = dynamicStatus,
+            CreatedAt = reservation.CreatedAt
+        };
+    }
 }

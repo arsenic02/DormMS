@@ -9,7 +9,7 @@ public class Competition
     public DateTime EndDate { get; set; }
     public CompetitionStatus Status { get; set; }
     public CompetitionType Type { get; set; } = CompetitionType.General;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
 
     public int? CreatedByAdminId { get; set; }
     public Admin? CreatedByAdmin { get; set; }
@@ -20,8 +20,8 @@ public class Competition
     public List<CompetitionApplication> Applications { get; set; } = new();
     public int? MaxStudents{get;set;}
 
-    public bool IsOpen => Status == CompetitionStatus.Open && DateTime.UtcNow >= StartDate && DateTime.UtcNow <= EndDate;
-    public bool IsClosed => Status == CompetitionStatus.Closed || DateTime.UtcNow > EndDate;
+    public bool IsOpen => Status == CompetitionStatus.Open && DateTime.Now >= StartDate && DateTime.Now <= EndDate;
+    public bool IsClosed => Status == CompetitionStatus.Closed || DateTime.Now > EndDate;
 }
 
 public enum CompetitionStatus

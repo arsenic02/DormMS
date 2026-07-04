@@ -616,6 +616,7 @@ public class AssignmentService : IAssignmentService
         foreach (var room in rooms)
         {
             room.CurrentOccupancy = 0;
+            room.Status = CalculateStatus(room);
         }
 
         await _context.SaveChangesAsync();
@@ -652,6 +653,7 @@ public class AssignmentService : IAssignmentService
         {
             var countToRemove = roomIdsToDecrement[room.Id];
             room.CurrentOccupancy = Math.Max(0, room.CurrentOccupancy - countToRemove);
+            room.Status = CalculateStatus(room);
         }
 
         foreach (var result in assignedResults)
@@ -661,6 +663,19 @@ public class AssignmentService : IAssignmentService
 
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    private static RoomStatus CalculateStatus(DormitoryRoom room)
+    {
+        if (room.Status == RoomStatus.Maintenance)
+            return RoomStatus.Maintenance;
+
+        if (room.Status == RoomStatus.Closed)
+            return RoomStatus.Closed;
+
+        return room.CurrentOccupancy >= room.Capacity
+            ? RoomStatus.FullyOccupied
+            : RoomStatus.Available;
     }
 
     private decimal CalculateOlderStudentPoints(decimal averageGrade, int espb, int yearsOfStudy, decimal incomePerMember)

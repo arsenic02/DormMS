@@ -34,5 +34,5 @@ public class RankingResult
     public int FamilyMemberCount { get; set; }
     public decimal IncomePerMember { get; set; }
 
-    public DateTime RankedAt { get; set; } = DateTime.UtcNow;
+    public DateTime RankedAt { get; set; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
 }

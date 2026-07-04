@@ -20,7 +20,8 @@ public class NotificationService : INotificationService
         {
             StudentId = studentId,
             Message = message,
-            CreatedAt = DateTime.UtcNow
+            // CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
         };
 
         await _context.Notifications.AddAsync(notification);
@@ -33,7 +34,8 @@ public class NotificationService : INotificationService
         {
             DormId = dormId,
             Message = message,
-            CreatedAt = DateTime.UtcNow
+            // CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
         };
 
         await _context.Notifications.AddAsync(notification);

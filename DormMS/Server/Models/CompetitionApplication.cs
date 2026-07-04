@@ -9,7 +9,7 @@ public class CompetitionApplication
     public int CompetitionId { get; set; }
     public Competition Competition { get; set; } = null!;
 
-    public DateTime AppliedAt { get; set; } = DateTime.UtcNow;
+    public DateTime AppliedAt { get; set; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
     public int? PriorityScore { get; set; }
     public string? Notes { get; set; }

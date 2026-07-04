@@ -60,7 +60,7 @@ namespace DormMS.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("CreatedByAdminId")
                         .HasColumnType("integer");
@@ -73,7 +73,7 @@ namespace DormMS.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("MaxStudents")
                         .HasColumnType("integer");
@@ -83,7 +83,7 @@ namespace DormMS.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -109,7 +109,7 @@ namespace DormMS.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AppliedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("CompetitionId")
                         .HasColumnType("integer");
@@ -231,6 +231,69 @@ namespace DormMS.Migrations
                     b.ToTable("DormitoryRooms");
                 });
 
+            modelBuilder.Entity("DormMS.Server.Models.LaundryMachine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("DormId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DormId");
+
+                    b.ToTable("LaundryMachines");
+                });
+
+            modelBuilder.Entity("DormMS.Server.Models.LaundryReservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("LaundryMachineId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LaundryMachineId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("LaundryReservations");
+                });
+
             modelBuilder.Entity("DormMS.Server.Models.MoveOutRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -240,14 +303,14 @@ namespace DormMS.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("DormNameSnapshot")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("RespondedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
@@ -280,7 +343,7 @@ namespace DormMS.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("DormId")
                         .HasColumnType("integer");
@@ -344,7 +407,7 @@ namespace DormMS.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("RankedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal?>("SocialBonus")
                         .HasColumnType("numeric");
@@ -379,7 +442,7 @@ namespace DormMS.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("ReceiverId")
                         .HasColumnType("integer");
@@ -388,7 +451,7 @@ namespace DormMS.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("RespondedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("SenderId")
                         .HasColumnType("integer");
@@ -509,7 +572,7 @@ namespace DormMS.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("TotalFamilyIncome")
                         .HasColumnType("numeric");
@@ -518,7 +581,7 @@ namespace DormMS.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("VerifiedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -624,6 +687,36 @@ namespace DormMS.Migrations
                         .IsRequired();
 
                     b.Navigation("Dorm");
+                });
+
+            modelBuilder.Entity("DormMS.Server.Models.LaundryMachine", b =>
+                {
+                    b.HasOne("DormMS.Server.Models.Dorm", "Dorm")
+                        .WithMany()
+                        .HasForeignKey("DormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dorm");
+                });
+
+            modelBuilder.Entity("DormMS.Server.Models.LaundryReservation", b =>
+                {
+                    b.HasOne("DormMS.Server.Models.LaundryMachine", "LaundryMachine")
+                        .WithMany("Reservations")
+                        .HasForeignKey("LaundryMachineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DormMS.Server.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LaundryMachine");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("DormMS.Server.Models.MoveOutRequest", b =>
@@ -767,6 +860,11 @@ namespace DormMS.Migrations
                     b.Navigation("Managers");
 
                     b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("DormMS.Server.Models.LaundryMachine", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("DormMS.Server.Models.Student", b =>

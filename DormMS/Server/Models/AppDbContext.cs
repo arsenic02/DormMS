@@ -20,6 +20,8 @@ public class AppDbContext : DbContext
     public DbSet<RoomSwapRequest> RoomSwapRequests { get; set; }
     public DbSet<MoveOutRequest> MoveOutRequests { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<LaundryMachine> LaundryMachines { get; set; }
+    public DbSet<LaundryReservation> LaundryReservations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -72,5 +74,35 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(r => r.RoomId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<LaundryMachine>()
+            .HasOne(lm => lm.Dorm)
+            .WithMany()
+            .HasForeignKey(lm => lm.DormId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<LaundryReservation>()
+            .HasOne(lr => lr.LaundryMachine)
+            .WithMany(lm => lm.Reservations)
+            .HasForeignKey(lr => lr.LaundryMachineId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<LaundryReservation>()
+            .HasOne(lr => lr.Student)
+            .WithMany()
+            .HasForeignKey(lr => lr.StudentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Konfigurišemo sve DateTime kolone da koriste timestamp without time zone
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entityType.GetProperties())
+            {
+                if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
+                {
+                    property.SetColumnType("timestamp without time zone");
+                }
+            }
+        }
     }
 }

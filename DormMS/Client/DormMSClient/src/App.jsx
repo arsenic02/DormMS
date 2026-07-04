@@ -23,6 +23,8 @@ import DormManagerNotifications from './pages/DormManagerDashBoard/DormManagerNo
 import AdminDorm from './pages/AdminDashBoard/AdminDorm/AdminDorm'
 import AdminUsers from './pages/AdminDashBoard/AdminUsers/AdminUsers'
 import AdminStudents from './pages/AdminDashBoard/AdminStudents/AdminStudents'
+import AdminLaundry from './pages/AdminDashBoard/AdminLaundry/AdminLaundry'
+import StudentLaundry from './pages/StudentDashboard/StudentLaundry/StudentLaundry'
 import Information from './pages/Information/Information'
 import Contact from './pages/Contact/Contact'
 
@@ -45,12 +47,14 @@ function App() {
           <Route path="/student/competitions" element={<StudentCompetitions />} />
           <Route path="/student/room-swap" element={<RoomSwapRequest />} />
           <Route path="/student/move-out" element={<MoveOutRequest />} />
+          <Route path="/student/laundry" element={<StudentLaundry />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
           <Route path="/admin/dorm" element={<AdminDorm />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/students" element={<AdminStudents />} />
+          <Route path="/admin/laundry" element={<AdminLaundry />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={['DormManager']} />}>

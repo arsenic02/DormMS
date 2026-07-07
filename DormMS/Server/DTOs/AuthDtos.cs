@@ -23,4 +23,6 @@ public class AuthResponseDto
     public string? Role { get; set; }
     public string? Token { get; set; }
     public DateTime? ExpiresAtUtc { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
 }

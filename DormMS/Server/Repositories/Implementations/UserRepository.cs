@@ -154,4 +154,44 @@ public class UserRepository : IUserRepository
 
         return user;
     }
+
+    public async Task<AdminProfileDto?> GetAdminProfileAsync(int userId)
+    {
+        var user = await _context.Users
+            .Include(u => u.Admin)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null || user.Admin is null)
+            return null;
+
+        return new AdminProfileDto
+        {
+            Id = user.Admin.Id,
+            Name = user.Admin.Name,
+            Surname = user.Admin.Surname,
+            Email = user.Admin.Email,
+            PhoneNumber = user.Admin.PhoneNumber
+        };
+    }
+
+    public async Task<DormManagerProfileDto?> GetDormManagerProfileAsync(int userId)
+    {
+        var user = await _context.Users
+            .Include(u => u.DormManager)
+            .ThenInclude(dm => dm.Dorm)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null || user.DormManager is null)
+            return null;
+
+        return new DormManagerProfileDto
+        {
+            Id = user.DormManager.Id,
+            Name = user.DormManager.Name,
+            Surname = user.DormManager.Surname,
+            Email = user.DormManager.Email,
+            PhoneNumber = user.DormManager.PhoneNumber,
+            DormName = user.DormManager.Dorm?.Name ?? null
+        };
+    }
 }

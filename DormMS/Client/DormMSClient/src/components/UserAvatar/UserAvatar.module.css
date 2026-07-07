@@ -1,0 +1,46 @@
+.avatarWrapper {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.avatarCircle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.avatarCircle:hover {
+  background-color: rgba(255, 255, 255, 0.22);
+  transform: scale(1.06);
+}
+
+/* .avatarCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0a500;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.avatarCircle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px rgba(240, 165, 0, 0.3);
+} */

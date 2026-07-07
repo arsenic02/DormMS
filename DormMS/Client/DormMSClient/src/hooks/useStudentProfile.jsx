@@ -3,6 +3,10 @@ import { getStudentProfile } from '../api/student'
 
 export function useStudentProfile(token) {
     const [formData, setFormData] = useState({
+        name: '',
+        surname: '',
+        studentIDNumber: '',
+        email: '',
         homeAddress: '',
         municipalityOfResidence: '',
         jmbg: '',
@@ -27,6 +31,10 @@ export function useStudentProfile(token) {
         getStudentProfile(token)
             .then(data => {
                 setFormData({
+                    name: data.name || '',
+                    surname: data.surname || '',
+                    studentIDNumber: data.studentIDNumber || '',
+                    email: data.email || '',
                     homeAddress: data.homeAddress || '',
                     municipalityOfResidence: data.municipalityOfResidence || '',
                     jmbg: data.jmbg || '',

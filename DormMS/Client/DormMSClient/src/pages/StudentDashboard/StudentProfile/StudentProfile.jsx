@@ -280,6 +280,10 @@ function StudentProfile() {
                 {!isEditing ? (
                     <div className={styles.viewMode}>
                         <div className={styles.viewGrid}>
+                            <ViewItem label="Ime" value={formData.name} />
+                            <ViewItem label="Prezime" value={formData.surname} />
+                            <ViewItem label="Broj indeksa" value={formData.studentIDNumber} />
+                            <ViewItem label="Email" value={formData.email} />
                             <ViewItem label="Adresa" value={formData.homeAddress} />
                             <ViewItem label="Opstina" value={formData.municipalityOfResidence} />
                             <ViewItem label="JMBG" value={formData.jmbg} />

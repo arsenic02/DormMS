@@ -94,7 +94,9 @@ public class AuthService : IAuthService
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        return BuildAuthResponse(user, "Registration successful. Complete your profile when ready.");
+        user.Student = student;
+
+        return BuildAuthResponse(user, "Uspešna registracija. Dopunite svoj profil kada budete spremni.");
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
@@ -109,7 +111,12 @@ public class AuthService : IAuthService
         }
 
         var normalizedEmail = request.Email.Trim().ToLowerInvariant();
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == normalizedEmail);
+
+        var user = await _context.Users
+        .Include(u => u.Student)
+        .Include(u => u.Admin)
+        .Include(u => u.DormManager)
+        .FirstOrDefaultAsync(u => u.Email == normalizedEmail);
 
         if (user is null)
         {
@@ -146,13 +153,23 @@ public class AuthService : IAuthService
     {
         var expiresAt = DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes);
 
+        var (firstName, lastName) = user.Role switch
+        {
+            UserRole.Student => (user.Student?.Name ?? string.Empty, user.Student?.Surname ?? string.Empty),
+            UserRole.Admin => (user.Admin?.Name ?? string.Empty, user.Admin?.Surname ?? string.Empty),
+            UserRole.DormManager => (user.DormManager?.Name ?? string.Empty, user.DormManager?.Surname ?? string.Empty),
+            _ => (string.Empty, string.Empty)
+        };
+
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email),
             new(JwtRegisteredClaimNames.Email, user.Email),
-            new(ClaimTypes.Role, user.Role.ToString())
+            new(ClaimTypes.Role, user.Role.ToString()),
+            new(ClaimTypes.GivenName, firstName),
+            new(ClaimTypes.Surname, lastName)
         };
 
         var keyBytes = Encoding.UTF8.GetBytes(_jwtSettings.Key);
@@ -176,7 +193,9 @@ public class AuthService : IAuthService
             Email = user.Email,
             Role = user.Role.ToString(),
             Token = tokenString,
-            ExpiresAtUtc = expiresAt
+            ExpiresAtUtc = expiresAt,
+            FirstName = firstName,
+            LastName = lastName
         };
     }
 }

@@ -9,4 +9,6 @@ public interface IUserRepository
     Task<User?> GetByIdTrackedAsync(int id);
     Task DeleteUserAndProfileAsync(User user);
     Task<User> CreateDormManagerAsync(DormManagerCreateDto dto);
+    Task<AdminProfileDto?> GetAdminProfileAsync(int userId);
+    Task<DormManagerProfileDto?> GetDormManagerProfileAsync(int userId);
 }

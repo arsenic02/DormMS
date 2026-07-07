@@ -31,4 +31,10 @@ public class UserService : IUserService
 
     public Task<User> CreateDormManagerAsync(DormManagerCreateDto dto)
         => _userRepository.CreateDormManagerAsync(dto);
+
+    public Task<AdminProfileDto?> GetAdminProfileAsync(int userId)
+        => _userRepository.GetAdminProfileAsync(userId);
+
+    public Task<DormManagerProfileDto?> GetDormManagerProfileAsync(int userId)
+        => _userRepository.GetDormManagerProfileAsync(userId);
 }

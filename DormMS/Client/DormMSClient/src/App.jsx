@@ -24,6 +24,8 @@ import AdminDorm from './pages/AdminDashBoard/AdminDorm/AdminDorm'
 import AdminUsers from './pages/AdminDashBoard/AdminUsers/AdminUsers'
 import AdminStudents from './pages/AdminDashBoard/AdminStudents/AdminStudents'
 import AdminLaundry from './pages/AdminDashBoard/AdminLaundry/AdminLaundry'
+import AdminProfile from './pages/AdminDashBoard/AdminProfile/AdminProfile'
+import DormManagerProfile from './pages/DormManagerDashBoard/DormManagerProfile/DormManagerProfile'
 import StudentLaundry from './pages/StudentDashboard/StudentLaundry/StudentLaundry'
 import Information from './pages/Information/Information'
 import Contact from './pages/Contact/Contact'
@@ -55,6 +57,7 @@ function App() {
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/students" element={<AdminStudents />} />
           <Route path="/admin/laundry" element={<AdminLaundry />} />
+          <Route path="/admin/profile" element={<AdminProfile />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={['DormManager']} />}>
@@ -67,6 +70,7 @@ function App() {
           <Route path="/dorm-manager/notifications" element={<DormManagerNotifications />} />
           <Route path="/dorm-manager/room-swap-requests" element={<DormManagerRoomSwaps />} />
           <Route path="/dorm-manager/move-out-requests" element={<DormManagerMoveOuts />} />
+          <Route path="/dorm-manager/profile" element={<DormManagerProfile />} />
         </Route>
 
       </Routes>

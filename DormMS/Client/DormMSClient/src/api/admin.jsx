@@ -180,3 +180,28 @@ export async function getStudentsPaged(pageNumber, pageSize, profileStatus, facu
     return res.json()
 }
 
+export async function getAdminProfile() {
+    const res = await fetchWithAuth(`${USERS_URL}/admin/me`, {
+        headers: authHeaders()
+    })
+
+    if (!res.ok) {
+        const text = await res.text()
+        throw new Error(text || 'Greška prilikom učitavanja profila.')
+    }
+
+    return res.json()
+}
+
+export async function getDormManagerProfile() {
+    const res = await fetchWithAuth(`${USERS_URL}/dorm-manager/me`, {
+        headers: authHeaders()
+    })
+
+    if (!res.ok) {
+        const text = await res.text()
+        throw new Error(text || 'Greška prilikom učitavanja profila.')
+    }
+
+    return res.json()
+}

@@ -5,11 +5,11 @@ using DormMS.Server.Models;
 using DormMS.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using static DormMS.Server.Services.Interfaces.IUserService;
 
 [ApiController]
 [Route("api/users")]
-[Authorize(Roles = "Admin")]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -19,6 +19,7 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("dorm-manager")]
     public async Task<IActionResult> CreateDormManager([FromBody] DormManagerCreateDto dto)
     {
@@ -33,6 +34,7 @@ public class UserController : ControllerBase
         });
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
@@ -46,6 +48,7 @@ public class UserController : ControllerBase
         };
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetPaged(
         [FromQuery] int pageNumber = 1,
@@ -57,5 +60,41 @@ public class UserController : ControllerBase
 
         var result = await _userService.GetPagedAsync(pageNumber, pageSize, role);
         return Ok(result);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin/me")]
+    public async Task<IActionResult> GetAdminProfile()
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        var profile = await _userService.GetAdminProfileAsync(userId.Value);
+        if (profile is null)
+            return NotFound();
+
+        return Ok(profile);
+    }
+
+    [Authorize(Roles = "DormManager")]
+    [HttpGet("dorm-manager/me")]
+    public async Task<IActionResult> GetDormManagerProfile()
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        var profile = await _userService.GetDormManagerProfileAsync(userId.Value);
+        if (profile is null)
+            return NotFound();
+
+        return Ok(profile);
+    }
+
+    private int? GetCurrentUserId()
+    {
+        var idValue = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+        return int.TryParse(idValue, out var userId) ? userId : null;
     }
 }

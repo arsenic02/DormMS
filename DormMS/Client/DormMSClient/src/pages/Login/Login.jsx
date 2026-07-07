@@ -58,7 +58,7 @@ function Login() {
         try {
             const data = await loginUser(formData.email, formData.password)
             login(data)
-
+            console.log('Login response:', data)
             if (data.role === 'Admin') {
                 navigate('/admin/dorm')
             } else if (data.role === 'DormManager') {
@@ -67,6 +67,7 @@ function Login() {
                 navigate('/student/profile')
             }
         } catch (err) {
+            console.error('Login error:', err)
             setErrors({ general: err.message })
         }
     }

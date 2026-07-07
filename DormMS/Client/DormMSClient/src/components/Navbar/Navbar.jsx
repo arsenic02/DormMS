@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import styles from './Navbar.module.css'
+import UserAvatar from '../UserAvatar/UserAvatar'
 
 function Navbar() {
     const { auth, logout } = useAuth()
@@ -57,6 +58,19 @@ function Navbar() {
             )}
 
             {auth ? (
+                <div className={styles.authArea}>
+                    <UserAvatar />
+                    <button onClick={handleLogout} className={styles.loginBtn}>
+                        Odjavi se
+                    </button>
+                </div>
+            ) : (
+                <Link to="/login" className={styles.loginBtn}>
+                    Prijavi se
+                </Link>
+            )}
+
+            {/* {auth ? (
                 <button onClick={handleLogout} className={styles.loginBtn}>
                     Odjavi se
                 </button>
@@ -64,7 +78,7 @@ function Navbar() {
                 <Link to="/login" className={styles.loginBtn}>
                     Prijavi se
                 </Link>
-            )}
+            )} */}
         </nav>
     )
 }

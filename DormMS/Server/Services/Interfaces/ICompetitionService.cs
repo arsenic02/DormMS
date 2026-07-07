@@ -10,13 +10,7 @@ public interface ICompetitionService
     int pageNumber, int pageSize, CompetitionType? type, CompetitionStatus? status);
     Task<CompetitionGetDto?> GetByIdAsync(int id);
     Task<IEnumerable<CompetitionGetDto>> GetOpenCompetitionsAsync(int studentId, bool isFreshman);
-
-    //Task<CompetitionGetDto?> OpenCompetitionAsync(int id);
-
     Task<CompetitionGetDto?> ToggleCompetitionStatusAsync(int id);
-
-   
-    //Task<CompetitionGetDto?> CreateAsync(CompetitionCreateDto dto, int userId, string role);
     Task<CreateCompetitionResult> CreateAsync(CompetitionCreateDto dto, int userId, string role);
     Task<CompetitionGetDto?> UpdateAsync(int id, CompetitionUpdateDto dto);
     Task<bool> DeleteAsync(int id);

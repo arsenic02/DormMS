@@ -7,7 +7,6 @@ public static class JmbgValidator
 
         int[] digits = jmbg.Select(c => c - '0').ToArray();
 
-        // Standardni algoritam mod 11
         int sum = 7 * (digits[0] + digits[6])
                 + 6 * (digits[1] + digits[7])
                 + 5 * (digits[2] + digits[8])

@@ -34,6 +34,6 @@ public enum CompetitionStatus
 
 public enum CompetitionType
 {
-    General=0,    // stariji studenti
-    Freshmen=1    // brucosi
+    General=0,    
+    Freshmen=1    
 }

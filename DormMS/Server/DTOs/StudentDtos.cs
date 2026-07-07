@@ -121,7 +121,7 @@ public class BulkVerifyProfilesDto
     public StudentProfileStatus Status { get; set; }
 }
 
-public record StudentProfileVerificationDto(StudentProfileStatus Status); // prima Verified ili Rejected
+public record StudentProfileVerificationDto(StudentProfileStatus Status); //  Verified / Rejected
 
 public class BulkFinancialStatusImportDto
 {
@@ -146,9 +146,3 @@ public class StudentSummaryDto
     public string? FacultyName { get; set; }
     public bool IsFreshman { get; set; }
 }
-
-// public class ApplyByFreshmanStatusDto
-// {
-//     public int CompetitionId { get; set; }
-//     public bool IsFreshman { get; set; }
-// }

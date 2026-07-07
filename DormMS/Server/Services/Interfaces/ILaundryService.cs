@@ -3,7 +3,7 @@ using DormMS.Server.DTOs;
 
 namespace DormMS.Server.Services.Interfaces;
 
-// Rezultat operacije sa greskom
+
 public record ServiceResult<T>(T? Value, string? Error = null)
 {
     public bool IsSuccess => Error == null;

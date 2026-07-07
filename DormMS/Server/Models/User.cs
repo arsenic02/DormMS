@@ -17,13 +17,11 @@ public class User
 {
     public int Id { get; set; }
 
-    public string Email { get; set; } = string.Empty;   // za login
+    public string Email { get; set; } = string.Empty;  
     public string PasswordHash { get; set; } = string.Empty;
 
     public UserRole Role { get; set; }
     public bool IsActive { get; set; } = true;
-
-    // veze na profile (opciono)
     public int? StudentId { get; set; }
     public Student? Student { get; set; }
 

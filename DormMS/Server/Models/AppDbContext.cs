@@ -93,7 +93,6 @@ public class AppDbContext : DbContext
             .HasForeignKey(lr => lr.StudentId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Konfigurišemo sve DateTime kolone da koriste timestamp without time zone
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             foreach (var property in entityType.GetProperties())

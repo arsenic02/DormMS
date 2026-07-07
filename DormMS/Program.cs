@@ -51,16 +51,8 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-// .AddJwtBearer(options =>
-// {
-//     options.Authority = builder.Configuration["Auth0:Domain"];
-//     options.Audience = builder.Configuration["Auth0:Audience"];
-// });
-
 builder.Services.AddAuthorization(options =>
 {
-    // options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
     options.AddPolicy("AdminOrDormManager", policy =>
      policy.RequireRole("Admin", "DormManager"));
 });
@@ -114,7 +106,6 @@ QuestPDF.Drawing.FontManager.RegisterFont(
 
 await app.Services.SeedDefaultUsersAsync(builder.Configuration);
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

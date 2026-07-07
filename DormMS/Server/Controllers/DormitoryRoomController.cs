@@ -32,7 +32,6 @@ public class DormitoryRoomController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Policy = "AdminOnly")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<DormitoryRoom>> CreateDormitoryRoom(DormitoryRoomCreateUpdateDto dto)
     {
@@ -44,7 +43,6 @@ public class DormitoryRoomController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    //[Authorize(Policy = "AdminOnly")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateDormitoryRoom(int id, DormitoryRoomCreateUpdateDto dto)
     {
@@ -58,7 +56,6 @@ public class DormitoryRoomController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    //[Authorize(Policy = "AdminOnly")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteDormitoryRoom(int id)
     {

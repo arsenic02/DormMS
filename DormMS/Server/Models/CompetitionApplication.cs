@@ -13,7 +13,7 @@ public class CompetitionApplication
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
     public int? PriorityScore { get; set; }
     public string? Notes { get; set; }
-    public string? DocumentUrl { get; set; } // putanja do PDF dokumenta (svedocanstvo, potvrda, itd.)
+    public string? DocumentUrl { get; set; } // putanja do PDF dokumenta 
 }
 
 public enum ApplicationStatus

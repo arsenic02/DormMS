@@ -77,22 +77,6 @@ public class StudentController : ControllerBase
         return Ok(result);
     }
 
-    // [HttpGet("paged")]
-    // [Authorize(Roles = "Admin,DormManager")]
-    // public async Task<ActionResult<PagedResultDto<StudentGetDto>>> GetStudentsPaged(
-    // [FromQuery] int pageNumber = 1,
-    // [FromQuery] int pageSize = 10,
-    // [FromQuery] StudentProfileStatus? profileStatus = null,
-    // [FromQuery] string? faculty = null,
-    // [FromQuery] bool? isFreshman = null)
-    // {
-    //     if (pageNumber < 1) pageNumber = 1;
-    //     if (pageSize < 1 || pageSize > 100) pageSize = 10;
-
-    //     var result = await _studentService.GetPagedAsync(pageNumber, pageSize, profileStatus, faculty, isFreshman);
-    //     return Ok(result);
-    // }
-
     [Authorize(Roles = "Student")]
     [HttpPut("me/profile")]
     public async Task<ActionResult<StudentGetDto>> CompleteMyProfile(StudentProfileUpdateDto dto)
@@ -129,17 +113,6 @@ public class StudentController : ControllerBase
 
         return NoContent();
     }
-
-    //brise samo studenta, bez naloga
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeleteStudent(int id)
-    // {
-    //     var deleted = await _studentService.DeleteAsync(id);
-    //     if (!deleted)
-    //         return NotFound();
-
-    //     return NoContent();
-    // }
 
     [HttpPost("import-csv")]
     public async Task<ActionResult<StudentImportResultDto>> ImportFromCsv(IFormFile csvFile)

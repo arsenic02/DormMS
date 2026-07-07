@@ -29,7 +29,6 @@ public class StudentAssignmentDto
     public bool IsMixedGenderAssignment { get; set; }
 }
 
-// DTO za rangiranje brucosa
 public class FreshmanAssignmentDto
 {
     public int RankingResultId { get; set; }
@@ -63,7 +62,6 @@ public class AssignmentResultDto
     public List<string> Errors { get; set; } = new();
 }
 
-// Result za rangiranje brucosa - grupisano po fakultetima
 public class FreshmanRankingResultDto
 {
     public int CompetitionId { get; set; }
@@ -74,7 +72,6 @@ public class FreshmanRankingResultDto
     public bool RoomsAssigned { get; set; }
 }
 
-// Result za rangiranje starijih studenata - grupisano po fakultetima
 public class OlderStudentsRankingResultDto
 {
     public int CompetitionId { get; set; }

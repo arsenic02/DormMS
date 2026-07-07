@@ -107,18 +107,4 @@ public class DormController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-
-    // [HttpPost("{id}/generate-rooms")]
-    // public async Task<IActionResult> GenerateRooms(int id, [FromBody] GenerateRoomsDto dto)
-    // {
-    //     if (id != dto.DormId)
-    //         return BadRequest("DormId mismatch");
-
-    //     var result = await _dormService.GenerateRooms(dto);
-
-    //     if (!result.Success)
-    //         return BadRequest(result.Error);
-
-    //     return Ok(result);
-    // }
 }

@@ -111,7 +111,7 @@ export async function toggleMachineStatus(id) {
 
 export async function getAvailableSlots(machineId, date) {
   const token = localStorage.getItem('token')
-  // Formatiramo datum kao YYYY-MM-DD bez vremenske zone
+  
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
@@ -133,7 +133,7 @@ export async function getAvailableSlots(machineId, date) {
 export async function createReservation(data) {
   const token = localStorage.getItem('token')
   
-  // Formatiramo startTime kao lokalni datum/vreme bez vremenske zone (YYYY-MM-DDTHH:mm:ss)
+  // Formatiranje startTime kao lokalni datum/vreme bez vremenske zone (YYYY-MM-DDTHH:mm:ss)
   const startTimeDate = new Date(data.startTime)
   const year = startTimeDate.getFullYear()
   const month = String(startTimeDate.getMonth() + 1).padStart(2, '0')
@@ -157,7 +157,7 @@ export async function createReservation(data) {
   })
 
   if (!response.ok) {
-    // Pokušaj da pročita poruku greške iz tela odgovora
+    
     let errorMessage = 'Greška pri kreiranju rezervacije'
     try {
       const errorData = await response.text()
@@ -165,7 +165,7 @@ export async function createReservation(data) {
         errorMessage = errorData
       }
     } catch (e) {
-      // Ako ne uspemo da pročitamo telo, koristimo podrazumevanu poruku
+    
     }
     throw new Error(errorMessage)
   }
@@ -183,7 +183,6 @@ export async function cancelReservation(id) {
   })
 
   if (!response.ok) {
-    // Pokušaj da pročita poruku greške iz tela odgovora
     let errorMessage = 'Greška pri otkazivanju rezervacije'
     try {
       const errorData = await response.text()
@@ -191,7 +190,6 @@ export async function cancelReservation(id) {
         errorMessage = errorData
       }
     } catch (e) {
-      // Ako ne uspemo da pročitamo telo, koristimo podrazumevanu poruku
     }
     throw new Error(errorMessage)
   }

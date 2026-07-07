@@ -18,8 +18,6 @@ export const applyToCompetition = async (competitionId, notes = '', documentUrl 
         const text = await res.text().catch(() => null)
         throw new Error(text || 'Greška prilikom prijave na konkurs.')
 
-        // const data = await res.json().catch(() => null)
-        // throw new Error(data?.error || data || 'Greška prilikom prijave na konkurs.')
     }
 
     return res.json()
@@ -45,7 +43,6 @@ export const uploadDocument = async (file) => {
     return res.json()
 }
 
-// Vraca listu prijava (CompetitionApplicationGetDto) za dati konkurs
 export const getApplicationsByCompetition = async (competitionId) => {
     const res = await fetchWithAuth(`${API_URL}/${competitionId}/applications`, {
         headers: { Authorization: `Bearer ${getToken()}` },
@@ -54,8 +51,6 @@ export const getApplicationsByCompetition = async (competitionId) => {
     return res.json()
 }
 
-// Vraca paginiranu listu prijava za dati konkurs, opciono filtriranu po statusu.
-// status: broj (0=Pending, 1=Approved, 2=Rejected, 3=Waitlisted) ili null/undefined za sve
 export const getApplicationsPaged = async (competitionId, pageNumber, pageSize, status) => {
     const params = new URLSearchParams({
         pageNumber: String(pageNumber),
@@ -72,8 +67,6 @@ export const getApplicationsPaged = async (competitionId, pageNumber, pageSize, 
     return res.json()
 }
 
-// Verifikuje (odobri/odbije) jednu prijavu preko bulk-verify endpointa,
-// koristeci StartId=EndId=applicationId (nema potrebe za posebnim endpointom).
 export const verifyApplication = async (applicationId, status) => {
     const res = await fetchWithAuth(`${API_URL}/bulk-verify`, {
         method: 'POST',

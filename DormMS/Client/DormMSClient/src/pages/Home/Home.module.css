@@ -43,15 +43,12 @@
 }
 
 .primaryBtn:hover {
-    /* background: #3a6347; */
     background:#1a3a5c;
 }
 
 .secondaryBtn {
     padding: 0.7rem 1.8rem;
     background: #fff;
-    /* color: #4a7c59;
-    border: 1.5px solid #4a7c59; */
     color:#1a3a5c;
     border:1.5px solid #1a3a5c;
     border-radius: 6px;
@@ -87,7 +84,6 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    /* background: #4a7c59; */
     background:#1a3a5c;
     color: #fff;
     font-weight: 700;
@@ -98,7 +94,6 @@
 .stepTitle {
     font-size: 1rem;
     font-weight: 700;
-    /* color: #1a1a1a; */
     color:#1a3a5c;
     margin: 0 0 0.5rem;
 }
@@ -113,14 +108,12 @@
 .moreInfo {
     text-align: center;
     padding: 2rem;
-    /* background: #f4f9f6; */
     background:#fff;
     border-radius: 10px;
 }
 
 .moreInfoText {
     font-size: 1rem;
-    /* color: #1a1a1a; */
     color:#1a3a5c;
     margin: 0 0 1rem;
 }
@@ -132,7 +125,6 @@
 }
 
 .linkBtn {
-    /* color: #4a7c59; */
     color:#1a3a5c;
     font-weight: 600;
     font-size: 0.92rem;
@@ -153,8 +145,3 @@
         gap: 0.7rem;
     }
 }
-
-/* .home {
-  padding: 3rem 2rem;
-  text-align: center;
-} */

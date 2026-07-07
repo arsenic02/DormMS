@@ -13,16 +13,12 @@ export async function updateStudentProfile(profileData, token) {
     body: JSON.stringify(profileData)
   })
   const data = await response.json()
-  // console.log('Status:', response.status)
-  // const text = await response.text()
-  // console.log('Response body:', text)
 
   if (!response.ok) {
     throw new Error(data.message || 'Greška pri čuvanju profila')
-    //throw new Error('Greška pri čuvanju profila')
   }
 
-  return data//text ? JSON.parse(text) : {}
+  return data
 }
 
 export async function getStudentProfile(token) {
@@ -166,8 +162,6 @@ export async function verifyStudentFinancialStatus(studentId, status, token) {
   return data
 }
 
-// Vraca informacije o sobi ulogovanog studenta (broj sobe, dom, cimeri).
-// Ako student jos nema dodeljenu sobu, vraceni objekat ima hasRoom: false.
 export const getMyRoom = async () => {
   const res = await fetchWithAuth(`${BASE_URL}/me/room`, {
     headers: { Authorization: `Bearer ${getToken()}` },

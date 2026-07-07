@@ -52,7 +52,6 @@ export const getSavedRankingResults = async (competitionId, isFreshmanView) => {
 
     if (!res.ok) {
         const text = await res.text().catch(() => null)
-        // throw new Error(text || 'Greška prilikom učitavanja sačuvanih rezultata.')
         throw new Error(extractErrorMessage(text) || 'Greška prilikom učitavanja sačuvanih rezultata.')
     }
 
@@ -72,7 +71,6 @@ export const assignOlderStudentsToDorms = async (competitionId) => {
     if (!res.ok) {
         const text = await res.text().catch(() => null)
         throw new Error(extractErrorMessage(text) || 'Greška prilikom raspodele soba.')
-        //throw new Error(text || 'Greška prilikom raspodele soba.')
     }
 
     return res.json()
@@ -90,7 +88,6 @@ export const assignFreshmenToDorms = async (competitionId) => {
 
     if (!res.ok) {
         const text = await res.text().catch(() => null)
-        // throw new Error(text || 'Greška prilikom raspodele soba.')
         throw new Error(extractErrorMessage(text) || 'Greška prilikom raspodele soba.')
     }
 
@@ -138,9 +135,6 @@ export const resetFlow = async () => {
     return response.json()
 }
 
-// Backend nekad vrati ceo AssignmentResultDto kao JSON (BadRequest(result)) umesto
-// plain teksta. Ova funkcija pokusava da izvuce citljivu poruku iz "errors" niza,
-// a ako ne uspe (npr. ako JE plain tekst), vraca originalni string.
 function extractErrorMessage(text) {
     if (!text) return null
 
@@ -150,7 +144,6 @@ function extractErrorMessage(text) {
             return parsed.errors.join(' ')
         }
     } catch {
-        // nije JSON, vrati kao plain tekst
     }
 
     return text

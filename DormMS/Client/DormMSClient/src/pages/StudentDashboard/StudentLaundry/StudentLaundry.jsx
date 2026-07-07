@@ -11,10 +11,9 @@ function StudentLaundry() {
   const [reservations, setReservations] = useState([])
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
-  const [messageType, setMessageType] = useState('') // 'success' or 'error'
+  const [messageType, setMessageType] = useState('') 
   const [hasRoom, setHasRoom] = useState(false)
 
-  // Auto-skrivanje poruka nakon 3 sekundi
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
@@ -47,7 +46,6 @@ function StudentLaundry() {
     }
   }, [selectedMachine, selectedDate])
 
-  // Formatiranje statusa rezervacije u prikazljiv string
   const formatReservationStatus = (status) => {
     const statusMap = {
       'Upcoming': 'Predstojeća',
@@ -58,7 +56,6 @@ function StudentLaundry() {
     return statusMap[status] || status
   }
 
-  // Pomoćna funkcija za postavljanje poruka
   const showMessage = (text, type) => {
     setMessage(text)
     setMessageType(type)
@@ -81,7 +78,7 @@ function StudentLaundry() {
   // Konvertuje datum iz backend formata (YYYY-MM-DDTHH:mm:ss) u lokalni Date
   const parseBackendDate = (dateString) => {
     if (!dateString) return null
-    // Ako je format YYYY-MM-DDTHH:mm:ss, parsiramo ga kao lokalni datum
+    
     const [datePart, timePart] = dateString.split('T')
     if (!datePart || !timePart) return new Date(dateString)
     const [year, month, day] = datePart.split('-').map(Number)
@@ -92,7 +89,6 @@ function StudentLaundry() {
   async function loadSlots(machineId, date) {
     try {
       const data = await getAvailableSlots(machineId, date)
-      // Konvertujemo sve datume u slotovima u lokalne
       const processedSlots = data.map(slot => ({
         ...slot,
         startTime: parseBackendDate(slot.startTime),
@@ -112,7 +108,6 @@ function StudentLaundry() {
   async function loadReservations() {
     try {
       const data = await getStudentReservations()
-      // Konvertujemo datume rezervacija u lokalne
       const processedReservations = data.map(res => ({
         ...res,
         startTime: parseBackendDate(res.startTime),
@@ -142,7 +137,6 @@ function StudentLaundry() {
 
   async function handleCancel(reservationId) {
     try {
-      // Optimističko ažuriranje: odmah uklanjamo rezervaciju iz liste
       setReservations(prevReservations => 
         prevReservations.filter(r => r.id !== reservationId)
       )
@@ -150,13 +144,11 @@ function StudentLaundry() {
       await cancelReservation(reservationId)
       showMessage('Rezervacija otkazana!', 'success')
       
-      // Učitavamo ponovo podatke da potvrdimo stanje
       await loadReservations()
       if (selectedMachine) {
         await loadSlots(selectedMachine.id, selectedDate)
       }
     } catch (error) {
-      // Ako dođe do greške, vraćamo podatke sa backend-a
       await loadReservations()
       showMessage(error.message || 'Greška pri otkazivanju rezervacije', 'error')
     }

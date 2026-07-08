@@ -9,7 +9,7 @@ public class CompetitionCreateDto
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public CompetitionType Type { get; set; } = CompetitionType.General;
-    public int? MaxStudents { get; set; }
+    public int MaxStudents { get; set; }
 }
 
 public class CompetitionUpdateDto
@@ -20,7 +20,7 @@ public class CompetitionUpdateDto
     public DateTime EndDate { get; set; }
     public CompetitionStatus Status { get; set; }
     public CompetitionType Type { get; set; } = CompetitionType.General;
-    public int? MaxStudents { get; set; }
+    public int MaxStudents { get; set; }
 }
 
 public class CompetitionGetDto
@@ -37,7 +37,7 @@ public class CompetitionGetDto
     public int? CreatedByAdminId { get; set; }
     public int? CreatedByDormManagerId { get; set; }
     public int ApplicationCount { get; set; }
-    public int? MaxStudents { get; set; }
+    public int MaxStudents { get; set; }
     public bool HasApplied { get; set; }
     public ApplicationStatus? ApplicationStatus { get; set; }
 }

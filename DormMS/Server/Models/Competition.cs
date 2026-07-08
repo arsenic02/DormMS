@@ -18,7 +18,7 @@ public class Competition
     public DormManager? CreatedByDormManager { get; set; }
 
     public List<CompetitionApplication> Applications { get; set; } = new();
-    public int? MaxStudents{get;set;}
+    public int MaxStudents { get; set; }
 
     public bool IsOpen => Status == CompetitionStatus.Open && DateTime.Now >= StartDate && DateTime.Now <= EndDate;
     public bool IsClosed => Status == CompetitionStatus.Closed || DateTime.Now > EndDate;

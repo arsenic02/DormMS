@@ -59,13 +59,16 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             return new(null, "Samo budžetski studenti mogu da konkurišu za smeštaj u domu.");
 
         if (student.ProfileStatus != StudentProfileStatus.Verified)
-            return new(null, "Vaš profil još nije verifikovan od strane administratora.");
+            return new(null, "Vaš profil još nije verifikovan od strane referenta.");
 
         if (student.FinancialStatus is null)
             return new(null, "Morate popuniti finansijski status pre prijave na konkurs.");
 
         if (student.FinancialStatus.VerificationStatus != FinancialVerificationStatus.Verified)
-            return new(null, "Vaš finansijski status još nije verifikovan od strane administratora.");
+            return new(null, "Vaš finansijski status još nije verifikovan od strane referentta.");
+
+        if (student.DormitoryRoomId != null)
+            return new(null, "Već imate dodeljeno mesto u domu. Ne možete se prijaviti na konkurs.");
 
         // Provera opstine
         if (competition.CreatedByDormManagerId.HasValue)

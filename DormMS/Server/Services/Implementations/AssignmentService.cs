@@ -209,20 +209,17 @@ public class AssignmentService : IAssignmentService
                     .ToList()
             );
 
-        if (competition.MaxStudents.HasValue)
-        {
-            var quotas = CalculateFacultyQuotas(
-                groupedByFaculty.ToDictionary(k => k.Key, v => v.Value.Count),
-                competition.MaxStudents.Value);
+        var quotas = CalculateFacultyQuotas(
+            groupedByFaculty.ToDictionary(k => k.Key, v => v.Value.Count),
+            competition.MaxStudents);
 
-            foreach (var faculty in groupedByFaculty)
-            {
-                var quota = quotas[faculty.Key];
-                for (int i = 0; i < faculty.Value.Count; i++)
-                    faculty.Value[i].Status = i < quota
-                        ? AssignmentStatus.Assigned
-                        : AssignmentStatus.Waitlisted;
-            }
+        foreach (var faculty in groupedByFaculty)
+        {
+            var quota = quotas[faculty.Key];
+            for (int i = 0; i < faculty.Value.Count; i++)
+                faculty.Value[i].Status = i < quota
+                    ? AssignmentStatus.Assigned
+                    : AssignmentStatus.Waitlisted;
         }
 
         var oldResults = await _context.RankingResults
@@ -326,7 +323,6 @@ public class AssignmentService : IAssignmentService
             freshmanAssignments.Add(assignment);
         }
 
-        // Grupisанје po fakultetima pa sortiraнје svakог fakultetа posebno
         var groupedByFaculty = freshmanAssignments
             .GroupBy(s => s.FacultyName ?? "Unknown")
             .ToDictionary(
@@ -338,20 +334,17 @@ public class AssignmentService : IAssignmentService
                     .ToList()
             );
 
-        if (competition.MaxStudents.HasValue)
-        {
-            var quotas = CalculateFacultyQuotas(
-                groupedByFaculty.ToDictionary(k => k.Key, v => v.Value.Count),
-                competition.MaxStudents.Value);
+        var quotas = CalculateFacultyQuotas(
+            groupedByFaculty.ToDictionary(k => k.Key, v => v.Value.Count),
+            competition.MaxStudents);
 
-            foreach (var faculty in groupedByFaculty)
-            {
-                var quota = quotas[faculty.Key];
-                for (int i = 0; i < faculty.Value.Count; i++)
-                    faculty.Value[i].Status = i < quota
-                        ? AssignmentStatus.Assigned
-                        : AssignmentStatus.Waitlisted;
-            }
+        foreach (var faculty in groupedByFaculty)
+        {
+            var quota = quotas[faculty.Key];
+            for (int i = 0; i < faculty.Value.Count; i++)
+                faculty.Value[i].Status = i < quota
+                    ? AssignmentStatus.Assigned
+                    : AssignmentStatus.Waitlisted;
         }
 
         var oldResults = await _context.RankingResults

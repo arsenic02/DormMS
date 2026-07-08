@@ -146,7 +146,7 @@ function DormManagerCompetitionApplications() {
                     <div className={styles.competitionMeta}>
                         <span>Početak: {formatDate(competition.startDate)}</span>
                         <span>Završetak: {formatDate(competition.endDate)}</span>
-                        <span>Max studenata: {competition.maxStudents ?? 'Neograničeno'}</span>
+                        <span>Max studenata: {competition.maxStudents}</span>
                         <span>Ukupno prijava: {totalCount}</span>
                     </div>
                 </div>

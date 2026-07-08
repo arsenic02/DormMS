@@ -90,7 +90,7 @@ function DormManagerRankings() {
                             <div className={styles.cardMeta}>
                                 <span>Završetak: {formatDate(comp.endDate)}</span>
                                 <span>Prijave: {comp.applicationCount}</span>
-                                <span>Max studenata: {comp.maxStudents ?? 'Neograničeno'}</span>
+                                <span>Max studenata: {comp.maxStudents}</span>
                             </div>
                             <span className={styles.cardCta}>
                                 {comp.status === COMPLETED_STATUS ? 'Pregledaj rang-listu →' : 'Otvori rangiranje →'}

@@ -33,7 +33,7 @@ function DormManagerCompetition() {
         startDate: new Date().toISOString().split('T')[0],
         endDate: '',
         type: 0,
-        maxStudents: '',
+        maxStudents: 100,
     })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -103,7 +103,11 @@ function DormManagerCompetition() {
             setError('Datum završetka mora biti posle datuma početka.')
             return
         }
-        if (form.maxStudents !== '' && Number(form.maxStudents) <= 0) {
+        if (!form.maxStudents) {
+            setError('Maksimalan broj studenata je obavezan.')
+            return
+        }
+        if (Number(form.maxStudents) <= 0) {
             setError('Maksimalan broj studenata mora biti veći od 0.')
             return
         }
@@ -113,7 +117,7 @@ function DormManagerCompetition() {
         const payload = {
             ...form,
             type: Number(form.type),
-            maxStudents: form.maxStudents === '' ? null : Number(form.maxStudents),
+            maxStudents: Number(form.maxStudents),
         }
 
         try {
@@ -125,7 +129,7 @@ function DormManagerCompetition() {
                 startDate: new Date().toISOString().split('T')[0],
                 endDate: '',
                 type: 0,
-                maxStudents: '',
+                maxStudents: 100,
             })
             setPageNumber(1) // novi konkurs je najnoviji, vracamo na prvu stranicu da se vidi
             fetchCompetitions()
@@ -197,7 +201,7 @@ function DormManagerCompetition() {
                             min="1"
                             value={form.maxStudents}
                             onChange={handleChange}
-                            placeholder="Neograničeno"
+                            required
                         />
                     </div>
                 </div>
@@ -289,7 +293,7 @@ function DormManagerCompetition() {
                                 </div>
                                 <div className={styles.cardMeta}>
                                     <span>Prijave: {comp.applicationCount}</span>
-                                    <span>Max studenata: {comp.maxStudents ?? 'Neograničeno'}</span>
+                                    <span>Max studenata: {comp.maxStudents}</span>
                                 </div>
                                 <div className={styles.cardActions}>
                                     {comp.status === 0 && (

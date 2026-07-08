@@ -82,21 +82,18 @@ public class CompetitionService : ICompetitionService
         if (dto.EndDate <= dto.StartDate)
             return new(null, "Datum završetka mora biti posle datuma početka");
 
-        if (dto.MaxStudents.HasValue && dto.MaxStudents.Value <= 0)
+        if (dto.MaxStudents <= 0)
             return new(null, "Maksimalan broj studenata mora biti veći od 0");
 
-        if (dto.MaxStudents.HasValue)
-        {
-            var dorm = await _context.Dorms
-                .Include(d => d.Rooms)
-                .FirstOrDefaultAsync();
+        var dorm = await _context.Dorms
+            .Include(d => d.Rooms)
+            .FirstOrDefaultAsync();
 
-            if (dorm is null)
-                return new(null, "Dom nije pronađen u sistemu");
+        if (dorm is null)
+            return new(null, "Dom nije pronađen u sistemu");
 
-            if (dto.MaxStudents.Value > dorm.AvailableSpots)
-                return new(null, $"Maksimalan broj studenata ({dto.MaxStudents.Value}) premašuje slobodna mesta u domu ({dorm.AvailableSpots})");
-        }
+        if (dto.MaxStudents > dorm.AvailableSpots)
+            return new(null, $"Maksimalan broj studenata ({dto.MaxStudents}) premašuje slobodna mesta u domu ({dorm.AvailableSpots})");
 
         if (role == "Admin")
         {
@@ -148,15 +145,12 @@ public class CompetitionService : ICompetitionService
         if (competition is null)
             return null;
 
-        if (dto.MaxStudents.HasValue)
-        {
-            var dorm = await _context.Dorms
-                .Include(d => d.Rooms)
-                .FirstOrDefaultAsync();
+        var dorm = await _context.Dorms
+            .Include(d => d.Rooms)
+            .FirstOrDefaultAsync();
 
-            if (dorm != null && dto.MaxStudents.Value > dorm.AvailableSpots)
-                return null;
-        }
+        if (dorm != null && dto.MaxStudents > dorm.AvailableSpots)
+            return null;
 
         competition.Name = dto.Name.Trim();
         competition.Description = dto.Description.Trim();

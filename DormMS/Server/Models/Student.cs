@@ -32,7 +32,8 @@ public class Student
         ProfileStatus == StudentProfileStatus.Verified &&
         FinancialStatus != null &&
         FinancialStatus.VerificationStatus == FinancialVerificationStatus.Verified &&
-        IsBudgetStudent;
+        IsBudgetStudent &&
+        DormitoryRoomId == null;
 
     public int CurrentYearOfStudy => DateTime.Now.Year - YearOfEnrollment + 1;
     public bool IsFreshman => CurrentYearOfStudy == 1;

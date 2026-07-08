@@ -90,7 +90,7 @@ export default function DormManagerRankingPage() {
         </div>
         <div className={styles.metaItem}>
           <span className={styles.metaLabel}>Max studenata</span>
-          <span className={styles.metaValue}>{competition.maxStudents ?? 'Neograničeno'}</span>
+          <span className={styles.metaValue}>{competition.maxStudents}</span>
         </div>
       </div>
 

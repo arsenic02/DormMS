@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getAllMachines, createMachine, updateMachine, deleteMachine, toggleMachineStatus } from '../../../api/laundry'
 import styles from './AdminLaundry.module.css'
+import Modal from '../../../components/Modal/Modal'
 
 function AdminLaundry() {
   const [machines, setMachines] = useState([])
@@ -125,53 +126,48 @@ function AdminLaundry() {
         ))}
       </div>
 
-      {showModal && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h2>{editingMachine ? 'Izmeni mašinu' : 'Dodaj mašinu'}</h2>
-              <button onClick={() => setShowModal(false)} className={styles.closeBtn}>
-                ×
-              </button>
-            </div>
-            <form onSubmit={handleSubmit}>
-              <div className={styles.formGroup}>
-                <label>Naziv mašine:</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Opis (opciono):</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>ID doma:</label>
-                <input
-                  type="number"
-                  value={formData.dormId}
-                  onChange={(e) => setFormData({ ...formData, dormId: parseInt(e.target.value) })}
-                  required
-                />
-              </div>
-              <div className={styles.modalActions}>
-                <button type="button" onClick={() => setShowModal(false)} className={styles.cancelBtn}>
-                  Otkaži
-                </button>
-                <button type="submit" className={styles.saveBtn}>
-                  Sačuvaj
-                </button>
-              </div>
-            </form>
+      <Modal
+        title={editingMachine ? 'Izmeni mašinu' : 'Dodaj mašinu'}
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        maxWidth="500px"
+      >
+        <form onSubmit={handleSubmit}>
+          <div className={styles.formGroup}>
+            <label>Naziv mašine:</label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
+            />
           </div>
-        </div>
-      )}
+          <div className={styles.formGroup}>
+            <label>Opis (opciono):</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>ID doma:</label>
+            <input
+              type="number"
+              value={formData.dormId}
+              onChange={(e) => setFormData({ ...formData, dormId: parseInt(e.target.value) })}
+              required
+            />
+          </div>
+          <div className={styles.modalActions}>
+            <button type="button" onClick={() => setShowModal(false)} className={styles.cancelBtn}>
+              Otkaži
+            </button>
+            <button type="submit" className={styles.saveBtn}>
+              Sačuvaj
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   )
 }

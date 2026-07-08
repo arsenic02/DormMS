@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import styles from './StudentCompetitions.module.css'
 import { getOpenCompetitions } from '../../../api/competition'
 import { applyToCompetition, uploadDocument } from '../../../api/applyCompetition'
+import Modal from '../../../components/Modal/Modal'
 
 const competitionStatusLabel = {
     0: 'Nacrt',
@@ -198,23 +199,24 @@ function StudentCompetitions() {
                 </>
             )}
 
-            {confirmModalId !== null && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modal}>
-                        <p className={styles.modalText}>
-                            Niste priložili dokument. Da li ste sigurni da želite da se prijavite bez njega?
-                        </p>
-                        <div className={styles.modalActions}>
-                            <button className={styles.modalCancelBtn} onClick={handleCancelConfirm}>
-                                Otkaži
-                            </button>
-                            <button className={styles.modalConfirmBtn} onClick={handleConfirmWithoutDocument}>
-                                Prijavi se bez dokumenta
-                            </button>
-                        </div>
-                    </div>
+            <Modal
+                title="Potvrda prijave"
+                isOpen={confirmModalId !== null}
+                onClose={handleCancelConfirm}
+                maxWidth="380px"
+            >
+                <p className={styles.modalText}>
+                    Niste priložili dokument. Da li ste sigurni da želite da se prijavite bez njega?
+                </p>
+                <div className={styles.modalActions}>
+                    <button className={styles.modalCancelBtn} onClick={handleCancelConfirm}>
+                        Otkaži
+                    </button>
+                    <button className={styles.modalConfirmBtn} onClick={handleConfirmWithoutDocument}>
+                        Prijavi se bez dokumenta
+                    </button>
                 </div>
-            )}
+            </Modal>
         </div>
     )
 }

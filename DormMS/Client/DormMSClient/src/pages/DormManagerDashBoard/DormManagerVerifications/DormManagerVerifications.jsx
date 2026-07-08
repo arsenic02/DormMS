@@ -6,6 +6,7 @@ import {
     verifyStudentProfile,
     verifyStudentFinancialStatus
 } from '../../../api/student'
+import Modal from '../../../components/Modal/Modal'
 
 const PROFILE_STATUS = {
     Incomplete: 0,
@@ -256,92 +257,82 @@ function DormManagerVerifications() {
                 </div>
             )}
 
-            {modalType === 'profile' && selectedStudent && (
-                <div className={styles.modalOverlay} onClick={closeModal}>
-                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                        <div className={styles.modalHeader}>
-                            <h2>Verifikacija profila</h2>
-                            <button className={styles.closeBtn} onClick={closeModal}>×</button>
-                        </div>
-                        <div className={styles.modalContent}>
-                            <h3>{selectedStudent.name} {selectedStudent.surname}</h3>
-                            <p><strong>Broj indeksa:</strong> {selectedStudent.studentIDNumber}</p>
-                            <p><strong>Email:</strong> {selectedStudent.email}</p>
-                            <p><strong>JMBG:</strong> {selectedStudent.jmbg}</p>
-                            <p><strong>Adresa:</strong> {selectedStudent.homeAddress}</p>
-                            <p><strong>Opština:</strong> {selectedStudent.municipalityOfResidence}</p>
-                            <p><strong>Godine:</strong> {selectedStudent.age}</p>
-                            <p><strong>Pol:</strong> {selectedStudent.gender === 0 ? 'Muški' : 'Ženski'}</p>
-                            <p><strong>Godina upisa:</strong> {selectedStudent.yearOfEnrollment}</p>
-                            <p><strong>Fakultet:</strong> {selectedStudent.facultyName ?? '-'}</p>
-                            <p><strong>ESPB:</strong> {selectedStudent.espb}</p>
-                            {selectedStudent.isFreshman ? (
-                                <p><strong>Prosečna ocena (srednja škola):</strong> {selectedStudent.highSchoolAverageGrade ?? '-'}</p>
-                            ) : (
-                                <p><strong>Prosečna ocena (fakultet):</strong> {selectedStudent.averageGrade ?? '-'}</p>
-                            )}
-                            <p><strong>Finansiranje:</strong> {selectedStudent.isBudgetStudent ? 'Budžet' : 'Samofinansiranje'}</p>
+            <Modal
+                title="Verifikacija profila"
+                isOpen={modalType === 'profile' && selectedStudent !== null}
+                onClose={closeModal}
+                maxWidth="480px"
+            >
+                <h3>{selectedStudent?.name} {selectedStudent?.surname}</h3>
+                <p><strong>Broj indeksa:</strong> {selectedStudent?.studentIDNumber}</p>
+                <p><strong>Email:</strong> {selectedStudent?.email}</p>
+                <p><strong>JMBG:</strong> {selectedStudent?.jmbg}</p>
+                <p><strong>Adresa:</strong> {selectedStudent?.homeAddress}</p>
+                <p><strong>Opština:</strong> {selectedStudent?.municipalityOfResidence}</p>
+                <p><strong>Godine:</strong> {selectedStudent?.age}</p>
+                <p><strong>Pol:</strong> {selectedStudent?.gender === 0 ? 'Muški' : 'Ženski'}</p>
+                <p><strong>Godina upisa:</strong> {selectedStudent?.yearOfEnrollment}</p>
+                <p><strong>Fakultet:</strong> {selectedStudent?.facultyName ?? '-'}</p>
+                <p><strong>ESPB:</strong> {selectedStudent?.espb}</p>
+                {selectedStudent?.isFreshman ? (
+                    <p><strong>Prosečna ocena (srednja škola):</strong> {selectedStudent?.highSchoolAverageGrade ?? '-'}</p>
+                ) : (
+                    <p><strong>Prosečna ocena (fakultet):</strong> {selectedStudent?.averageGrade ?? '-'}</p>
+                )}
+                <p><strong>Finansiranje:</strong> {selectedStudent?.isBudgetStudent ? 'Budžet' : 'Samofinansiranje'}</p>
 
-                            {actionError && <p className={styles.error}>{actionError}</p>}
+                {actionError && <p className={styles.error}>{actionError}</p>}
 
-                            <div className={styles.modalActions}>
-                                <button
-                                    className={styles.btnApprove}
-                                    disabled={actionLoading}
-                                    onClick={() => handleProfileDecision(PROFILE_STATUS.Verified)}
-                                >
-                                    {actionLoading ? 'Čuvanje...' : 'Verifikuj'}
-                                </button>
-                                <button
-                                    className={styles.btnReject}
-                                    disabled={actionLoading}
-                                    onClick={() => handleProfileDecision(PROFILE_STATUS.Rejected)}
-                                >
-                                    Odbij
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div className={styles.modalActions}>
+                    <button
+                        className={styles.btnApprove}
+                        disabled={actionLoading}
+                        onClick={() => handleProfileDecision(PROFILE_STATUS.Verified)}
+                    >
+                        {actionLoading ? 'Čuvanje...' : 'Verifikuj'}
+                    </button>
+                    <button
+                        className={styles.btnReject}
+                        disabled={actionLoading}
+                        onClick={() => handleProfileDecision(PROFILE_STATUS.Rejected)}
+                    >
+                        Odbij
+                    </button>
                 </div>
-            )}
+            </Modal>
 
-            {modalType === 'financial' && selectedStudent && selectedStudent.financialStatus && (
-                <div className={styles.modalOverlay} onClick={closeModal}>
-                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                        <div className={styles.modalHeader}>
-                            <h2>Verifikacija finansijskog statusa</h2>
-                            <button className={styles.closeBtn} onClick={closeModal}>×</button>
-                        </div>
-                        <div className={styles.modalContent}>
-                            <h3>{selectedStudent.name} {selectedStudent.surname}</h3>
-                            <p><strong>Broj indeksa:</strong> {selectedStudent.studentIDNumber}</p>
-                            <p><strong>Ukupni prihodi domaćinstva:</strong> {selectedStudent.financialStatus.totalFamilyIncome} RSD</p>
-                            <p><strong>Broj članova porodice:</strong> {selectedStudent.financialStatus.familyMemberCount}</p>
-                            <p><strong>Prihod po članu:</strong> {selectedStudent.financialStatus.incomePerMember} RSD</p>
-                            <p><strong>Podneto:</strong> {new Date(selectedStudent.financialStatus.submittedAt).toLocaleDateString('sr-RS')}</p>
+            <Modal
+                title="Verifikacija finansijskog statusa"
+                isOpen={modalType === 'financial' && selectedStudent !== null && selectedStudent.financialStatus !== undefined}
+                onClose={closeModal}
+                maxWidth="480px"
+            >
+                <h3>{selectedStudent?.name} {selectedStudent?.surname}</h3>
+                <p><strong>Broj indeksa:</strong> {selectedStudent?.studentIDNumber}</p>
+                <p><strong>Ukupni prihodi domaćinstva:</strong> {selectedStudent?.financialStatus?.totalFamilyIncome} RSD</p>
+                <p><strong>Broj članova porodice:</strong> {selectedStudent?.financialStatus?.familyMemberCount}</p>
+                <p><strong>Prihod po članu:</strong> {selectedStudent?.financialStatus?.incomePerMember} RSD</p>
+                <p><strong>Podneto:</strong> {selectedStudent?.financialStatus?.submittedAt ? new Date(selectedStudent.financialStatus.submittedAt).toLocaleDateString('sr-RS') : '-'}</p>
 
-                            {actionError && <p className={styles.error}>{actionError}</p>}
+                {actionError && <p className={styles.error}>{actionError}</p>}
 
-                            <div className={styles.modalActions}>
-                                <button
-                                    className={styles.btnApprove}
-                                    disabled={actionLoading}
-                                    onClick={() => handleFinancialDecision(FINANCIAL_STATUS.Verified)}
-                                >
-                                    {actionLoading ? 'Čuvanje...' : 'Verifikuj'}
-                                </button>
-                                <button
-                                    className={styles.btnReject}
-                                    disabled={actionLoading}
-                                    onClick={() => handleFinancialDecision(FINANCIAL_STATUS.Rejected)}
-                                >
-                                    Odbij
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div className={styles.modalActions}>
+                    <button
+                        className={styles.btnApprove}
+                        disabled={actionLoading}
+                        onClick={() => handleFinancialDecision(FINANCIAL_STATUS.Verified)}
+                    >
+                        {actionLoading ? 'Čuvanje...' : 'Verifikuj'}
+                    </button>
+                    <button
+                        className={styles.btnReject}
+                        disabled={actionLoading}
+                        onClick={() => handleFinancialDecision(FINANCIAL_STATUS.Rejected)}
+                    >
+                        Odbij
+                    </button>
                 </div>
-            )}
+            </Modal>
         </div>
     )
 }

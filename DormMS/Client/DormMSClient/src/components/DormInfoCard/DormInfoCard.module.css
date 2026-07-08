@@ -1,0 +1,69 @@
+.dormCard {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+
+.dormHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.2rem;
+}
+
+.dormName {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 0.3rem;
+}
+
+.dormLocation {
+    font-size: 0.9rem;
+    color: #777;
+    margin: 0;
+}
+
+.editBtn {
+    padding: 0.5rem 1rem;
+    background: #4a7c59;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.editBtn:hover {
+    background: #3d6b4a;
+}
+
+.dormStats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.statValue {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1976d2;
+}
+
+.statLabel {
+    font-size: 0.78rem;
+    color: #777;
+}

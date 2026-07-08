@@ -191,6 +191,7 @@ public class UserRepository : IUserRepository
             Surname = user.DormManager.Surname,
             Email = user.DormManager.Email,
             PhoneNumber = user.DormManager.PhoneNumber,
+            DormId = user.DormManager.DormId,
             DormName = user.DormManager.Dorm?.Name ?? null
         };
     }

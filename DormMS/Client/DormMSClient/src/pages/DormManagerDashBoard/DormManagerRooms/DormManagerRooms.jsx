@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 // import { getRoomsPaged } from '../api/room'
 import { getRoomsPaged } from '../../../api/dormitoryRoom'
 import { removeStudentFromRoom } from '../../../api/ranking'
+import { getDormManagerProfile, getDorm } from '../../../api/admin'
+import DormInfoCard from '../../../components/DormInfoCard/DormInfoCard'
 import styles from './DormManagerRooms.module.css'
 
 const STATUS_LABELS = {
@@ -33,6 +35,27 @@ export default function DormManagerRooms() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
 
+    const [dorm, setDorm] = useState(null)
+    const [dormLoading, setDormLoading] = useState(true)
+
+    const loadDorm = async () => {
+        setDormLoading(true)
+        try {
+            const profile = await getDormManagerProfile()
+            console.log('PROFILE:', profile)
+
+            if (profile.dormId) {
+                const dormData = await getDorm(profile.dormId)
+                setDorm(dormData)
+            }
+        } catch (err) {
+            console.error('Failed to load dorm:', err)
+            setError(err.message) 
+        } finally {
+            setDormLoading(false)
+        }
+    }
+
     const loadRooms = async () => {
         setLoading(true)
         setError('')
@@ -54,13 +77,19 @@ export default function DormManagerRooms() {
 
 
     useEffect(() => {
-        // let active = true
+        loadDorm()
         loadRooms()
-        //return () => { active = false }
     }, [pageNumber])
 
     return (
         <div className={styles.container}>
+            {!dormLoading && dorm && (
+                <DormInfoCard
+                    dorm={dorm}
+                    editable={false}
+                />
+            )}
+
             <div className={styles.header}>
                 <h2 className={styles.title}>Sobe</h2>
                 <p className={styles.subtitle}>

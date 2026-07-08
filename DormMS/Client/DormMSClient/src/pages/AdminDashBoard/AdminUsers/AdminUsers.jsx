@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import styles from './AdminUsers.module.css'
 import { getUsersPaged, deleteUser, createDormManager } from '../../../api/admin'
 import { useAuth } from '../../../context/AuthContext'
+import Modal from '../../../components/Modal/Modal'
 
 const roleLabel = {
     0: 'Admin',
@@ -215,102 +216,94 @@ function AdminUsers() {
                 </>
             )}
 
-            {showCreateModal && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modal}>
-                        <div className={styles.modalHeader}>
-                            <h2>Dodaj referenta</h2>
-                            <button 
-                                className={styles.closeButton}
-                                onClick={() => setShowCreateModal(false)}
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <form onSubmit={handleCreateSubmit} className={styles.modalForm}>
-                            {createError && <p className={styles.error}>{createError}</p>}
-                            
-                            <div className={styles.formField}>
-                                <label htmlFor="name">Ime:</label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleFormChange}
-                                    required
-                                />
-                            </div>
-                            
-                            <div className={styles.formField}>
-                                <label htmlFor="surname">Prezime:</label>
-                                <input
-                                    type="text"
-                                    id="surname"
-                                    name="surname"
-                                    value={formData.surname}
-                                    onChange={handleFormChange}
-                                    required
-                                />
-                            </div>
-                            
-                            <div className={styles.formField}>
-                                <label htmlFor="email">Email:</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleFormChange}
-                                    required
-                                />
-                            </div>
-                            
-                            <div className={styles.formField}>
-                                <label htmlFor="phoneNumber">Broj telefona:</label>
-                                <input
-                                    type="text"
-                                    id="phoneNumber"
-                                    name="phoneNumber"
-                                    value={formData.phoneNumber}
-                                    onChange={handleFormChange}
-                                    required
-                                />
-                            </div>
-                            
-                            <div className={styles.formField}>
-                                <label htmlFor="password">Lozinka:</label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleFormChange}
-                                    required
-                                />
-                            </div>
-                            
-                            <div className={styles.modalActions}>
-                                <button
-                                    type="button"
-                                    className={styles.cancelButton}
-                                    onClick={() => setShowCreateModal(false)}
-                                    disabled={creating}
-                                >
-                                    Otkaži
-                                </button>
-                                <button
-                                    type="submit"
-                                    className={styles.submitButton}
-                                    disabled={creating}
-                                >
-                                    {creating ? 'Kreiranje...' : 'Kreiraj'}
-                                </button>
-                            </div>
-                        </form>
+            <Modal
+                title="Dodaj referenta"
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                maxWidth="500px"
+            >
+                <form onSubmit={handleCreateSubmit} className={styles.modalForm}>
+                    {createError && <p className={styles.error}>{createError}</p>}
+                    
+                    <div className={styles.formField}>
+                        <label htmlFor="name">Ime:</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleFormChange}
+                            required
+                        />
                     </div>
-                </div>
-            )}
+                    
+                    <div className={styles.formField}>
+                        <label htmlFor="surname">Prezime:</label>
+                        <input
+                            type="text"
+                            id="surname"
+                            name="surname"
+                            value={formData.surname}
+                            onChange={handleFormChange}
+                            required
+                        />
+                    </div>
+                    
+                    <div className={styles.formField}>
+                        <label htmlFor="email">Email:</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleFormChange}
+                            required
+                        />
+                    </div>
+                    
+                    <div className={styles.formField}>
+                        <label htmlFor="phoneNumber">Broj telefona:</label>
+                        <input
+                            type="text"
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            value={formData.phoneNumber}
+                            onChange={handleFormChange}
+                            required
+                        />
+                    </div>
+                    
+                    <div className={styles.formField}>
+                        <label htmlFor="password">Lozinka:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleFormChange}
+                            required
+                        />
+                    </div>
+                    
+                    <div className={styles.modalActions}>
+                        <button
+                            type="button"
+                            className={styles.cancelButton}
+                            onClick={() => setShowCreateModal(false)}
+                            disabled={creating}
+                        >
+                            Otkaži
+                        </button>
+                        <button
+                            type="submit"
+                            className={styles.submitButton}
+                            disabled={creating}
+                        >
+                            {creating ? 'Kreiranje...' : 'Kreiraj'}
+                        </button>
+                    </div>
+                </form>
+            </Modal>
         </div>
     )
 }

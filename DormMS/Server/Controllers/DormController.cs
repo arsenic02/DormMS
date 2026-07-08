@@ -16,7 +16,7 @@ public class DormController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, DormManager")]
     public async Task<ActionResult<IEnumerable<DormGetDto>>> GetDorms()
     {
         return Ok(await _dormService.GetAllAsync());

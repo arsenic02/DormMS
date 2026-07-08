@@ -3,6 +3,8 @@ import styles from './AdminDorm.module.css'
 import { getDorms, createDorm, updateDorm, generateRooms, deleteAllRooms } from '../../../api/admin'
 import { getRoomsPaged, getRoomDetails } from '../../../api/dormitoryRoom'
 import { resetFlow } from '../../../api/ranking'
+import Modal from '../../../components/Modal/Modal'
+import DormInfoCard from '../../../components/DormInfoCard/DormInfoCard'
 const genderLabel = {
     0: 'Muška',
     1: 'Ženska'
@@ -299,36 +301,11 @@ function AdminDorm() {
             {
                 dorm && !editingDorm && (
                     <>
-                        <div className={styles.dormCard}>
-                            <div className={styles.dormHeader}>
-                                <div>
-                                    <h2 className={styles.dormName}>{dorm.name}</h2>
-                                    <p className={styles.dormLocation}>{dorm.location}</p>
-                                    <p className={styles.dormLocation}>{dorm.municipality}</p>
-                                </div>
-                                <button className={styles.editBtn} onClick={() => setEditingDorm(true)}>
-                                    Izmeni
-                                </button>
-                            </div>
-                            <div className={styles.dormStats}>
-                                <div className={styles.statItem}>
-                                    <span className={styles.statValue}>{dorm.capacity}</span>
-                                    <span className={styles.statLabel}>Kapacitet</span>
-                                </div>
-                                <div className={styles.statItem}>
-                                    <span className={styles.statValue}>{dorm.currentOccupancy}</span>
-                                    <span className={styles.statLabel}>Popunjeno</span>
-                                </div>
-                                <div className={styles.statItem}>
-                                    <span className={styles.statValue}>{dorm.availableSpots}</span>
-                                    <span className={styles.statLabel}>Slobodno</span>
-                                </div>
-                                <div className={styles.statItem}>
-                                    <span className={styles.statValue}>{dorm.rooms.length}</span>
-                                    <span className={styles.statLabel}>Soba</span>
-                                </div>
-                            </div>
-                        </div>
+                        <DormInfoCard
+                            dorm={dorm}
+                            editable={true}
+                            onEdit={() => setEditingDorm(true)}
+                        />
 
                         <h2 className={styles.subtitle}>Generiši sobe</h2>
                         <form onSubmit={handleGenerateRooms} className={styles.form}>
@@ -402,7 +379,7 @@ function AdminDorm() {
                             <p className={styles.info}>Nema generisanih soba.</p>
                         ) : (
                             <div className={styles.roomsList}>
-                                {dorm.rooms.map((room) => (
+                                {[...dorm.rooms].sort((a, b) => a.roomNumber - b.roomNumber).map((room) => (
                                     <div
                                         key={room.id}
                                         className={styles.roomCard}
@@ -422,52 +399,45 @@ function AdminDorm() {
                                     </div>
                                 ))}
 
-                                {modalOpen && (
-                                    <div className={styles.modalOverlay} onClick={closeModal}>
-                                        <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                                            <div className={styles.modalHeader}>
-                                                <h3 className={styles.modalTitle}>
-                                                    Soba {selectedRoom?.roomNumber}
-                                                </h3>
-                                                <button className={styles.modalCloseBtn} onClick={closeModal}>✕</button>
+                                <Modal
+                                    title={`Soba ${selectedRoom?.roomNumber}`}
+                                    isOpen={modalOpen}
+                                    onClose={closeModal}
+                                >
+                                    {modalLoading && <p className={styles.info}>Učitavanje...</p>}
+                                    {modalError && <p className={styles.error}>{modalError}</p>}
+
+                                    {!modalLoading && !modalError && selectedRoom && (
+                                        <>
+                                            <div className={styles.modalMeta}>
+                                                <span>{genderLabel[selectedRoom.gender]}</span>
+                                                <span>{selectedRoom.currentOccupancy}/{selectedRoom.capacity} mesta</span>
+                                                <span className={`${styles.badge} ${styles[statusClass[selectedRoom.status]]}`}>
+                                                    {statusLabel[selectedRoom.status]}
+                                                </span>
                                             </div>
 
-                                            {modalLoading && <p className={styles.info}>Učitavanje...</p>}
-                                            {modalError && <p className={styles.error}>{modalError}</p>}
-
-                                            {!modalLoading && !modalError && selectedRoom && (
-                                                <>
-                                                    <div className={styles.modalMeta}>
-                                                        <span>{genderLabel[selectedRoom.gender]}</span>
-                                                        <span>{selectedRoom.currentOccupancy}/{selectedRoom.capacity} mesta</span>
-                                                        <span className={`${styles.badge} ${styles[statusClass[selectedRoom.status]]}`}>
-                                                            {statusLabel[selectedRoom.status]}
-                                                        </span>
-                                                    </div>
-
-                                                    <div className={styles.modalStudents}>
-                                                        <p className={styles.studentsLabel}>Studenti</p>
-                                                        {(!selectedRoom.students || selectedRoom.students.length === 0) ? (
-                                                            <p className={styles.info}>Soba je trenutno prazna.</p>
-                                                        ) : (
-                                                            selectedRoom.students.map((student) => (
-                                                                <div key={student.id} className={styles.studentRow}>
-                                                                    <span className={styles.studentName}>
-                                                                        {student.name} {student.surname}
-                                                                        {student.isFreshman && (
-                                                                            <span className={styles.freshmanTag}>brucoš</span>
-                                                                        )}
-                                                                    </span>
-                                                                    <span className={styles.studentFaculty}>{student.facultyName}</span>
-                                                                </div>
-                                                            ))
-                                                        )}
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
+                                            <div className={styles.modalStudents}>
+                                                <p className={styles.studentsLabel}>Studenti</p>
+                                                {(!selectedRoom.students || selectedRoom.students.length === 0) ? (
+                                                    <p className={styles.info}>Soba je trenutno prazna.</p>
+                                                ) : (
+                                                    selectedRoom.students.map((student) => (
+                                                        <div key={student.id} className={styles.studentRow}>
+                                                            <span className={styles.studentName}>
+                                                                {student.name} {student.surname}
+                                                                {student.isFreshman && (
+                                                                    <span className={styles.freshmanTag}>brucoš</span>
+                                                                )}
+                                                            </span>
+                                                            <span className={styles.studentFaculty}>{student.facultyName}</span>
+                                                        </div>
+                                                    ))
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                </Modal>
                             </div>
                         )}
                     </>

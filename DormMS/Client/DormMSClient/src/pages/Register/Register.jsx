@@ -96,7 +96,8 @@ function Register() {
             const data = await registerUser(formData)
             console.log('Uspešna registracija:', data)
             login(data)
-            navigate('/student')
+            //navigate('/student')
+            navigate('/student/profile')
         } catch (err) {
             setErrors({ general: err.message })
         }

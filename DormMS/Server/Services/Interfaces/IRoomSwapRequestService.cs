@@ -11,4 +11,5 @@ public interface IRoomSwapRequestService
     Task<RoomSwapRequestDto> ApproveAsync(int managerUserId, int requestId);
     Task<RoomSwapRequestDto> RejectAsync(int managerUserId, int requestId);
     Task<List<RoomSwapRequestDto>> GetPendingForManagerAsync(int managerUserId);
+    Task<List<StudentSearchResultDto>> SearchStudentsAsync(int senderUserId, string? idNumber, string? name, string? surname, string? faculty, string? room);
 }

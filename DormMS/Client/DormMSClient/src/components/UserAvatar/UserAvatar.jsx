@@ -10,9 +10,9 @@ function getInitials(firstName, lastName) {
 
 function getRoleLabel(role) {
   switch (role) {
-    case 'Admin': return 'Администратор'
-    case 'DormManager': return 'Референт'
-    case 'Student': return 'Студент'
+    case 'Admin': return 'Admin'
+    case 'DormManager': return 'Referent'
+    case 'Student': return 'Student'
     default: return ''
   }
 }

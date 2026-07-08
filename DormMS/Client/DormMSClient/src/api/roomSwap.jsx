@@ -10,11 +10,17 @@ function authHeaders() {
     }
 }
 
-export async function createSwapRequest(receiverStudentIdNumber) {
+export async function createSwapRequest(receiverStudentIdNumber, receiverName, receiverSurname, receiverFaculty, receiverRoom) {
     const res = await fetchWithAuth(BASE_URL, {
         method: 'POST',
         headers: authHeaders(),
-        body: JSON.stringify({ receiverStudentIdNumber: receiverStudentIdNumber })
+        body: JSON.stringify({
+            receiverStudentIdNumber: receiverStudentIdNumber,
+            receiverName: receiverName,
+            receiverSurname: receiverSurname,
+            receiverFaculty: receiverFaculty,
+            receiverRoom: receiverRoom
+        })
     })
 
     if (!res.ok) {
@@ -41,6 +47,7 @@ export async function respondToSwapRequest(requestId, accept) {
 }
 
 export async function getIncomingSwapRequests() {
+    console.log('getIncomingSwapRequests called')
     const res = await fetchWithAuth(`${BASE_URL}/incoming`, {
         headers: authHeaders()
     })
@@ -54,6 +61,7 @@ export async function getIncomingSwapRequests() {
 }
 
 export async function getOutgoingSwapRequests() {
+    console.log('getOutgoingSwapRequests called')
     const res = await fetchWithAuth(`${BASE_URL}/outgoing`, {
         headers: authHeaders()
     })
@@ -104,6 +112,26 @@ export async function rejectSwapRequest(requestId) {
     if (!res.ok) {
         const text = await res.text()
         throw new Error(text || 'Greška prilikom odbijanja zamene sobe.')
+    }
+
+    return res.json()
+}
+
+export async function searchStudentsForSwap({ idNumber, name, surname, faculty, room }) {
+    const params = new URLSearchParams()
+    if (idNumber) params.set('idNumber', idNumber)
+    if (name) params.set('name', name)
+    if (surname) params.set('surname', surname)
+    if (faculty) params.set('faculty', faculty)
+    if (room) params.set('room', room)
+
+    const res = await fetchWithAuth(`${BASE_URL}/search-students?${params.toString()}`, {
+        headers: authHeaders()
+    })
+
+    if (!res.ok) {
+        const text = await res.text()
+        throw new Error(text || 'Greška prilikom pretrage studenata.')
     }
 
     return res.json()

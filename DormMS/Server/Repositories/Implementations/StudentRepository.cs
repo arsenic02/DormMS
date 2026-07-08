@@ -202,6 +202,32 @@ public class StudentRepository : IStudentRepository
         };
     }
 
+    public async Task<List<Student>> SearchForRoomSwapAsync(string? idNumber,
+    string? name, string? surname, string? faculty, string? room, int excludeStudentId)
+    {
+        var query = _context.Students
+            .Include(s => s.DormitoryRoom)
+            .Where(s => s.Id != excludeStudentId && s.DormitoryRoomId != null)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(idNumber))
+            query = query.Where(s => EF.Functions.ILike(s.StudentIDNumber, $"%{idNumber}%"));
+
+        if (!string.IsNullOrWhiteSpace(name))
+            query = query.Where(s => EF.Functions.ILike(s.Name, $"%{name}%"));
+
+        if (!string.IsNullOrWhiteSpace(surname))
+            query = query.Where(s => EF.Functions.ILike(s.Surname, $"%{surname}%"));
+
+        if (!string.IsNullOrWhiteSpace(faculty))
+            query = query.Where(s => EF.Functions.ILike(s.FacultyName, $"%{faculty}%"));
+
+        if (!string.IsNullOrWhiteSpace(room))
+            query = query.Where(s => s.DormitoryRoom != null && EF.Functions.ILike(s.DormitoryRoom.RoomNumber, $"%{room}%"));
+
+        return await query.Take(20).ToListAsync();
+    }
+
     // public async Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
     // int pageNumber,
     // int pageSize,

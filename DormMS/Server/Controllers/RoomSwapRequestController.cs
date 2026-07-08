@@ -82,4 +82,21 @@ public class RoomSwapRequestController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpGet("search-students")]
+    public async Task<ActionResult<List<StudentSearchResultDto>>> SearchStudents(
+        [FromQuery] string? idNumber, [FromQuery] string? name, [FromQuery] string? surname,
+    [FromQuery] string? faculty, [FromQuery] string? room)
+    {
+        try
+        {
+            var senderId = GetCurrentUserId();
+            var result = await _roomSwapService.SearchStudentsAsync(senderId, idNumber, name, surname, faculty, room);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

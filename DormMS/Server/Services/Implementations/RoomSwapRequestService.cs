@@ -224,6 +224,24 @@ public class RoomSwapRequestService : IRoomSwapRequestService
         return requests.Select(r => MapToDto(r, r.Sender, r.Receiver)).ToList();
     }
 
+    public async Task<List<StudentSearchResultDto>> SearchStudentsAsync(
+    int senderUserId, string? idNumber, string? name, string? surname, string? faculty, string? room)
+{
+    var sender = await _studentRepository.GetByUserIdAsync(senderUserId)
+        ?? throw new KeyNotFoundException("Vaš studentski profil nije pronađen.");
+
+    var results = await _studentRepository.SearchForRoomSwapAsync(idNumber, name, surname, faculty, room, sender.Id);
+
+    return results.Select(s => new StudentSearchResultDto
+    {
+        StudentIdNumber = s.StudentIDNumber,
+        Name = s.Name,
+        Surname = s.Surname,
+        FacultyName = s.FacultyName,
+        RoomNumber = s.DormitoryRoom?.RoomNumber
+    }).ToList();
+}
+
     private static RoomSwapRequestDto MapToDto(RoomSwapRequest request, Student sender, Student receiver)
     {
         return new RoomSwapRequestDto

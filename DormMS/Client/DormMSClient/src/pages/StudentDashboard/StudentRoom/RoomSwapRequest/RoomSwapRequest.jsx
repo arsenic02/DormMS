@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styles from './RoomSwapRequest.module.css'
 import {
     createSwapRequest,
     respondToSwapRequest,
     getIncomingSwapRequests,
-    getOutgoingSwapRequests
+    getOutgoingSwapRequests,
+    searchStudentsForSwap
 } from '../../../../api/roomSwap'
 
 const STATUS_LABELS = {
@@ -26,16 +27,32 @@ function RoomSwapRequest() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
-    // const [receiverId, setReceiverId] = useState('')
-    const [receiverIdNumber, setReceiverIdNumber] = useState('')
+    // Polja za pretragu (dok student nije izabran)
+    const [searchIdNumber, setSearchIdNumber] = useState('')
+    const [searchName, setSearchName] = useState('')
+    const [searchSurname, setSearchSurname] = useState('')
+    const [searchFaculty, setSearchFaculty] = useState('')
+    const [searchRoom, setSearchRoom] = useState('')
+
+    // Rezultati pretrage
+    const [searchResults, setSearchResults] = useState([])
+    const [searching, setSearching] = useState(false)
+    const [searchError, setSearchError] = useState(null)
+    const [showResults, setShowResults] = useState(false)
+
+    // Izabrani student (nakon klika na rezultat)
+    const [selectedStudent, setSelectedStudent] = useState(null)
+
     const [sending, setSending] = useState(false)
     const [formError, setFormError] = useState(null)
     const [formSuccess, setFormSuccess] = useState(null)
 
     const [respondingId, setRespondingId] = useState(null)
 
+    const debounceRef = useRef(null)
+    const searchBoxRef = useRef(null)
+
     const loadRequests = async () => {
-        setLoading(true)
         setError(null)
         try {
             const [incomingData, outgoingData] = await Promise.all([
@@ -46,31 +63,132 @@ function RoomSwapRequest() {
             setOutgoing(outgoingData)
         } catch (err) {
             setError(err.message)
-        } finally {
-            setLoading(false)
         }
     }
 
     useEffect(() => {
-        loadRequests()
+        let isMounted = true
+
+        const loadRequestsSafe = async () => {
+            if (!isMounted) return
+            setError(null)
+            try {
+                const [incomingData, outgoingData] = await Promise.all([
+                    getIncomingSwapRequests(),
+                    getOutgoingSwapRequests()
+                ])
+                if (isMounted) {
+                    setIncoming(incomingData)
+                    setOutgoing(outgoingData)
+                }
+            } catch (err) {
+                if (isMounted) setError(err.message)
+            } finally {
+                if (isMounted) setLoading(false)
+            }
+        }
+
+        loadRequestsSafe()
+
+        return () => {
+            isMounted = false
+        }
     }, [])
+
+    // Debounced pretraga — okida se čim se promeni bilo koje polje za pretragu,
+    // sem ako je student već izabran (tada su polja "zaključana")
+    useEffect(() => {
+        if (selectedStudent) return
+
+        const hasAnyInput =
+            searchIdNumber.trim() || searchName.trim() || searchSurname.trim() ||
+            searchFaculty.trim() || searchRoom.trim()
+
+        if (!hasAnyInput) {
+            setSearchResults([])
+            setShowResults(false)
+            setSearching(false)
+            return
+        }
+
+        setSearching(true)
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+
+        debounceRef.current = setTimeout(async () => {
+            setSearchError(null)
+            try {
+                const results = await searchStudentsForSwap({
+                    idNumber: searchIdNumber.trim(),
+                    name: searchName.trim(),
+                    surname: searchSurname.trim(),
+                    faculty: searchFaculty.trim(),
+                    room: searchRoom.trim()
+                })
+                setSearchResults(results)
+                setShowResults(true)
+            } catch (err) {
+                setSearchError(err.message)
+                setSearchResults([])
+            } finally {
+                setSearching(false)
+            }
+        }, 300)
+
+        return () => clearTimeout(debounceRef.current)
+    }, [searchIdNumber, searchName, searchSurname, searchFaculty, searchRoom, selectedStudent])
+
+    // Zatvori dropdown na klik van njega
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
+                setShowResults(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
+
+    const handleSelectStudent = (student) => {
+        setSelectedStudent(student)
+        setSearchIdNumber(student.studentIdNumber)
+        setSearchName(student.name)
+        setSearchSurname(student.surname)
+        setSearchFaculty(student.facultyName)
+        setSearchRoom(student.roomNumber ?? '')
+        setShowResults(false)
+        setSearchResults([])
+        setFormError(null)
+        setFormSuccess(null)
+    }
+
+    const handleClearSelection = () => {
+        setSelectedStudent(null)
+        setSearchIdNumber('')
+        setSearchName('')
+        setSearchSurname('')
+        setSearchFaculty('')
+        setSearchRoom('')
+        setSearchResults([])
+        setShowResults(false)
+        setFormError(null)
+        setFormSuccess(null)
+    }
 
     const handleSendRequest = async (e) => {
         e.preventDefault()
         setFormError(null)
         setFormSuccess(null)
 
-        const trimmedValue = receiverIdNumber.trim()
-        if (!trimmedValue) {
-            setFormError('Unesite broj indeksa studenta.')
+        if (!selectedStudent) {
+            setFormError('Izaberite studenta iz liste rezultata pretrage.')
             return
         }
-       
+
         setSending(true)
         try {
-            await createSwapRequest(trimmedValue)
+            await createSwapRequest(selectedStudent.studentIdNumber)
             setFormSuccess('Zahtev je uspešno poslat.')
-            setReceiverIdNumber('')
+            handleClearSelection()
             await loadRequests()
         } catch (err) {
             setFormError(err.message)
@@ -98,17 +216,116 @@ function RoomSwapRequest() {
             <div className={styles.formCard}>
                 <h2 className={styles.subtitle}>Pošalji zahtev za zamenu</h2>
                 <form className={styles.form} onSubmit={handleSendRequest}>
-                    <input
-                        type="text"
-                        placeholder="Indeks studenta sa kojim želite da zamenite sobu"
-                        value={receiverIdNumber}
-                        onChange={(e) => setReceiverIdNumber(e.target.value)}
-                        className={styles.input}
-                        disabled={sending}
-                    />
-                    <button type="submit" className={styles.sendButton} disabled={sending}>
-                        {sending ? 'Slanje...' : 'Pošalji zahtev'}
-                    </button>
+                    <div className={styles.searchBox} ref={searchBoxRef}>
+                        <div className={styles.searchFields}>
+                        <input
+                            type="text"
+                            placeholder="Broj indeksa studenta"
+                            value={searchIdNumber}
+                            onChange={(e) => setSearchIdNumber(e.target.value)}
+                            onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                            className={styles.input}
+                            disabled={sending || !!selectedStudent}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Ime studenta"
+                            value={searchName}
+                            onChange={(e) => setSearchName(e.target.value)}
+                            onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                            className={styles.input}
+                            disabled={sending || !!selectedStudent}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Prezime studenta"
+                            value={searchSurname}
+                            onChange={(e) => setSearchSurname(e.target.value)}
+                            onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                            className={styles.input}
+                            disabled={sending || !!selectedStudent}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Fakultet studenta"
+                            value={searchFaculty}
+                            onChange={(e) => setSearchFaculty(e.target.value)}
+                            onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                            className={styles.input}
+                            disabled={sending || !!selectedStudent}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Naziv sobe studenta"
+                            value={searchRoom}
+                            onChange={(e) => setSearchRoom(e.target.value)}
+                            onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                            className={styles.input}
+                            disabled={sending || !!selectedStudent}
+                        />
+                        </div>
+
+                        {searchError && <p className={styles.error}>{searchError}</p>}
+
+                        {searching && !selectedStudent && (
+                            <div className={styles.searchResultsDropdown}>
+                                <div className={styles.searchLoadingRow}>
+                                    <span className={styles.spinner} />
+                                    <span>Pretraga studenata...</span>
+                                </div>
+                            </div>
+                        )}
+
+                        {!searching && showResults && !selectedStudent && searchResults.length > 0 && (
+                            <div className={styles.searchResultsDropdown}>
+                                {searchResults.map((student) => (
+                                    <div
+                                        key={student.studentIdNumber}
+                                        className={styles.searchResultItem}
+                                        onClick={() => handleSelectStudent(student)}
+                                    >
+                                        <span className={styles.searchResultName}>
+                                            {student.name} {student.surname}
+                                        </span>
+                                        <span className={styles.searchResultMeta}>
+                                            {student.facultyName}
+                                            {student.roomNumber && ` · Soba ${student.roomNumber}`}
+                                            {' · '}Indeks: {student.studentIdNumber}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {!searching && showResults && !selectedStudent && searchResults.length === 0 && (
+                            <div className={styles.searchResultsDropdown}>
+                                <p className={styles.info}>Nema rezultata za unete kriterijume.</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {selectedStudent && (
+                        <div className={styles.selectedStudentCard}>
+                            <span>
+                                Izabran student: <strong>{selectedStudent.name} {selectedStudent.surname}</strong>
+                                {' '}(indeks {selectedStudent.studentIdNumber})
+                            </span>
+                            <button
+                                type="button"
+                                className={styles.rejectButton}
+                                onClick={handleClearSelection}
+                                disabled={sending}
+                            >
+                                Promeni
+                            </button>
+                        </div>
+                    )}
+
+                    <div className={styles.formActions}>
+                        <button type="submit" className={styles.sendButton} disabled={sending || !selectedStudent}>
+                            {sending ? 'Slanje...' : 'Pošalji zahtev'}
+                        </button>
+                    </div>
                 </form>
                 {formError && <p className={styles.error}>{formError}</p>}
                 {formSuccess && <p className={styles.success}>{formSuccess}</p>}

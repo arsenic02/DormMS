@@ -21,6 +21,8 @@ public interface IStudentRepository
     //Task<bool> DeleteAsync(int id);
     Task<bool> DormitoryRoomExistsAsync(int roomId);
     Task<Student?> GetByStudentIdNumberAsync(string studentIdNumber);
+    Task<List<Student>> SearchForRoomSwapAsync(string? idNumber,
+    string? name, string? surname, string? faculty, string? room, int excludeStudentId);
 
    Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
     int pageNumber,

@@ -45,8 +45,8 @@ function AdminDorm() {
     const [modalError, setModalError] = useState(null)
 
     const [deleting, setDeleting] = useState(false)
-
     const [resettingFlow, setResettingFlow] = useState(false)
+    const [confirmAction, setConfirmAction] = useState(null)
 
     const loadDorm = async () => {
         setLoading(true)
@@ -170,10 +170,6 @@ function AdminDorm() {
     }
 
     const handleDeleteAllRooms = async () => {
-        if (!window.confirm('Da li ste sigurni da želite da obrišete SVE sobe u ovom domu? Ova akcija se ne može opozvati.')) {
-            return
-        }
-
         setDeleting(true)
         try {
             await deleteAllRooms(dorm.id)
@@ -182,14 +178,11 @@ function AdminDorm() {
             setError(err.message)
         } finally {
             setDeleting(false)
+            setConfirmAction(null)
         }
     }
 
     const handleResetFlow = async () => {
-        if (!window.confirm('Da li ste sigurni da želite da iselite SVE studente iz svih soba? Ova akcija resetuje rangiranje i dodelu za sve studente.')) {
-            return
-        }
-
         setResettingFlow(true)
         try {
             await resetFlow()
@@ -198,6 +191,7 @@ function AdminDorm() {
             setError(err.message)
         } finally {
             setResettingFlow(false)
+            setConfirmAction(null)
         }
     }
 
@@ -358,7 +352,7 @@ function AdminDorm() {
                                 <button
                                     type="button"
                                     className={styles.deleteBtn}
-                                    onClick={handleDeleteAllRooms}
+                                    onClick={() => setConfirmAction('deleteRooms')}
                                     disabled={deleting || dorm.rooms.length === 0}
                                 >
                                     {deleting ? 'Brisanje...' : 'Obriši sve sobe'}
@@ -366,7 +360,7 @@ function AdminDorm() {
                                 <button
                                     type="button"
                                     className={styles.deleteBtn}
-                                    onClick={handleResetFlow}
+                                    onClick={() => setConfirmAction('resetFlow')}
                                     disabled={resettingFlow}
                                 >
                                     {resettingFlow ? 'Iseljavanje...' : 'Iseli sve studente'}
@@ -440,6 +434,37 @@ function AdminDorm() {
                                 </Modal>
                             </div>
                         )}
+                        <Modal
+                            title={confirmAction === 'deleteRooms' ? 'Obriši sve sobe' : 'Iseli sve studente'}
+                            isOpen={confirmAction !== null}
+                            onClose={() => setConfirmAction(null)}
+                        >
+                            <p className={styles.confirmText}>
+                                {confirmAction === 'deleteRooms'
+                                    ? 'Da li ste sigurni da želite da obrišete SVE sobe u ovom domu? Ova akcija se ne može opozvati.'
+                                    : 'Da li ste sigurni da želite da iselite SVE studente iz svih soba? Ova akcija resetuje rangiranje i dodelu za sve studente.'}
+                            </p>
+                            <div className={styles.formActions}>
+                                <button
+                                    type="button"
+                                    className={styles.deleteBtn}
+                                    onClick={confirmAction === 'deleteRooms' ? handleDeleteAllRooms : handleResetFlow}
+                                    disabled={deleting || resettingFlow}
+                                >
+                                    {confirmAction === 'deleteRooms'
+                                        ? (deleting ? 'Brisanje...' : 'Da, obriši')
+                                        : (resettingFlow ? 'Iseljavanje...' : 'Da, iseli')}
+                                </button>
+                                <button
+                                    type="button"
+                                    className={styles.cancelBtn}
+                                    onClick={() => setConfirmAction(null)}
+                                    disabled={deleting || resettingFlow}
+                                >
+                                    Otkaži
+                                </button>
+                            </div>
+                        </Modal>
                     </>
                 )
             }

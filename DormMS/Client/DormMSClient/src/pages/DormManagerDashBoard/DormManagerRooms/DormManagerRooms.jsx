@@ -4,6 +4,7 @@ import { getRoomsPaged } from '../../../api/dormitoryRoom'
 import { removeStudentFromRoom } from '../../../api/ranking'
 import { getDormManagerProfile, getDorm } from '../../../api/admin'
 import DormInfoCard from '../../../components/DormInfoCard/DormInfoCard'
+import Modal from '../../../components/Modal/Modal'
 import styles from './DormManagerRooms.module.css'
 
 const STATUS_LABELS = {
@@ -140,14 +141,16 @@ function RoomCard({ room, onStudentRemoved }) {
 
     const [removingId, setRemovingId] = useState(null)
     const [removeError, setRemoveError] = useState(null)
+    const [studentToRemove, setStudentToRemove] = useState(null)
 
-    const handleRemove = async (studentId) => {
-        if (!window.confirm('Da li ste sigurni da želite da uklonite ovog studenta iz sobe?')) return
+    const handleRemove = async () => {
+        if (!studentToRemove) return
 
-        setRemovingId(studentId)
+        setRemovingId(studentToRemove.id)
         setRemoveError(null)
         try {
-            await removeStudentFromRoom(studentId)
+            await removeStudentFromRoom(studentToRemove.id)
+            setStudentToRemove(null)
             onStudentRemoved()
         } catch (err) {
             setRemoveError(err.message)
@@ -201,17 +204,47 @@ function RoomCard({ room, onStudentRemoved }) {
                             <span className={styles.studentFaculty}>{student.facultyName}</span>
                             <button
                                 className={styles.removeButton}
-                                onClick={() => handleRemove(student.id)}
+                                onClick={() => setStudentToRemove(student)}
                                 disabled={removingId === student.id}
                                 type="button"
                                 title="Ukloni studenta iz sobe"
                             >
-                                {removingId === student.id ? '...' : '✕'}
+                                {removingId === student.id ? '...' : <>&times;</>}
                             </button>
                         </div>
                     ))
                 )}
             </div>
+
+            <Modal
+                title="Ukloni studenta"
+                isOpen={studentToRemove !== null}
+                onClose={() => {
+                    if (!removingId) setStudentToRemove(null)
+                }}
+            >
+                <p className={styles.confirmText}>
+                    Da li ste sigurni da želite da uklonite studenta "{studentToRemove?.name} {studentToRemove?.surname}" iz sobe {room.roomNumber}?
+                </p>
+                <div className={styles.modalActions}>
+                    <button
+                        type="button"
+                        className={styles.cancelButton}
+                        onClick={() => setStudentToRemove(null)}
+                        disabled={removingId !== null}
+                    >
+                        Otkaži
+                    </button>
+                    <button
+                        type="button"
+                        className={styles.deleteConfirmButton}
+                        onClick={handleRemove}
+                        disabled={removingId !== null}
+                    >
+                        {removingId ? 'Uklanjanje...' : 'Da, ukloni'}
+                    </button>
+                </div>
+            </Modal>
         </div>
     )
 }

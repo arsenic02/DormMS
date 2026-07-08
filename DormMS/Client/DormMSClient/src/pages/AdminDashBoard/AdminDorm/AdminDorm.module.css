@@ -298,6 +298,13 @@
     font-size: 0.9rem;
 }
 
+.confirmText {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0.25rem 0 0.75rem;
+}
+
 .modalOverlay {
     position: fixed;
     top: 0;

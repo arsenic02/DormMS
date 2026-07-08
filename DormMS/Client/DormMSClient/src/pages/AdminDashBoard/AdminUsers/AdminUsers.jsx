@@ -32,6 +32,7 @@ function AdminUsers() {
 
     const [deletingId, setDeletingId] = useState(null)
     const [deleteError, setDeleteError] = useState(null)
+    const [userToDelete, setUserToDelete] = useState(null)
 
     const [showCreateModal, setShowCreateModal] = useState(false)
     const [createError, setCreateError] = useState(null)
@@ -104,17 +105,13 @@ function AdminUsers() {
         setPageNumber(1)
     }
 
-    const handleDelete = async (user) => {
-        const confirmed = window.confirm(
-            `Da li ste sigurni da želite da obrišete korisnika "${user.profileName ?? user.email}"? Ova akcija je nepovratna.`
-        )
-        if (!confirmed) return
-
+    const handleDelete = async () => {
+        if (!userToDelete) return
         setDeleteError(null)
-        setDeletingId(user.id)
+        setDeletingId(userToDelete.id)
 
         try {
-            await deleteUser(user.id, auth.token)
+            await deleteUser(userToDelete.id, auth.token)
 
             // Ako je ovo bio poslednji korisnik na stranici, a nismo na prvoj strani, vrati se za jednu stranicu
             if (users.length === 1 && pageNumber > 1) {
@@ -122,6 +119,7 @@ function AdminUsers() {
             } else {
                 fetchUsers()
             }
+            setUserToDelete(null)
         } catch (err) {
             setDeleteError(err.message)
         } finally {
@@ -182,7 +180,7 @@ function AdminUsers() {
                                         <button
                                             type="button"
                                             className={styles.deleteButton}
-                                            onClick={() => handleDelete(user)}
+                                            onClick={() => setUserToDelete(user)}
                                             disabled={deletingId === user.id}
                                         >
                                             {deletingId === user.id ? 'Brisanje...' : 'Obriši'}
@@ -303,6 +301,36 @@ function AdminUsers() {
                         </button>
                     </div>
                 </form>
+            </Modal>
+
+            <Modal
+                title="Obriši korisnika"
+                isOpen={userToDelete !== null}
+                onClose={() => {
+                    if (!deletingId) setUserToDelete(null)
+                }}
+            >
+                <p className={styles.confirmText}>
+                    Da li ste sigurni da želite da obrišete korisnika "{userToDelete?.profileName ?? userToDelete?.email}"? Ova akcija je nepovratna.
+                </p>
+                <div className={styles.modalActions}>
+                    <button
+                        type="button"
+                        className={styles.cancelButton}
+                        onClick={() => setUserToDelete(null)}
+                        disabled={deletingId !== null}
+                    >
+                        Otkaži
+                    </button>
+                    <button
+                        type="button"
+                        className={styles.deleteConfirmButton}
+                        onClick={handleDelete}
+                        disabled={deletingId !== null}
+                    >
+                        {deletingId ? 'Brisanje...' : 'Da, obriši'}
+                    </button>
+                </div>
             </Modal>
         </div>
     )

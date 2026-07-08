@@ -318,6 +318,13 @@
     margin-top: 1rem;
 }
 
+.confirmText {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0.25rem 0 0.75rem;
+}
+
 .cancelButton {
     background: #fff;
     border: 1.5px solid #ddd;
@@ -353,6 +360,27 @@
 
 .submitButton:disabled,
 .cancelButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.deleteConfirmButton {
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.deleteConfirmButton:hover:not(:disabled) {
+    background: #a93226;
+}
+
+.deleteConfirmButton:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }

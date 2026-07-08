@@ -12,7 +12,7 @@ export default function Modal({ title, isOpen, onClose, children, maxWidth = '42
             >
                 <div className={styles.modalHeader}>
                     <h3 className={styles.modalTitle}>{title}</h3>
-                    <button className={styles.modalCloseBtn} onClick={onClose}>✕</button>
+                    <button className={styles.modalCloseBtn} onClick={onClose} aria-label="Zatvori modal">&times;</button>
                 </div>
                 <div className={styles.modalBody}>
                     {children}

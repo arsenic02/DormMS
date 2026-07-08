@@ -224,3 +224,54 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.confirmText {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0.25rem 0 0.75rem;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.cancelButton {
+    background: #fff;
+    border: 1.5px solid #ddd;
+    color: #444;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.cancelButton:hover:not(:disabled) {
+    background: #f5f5f5;
+    border-color: #bbb;
+}
+
+.deleteConfirmButton {
+    background: #c62828;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.deleteConfirmButton:hover:not(:disabled) {
+    background: #a92323;
+}
+
+.cancelButton:disabled,
+.deleteConfirmButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -13,6 +13,7 @@ using QuestPDF.Infrastructure;
 using QuestPDF.Drawing;
 using DormMS.Server.Services;
 using DormMS.Server.Repositories;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,8 +69,16 @@ builder.Services.AddCors(options =>
     });
 });
 
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(
+    builder.Configuration.GetConnectionString("DefaultConnection"));
+dataSourceBuilder.UseVector();
+var dataSource = dataSourceBuilder.Build();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(dataSource,o=>o.UseVector()));
+// builder.Services.AddDbContext<AppDbContext>(options =>
+//     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IStudentService, StudentService>();
@@ -94,6 +103,9 @@ builder.Services.AddScoped<IDormManagerRepository, DormManagerRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILaundryService, LaundryService>();
+builder.Services.AddScoped<IKnowledgeBaseService, KnowledgeBaseService>();
+builder.Services.AddScoped<IKnowledgeBaseRepository, KnowledgeBaseRepository>();
+builder.Services.AddSingleton<IEmbeddingService, EmbeddingService>();
 
 var app = builder.Build();
 
@@ -105,6 +117,7 @@ QuestPDF.Drawing.FontManager.RegisterFont(
     File.OpenRead(Path.Combine(builder.Environment.WebRootPath, "fonts", "DejaVuSans-Bold.ttf")));
 
 await app.Services.SeedDefaultUsersAsync(builder.Configuration);
+await app.Services.SeedKnowledgeBaseAsync();
 
 if (app.Environment.IsDevelopment())
 {

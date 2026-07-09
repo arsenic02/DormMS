@@ -22,6 +22,7 @@ public class AppDbContext : DbContext
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<LaundryMachine> LaundryMachines { get; set; }
     public DbSet<LaundryReservation> LaundryReservations { get; set; }
+    public DbSet<KnowledgeBaseEntry> KnowledgeBaseEntries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -92,6 +93,11 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(lr => lr.StudentId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.HasPostgresExtension("vector");
+        modelBuilder.Entity<KnowledgeBaseEntry>()
+            .Property(e => e.Embedding)
+            .HasColumnType("vector(1024)");
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {

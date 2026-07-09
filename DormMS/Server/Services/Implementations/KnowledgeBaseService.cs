@@ -8,7 +8,7 @@ namespace DormMS.Server.Services.Implementations;
 
 public class KnowledgeBaseService : IKnowledgeBaseService
 {
-    private const double DistanceThreshold = 0.5; // testirajte i podesite empirijski
+    private const double SimilarityThreshold = 0.5; 
 
     private readonly IKnowledgeBaseRepository _repository;
     private readonly IEmbeddingService _embeddingService;
@@ -42,20 +42,24 @@ public class KnowledgeBaseService : IKnowledgeBaseService
         if (closest is null)
             return null;
 
-        var distance = CosineDistance(queryEmbeddingArray, closest.Embedding.ToArray());
+        var similarity = CosineSimilarity(queryEmbeddingArray, closest.Embedding.ToArray());
 
-        if (distance > DistanceThreshold)
-            return null; // nema dovoljno sličnog pitanja u bazi
+        if (similarity < SimilarityThreshold)
+            return null;
+        //var distance = CosineDistance(queryEmbeddingArray, closest.Embedding.ToArray());
+
+        // if (distance > SimilarityThreshold)
+        //     return null; // nema dovoljno sličnog pitanja u bazi
 
         return new ChatbotAnswerResult
         {
             Question = closest.Question,
             Answer = closest.Answer,
-            Distance = distance
+            Similarity = similarity
         };
     }
 
-    private static double CosineDistance(float[] a, float[] b)
+    private static double CosineSimilarity(float[] a, float[] b)
     {
         double dot = 0, normA = 0, normB = 0;
         for (int i = 0; i < a.Length; i++)
@@ -64,8 +68,22 @@ public class KnowledgeBaseService : IKnowledgeBaseService
             normA += a[i] * a[i];
             normB += b[i] * b[i];
         }
-        return 1 - (dot / (Math.Sqrt(normA) * Math.Sqrt(normB)));
+        return dot / (Math.Sqrt(normA) * Math.Sqrt(normB)); // 1 - cosine distance
     }
+
+    // private static double CosineDistance(float[] a, float[] b)
+    // {
+    //     double dot = 0, normA = 0, normB = 0;
+    //     for (int i = 0; i < a.Length; i++)
+    //     {
+    //         dot += a[i] * b[i];
+    //         normA += a[i] * a[i];
+    //         normB += b[i] * b[i];
+    //     }
+    //     return 1 - (dot / (Math.Sqrt(normA) * Math.Sqrt(normB)));
+    // }
+
+
 }
 
 // using DormMS.Server.Models;

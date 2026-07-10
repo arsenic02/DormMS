@@ -115,6 +115,9 @@ public class AssignmentService : IAssignmentService
             {
                 result.SuccessfullyAssigned++;
                 assignment.Status = AssignmentStatus.Assigned;
+                await _notificationService.NotifyStudentAsync(
+                    student.Id,
+                    $"Dodeljena vam je soba {assignment.AssignedRoomId} u domu {assignment.AssignedDormName}.");
             }
             else
             {
@@ -445,7 +448,8 @@ public class AssignmentService : IAssignmentService
                 TotalFamilyIncome = r.TotalFamilyIncome,
                 FamilyMemberCount = r.FamilyMemberCount,
                 IncomePerMember = r.IncomePerMember,
-                Status = r.Status
+                Status = r.Status,
+                IsPhysicallyAssigned = r.Student.DormitoryRoomId != null
             }).ToList();
 
             var groupedByFaculty = freshmanAssignments
@@ -522,6 +526,10 @@ public class AssignmentService : IAssignmentService
 
         if (rankingResult.Student.DormitoryRoomId != null)
             throw new InvalidOperationException("Student već ima dodeljenu sobu.");
+
+        if (rankingResult.Status != AssignmentStatus.Assigned
+            && rankingResult.Status != AssignmentStatus.AssignedNoRoomAvailable)
+            throw new InvalidOperationException("Student nije prošao rangiranje po kvoti.");
 
         var dorms = await _assignmentRepository.GetAllDormsWithRoomsAsync();
 

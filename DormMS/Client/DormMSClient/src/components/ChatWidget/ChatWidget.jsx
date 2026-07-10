@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { askChatbot } from '../../api/chatbot'
 import { useAuth } from '../../context/AuthContext'
-import './ChatWidget.css'
+import styles from './ChatWidget.module.css'
+// import './ChatWidget.css'
 
 function ChatWidget() {
     const { auth } = useAuth()
 
-    // Only show for students or unauthenticated users
     if (auth && auth.role !== 'Student') {
         return null
     }
@@ -29,10 +29,18 @@ function ChatWidget() {
 
         try {
             const response = await askChatbot(userMessage)
-            
-            const botAnswer = response.answer || response.Answer || 'Nemam odgovor na to pitanje.'
-            
-            setMessages(prev => [...prev, { type: 'bot', text: botAnswer }])
+
+            //za 1 najslicniji odgovor
+            //const botAnswer = response.answer || response.Answer || 'Nemam odgovor na to pitanje.'
+
+            if (Array.isArray(response) && response.length > 0) {
+                setMessages(prev => [...prev, { type: 'bot', results: response }])
+            } else {
+                const fallbackText = response.message || 'Nemam odgovor na to pitanje.'
+                setMessages(prev => [...prev, { type: 'bot', text: fallbackText }])
+            }
+
+            //setMessages(prev => [...prev, { type: 'bot', text: botAnswer }])
         } catch (error) {
             setMessages(prev => [...prev, { type: 'bot', text: 'Došlo je do greške. Pokušajte ponovo.' }])
         } finally {
@@ -48,9 +56,9 @@ function ChatWidget() {
     }
 
     return (
-        <div className="chat-widget">
-            <button 
-                className="chat-toggle-btn"
+        <div className={styles.chatWidget}>
+            <button
+                className={styles.chatToggleBtn}
                 onClick={toggleChat}
                 aria-label="Chat"
             >
@@ -58,11 +66,11 @@ function ChatWidget() {
             </button>
 
             {isOpen && (
-                <div className="chat-window">
-                    <div className="chat-header">
-                        <h3>Pomoćnik</h3>
-                        <button 
-                            className="close-btn"
+                <div className={styles.chatWindow}>
+                    <div className={styles.chatHeader}>
+                        <h3>AI asistent</h3>
+                        <button
+                            className={styles.closeBtn}
                             onClick={toggleChat}
                             aria-label="Zatvori"
                         >
@@ -70,28 +78,40 @@ function ChatWidget() {
                         </button>
                     </div>
 
-                    <div className="chat-messages">
+                    <div className={styles.chatMessages}>
                         {messages.length === 0 && (
-                            <div className="welcome-message">
+                            <div className={styles.welcomeMessage}>
                                 <p>Postavite pitanje o studentskom domu!</p>
                             </div>
                         )}
                         {messages.map((msg, index) => (
-                            <div 
-                                key={index} 
-                                className={`message ${msg.type === 'user' ? 'user-message' : 'bot-message'}`}
+                            <div
+                                key={index}
+                                className={`message ${msg.type === 'user' ? styles.userMessage : styles.botMessage}`}
                             >
-                                {msg.text}
+                                {msg.results ? (
+                                    <div className={styles.botResults}>
+                                        {msg.results.map((result, i) => (
+                                            <div key={i} className={styles.resultItem}>
+                                                <p className={styles.resultQuestion}>{result.question}</p>
+                                                <p className={styles.resultAnswer}>{result.answer}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    msg.text
+                                )}
+                                {/* {msg.text} */}
                             </div>
                         ))}
                         {isLoading && (
-                            <div className="message bot-message">
-                                <span className="typing-indicator">...</span>
+                            <div className={`message ${styles.botMessage}`}>
+                                <span className={styles.typingIndicator}>...</span>
                             </div>
                         )}
                     </div>
 
-                    <div className="chat-input">
+                    <div className={styles.chatInput}>
                         <textarea
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
@@ -100,8 +120,8 @@ function ChatWidget() {
                             rows={2}
                             disabled={isLoading}
                         />
-                        <button 
-                            className="send-btn"
+                        <button
+                            className={styles.sendBtn}
                             onClick={handleSend}
                             disabled={isLoading || !input.trim()}
                         >

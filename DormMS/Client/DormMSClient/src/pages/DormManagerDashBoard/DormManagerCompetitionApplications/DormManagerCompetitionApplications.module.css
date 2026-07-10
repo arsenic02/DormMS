@@ -7,7 +7,7 @@
 .backBtn {
     background: none;
     border: none;
-    color: #4a7c59;
+    color: #1a3a5c;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -197,7 +197,7 @@
 
 .docLink {
     font-size: 0.85rem;
-    color: #4a7c59;
+    color: #1a3a5c;
     font-weight: 600;
     text-decoration: none;
 }

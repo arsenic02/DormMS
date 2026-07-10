@@ -27,6 +27,13 @@ public class KnowledgeBaseRepository : IKnowledgeBaseRepository
             .OrderBy(e => e.Embedding.CosineDistance(queryVector))
             .FirstOrDefaultAsync();
     }
+    public async Task<List<KnowledgeBaseEntry>> FindTopNAsync(Vector queryVector, int topN)
+    {
+        return await _context.KnowledgeBaseEntries
+            .OrderBy(e => e.Embedding.CosineDistance(queryVector))
+            .Take(topN)
+            .ToListAsync();
+    }
 
     public async Task<List<KnowledgeBaseEntry>> GetAllAsync()
     {

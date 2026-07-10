@@ -27,6 +27,8 @@ public class StudentAssignmentDto
     public AssignmentStatus Status { get; set; }
     public string? FacultyName { get; set; } 
     public bool IsMixedGenderAssignment { get; set; }
+    public bool IsPhysicallyAssigned { get; set; }
+
 }
 
 public class FreshmanAssignmentDto
@@ -48,6 +50,7 @@ public class FreshmanAssignmentDto
     public string? AssignedDormName { get; set; }
     public int? AssignedRoomId { get; set; }
     public AssignmentStatus Status { get; set; }
+    public bool IsPhysicallyAssigned { get; set; }
 }
 
 public class AssignmentResultDto

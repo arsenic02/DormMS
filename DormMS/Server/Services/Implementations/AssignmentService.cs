@@ -464,7 +464,8 @@ public class AssignmentService : IAssignmentService
                 CompetitionId = competitionId,
                 CompetitionName = competition?.Name ?? string.Empty,
                 TotalStudents = freshmanAssignments.Count,
-                RankingsByFaculty = groupedByFaculty
+                RankingsByFaculty = groupedByFaculty,
+                RoomsAssigned = roomsAssigned
             };
         }
         else
@@ -484,7 +485,8 @@ public class AssignmentService : IAssignmentService
                 FamilyMemberCount = r.FamilyMemberCount,
                 IncomePerMember = r.IncomePerMember,
                 FacultyName = r.FacultyName,
-                Status = r.Status
+                Status = r.Status,
+                IsPhysicallyAssigned = r.Student.DormitoryRoomId != null
             }).ToList();
 
             var groupedByFaculty = studentAssignments
@@ -505,7 +507,8 @@ public class AssignmentService : IAssignmentService
                 CompetitionId = competitionId,
                 CompetitionName = competition?.Name ?? string.Empty,
                 TotalStudents = studentAssignments.Count,
-                RankingsByFaculty = groupedByFaculty
+                RankingsByFaculty = groupedByFaculty,
+                RoomsAssigned = roomsAssigned
             };
         }
     }

@@ -29,6 +29,7 @@ import DormManagerProfile from './pages/DormManagerDashBoard/DormManagerProfile/
 import StudentLaundry from './pages/StudentDashboard/StudentLaundry/StudentLaundry'
 import Information from './pages/Information/Information'
 import Contact from './pages/Contact/Contact'
+import ChatWidget from './components/ChatWidget/ChatWidget'
 
 
 function App() {
@@ -74,6 +75,7 @@ function App() {
         </Route>
 
       </Routes>
+      <ChatWidget />
     </BrowserRouter>
   )
 }

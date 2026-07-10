@@ -53,8 +53,14 @@ function StatusBadge({ status }) {
   return <span className={styles.badgeNeutral}>{status}</span>;
 }
 
-function OlderStudentsTable({ students, onAssign, assigningId, assignError }) {
-  const firstUnassignedIdx = students.findIndex((s) => s.status !== ASSIGNMENT_STATUS.ASSIGNED);
+function OlderStudentsTable({ students, onAssign, assigningId, assignError, roomsAssigned }) {
+
+  const firstUnassignedIdx = students.findIndex(
+    (s) =>
+      (s.status === ASSIGNMENT_STATUS.ASSIGNED && !s.isPhysicallyAssigned) ||
+      s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM
+  );
+  //const firstUnassignedIdx = students.findIndex((s) => s.status !== ASSIGNMENT_STATUS.ASSIGNED);
 
   return (
     <table className={styles.table}>
@@ -91,7 +97,7 @@ function OlderStudentsTable({ students, onAssign, assigningId, assignError }) {
             <td className={styles.numericBold}>{formatNumber(s.calculatedPoints)}</td>
             <td className={styles.statusCell}>
               <StatusBadge status={s.status} />
-              {idx === firstUnassignedIdx && (
+              {roomsAssigned && idx === firstUnassignedIdx && (
                 <div className={styles.assignBox}>
                   <button
                     className={styles.assignSingleButton}
@@ -172,8 +178,13 @@ function OlderStudentsTable({ students, onAssign, assigningId, assignError }) {
 //   );
 // }
 
-function FreshmenTable({ students, onAssign, assigningId, assignError }) {
-  const firstUnassignedIdx = students.findIndex((s) => s.status !== ASSIGNMENT_STATUS.ASSIGNED);
+function FreshmenTable({ students, onAssign, assigningId, assignError, roomsAssigned }) {
+  const firstUnassignedIdx = students.findIndex(
+    (s) =>
+      (s.status === ASSIGNMENT_STATUS.ASSIGNED && !s.isPhysicallyAssigned) ||
+      s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM
+  );
+  //const firstUnassignedIdx = students.findIndex((s) => s.status !== ASSIGNMENT_STATUS.ASSIGNED);
   return (
     <table className={styles.table}>
       <thead>
@@ -205,7 +216,7 @@ function FreshmenTable({ students, onAssign, assigningId, assignError }) {
 
             <td className={styles.statusCell}>
               <StatusBadge status={s.status} />
-              {idx === firstUnassignedIdx && (
+              {roomsAssigned && idx === firstUnassignedIdx && (
                 <div className={styles.assignBox}>
                   <button
                     className={styles.assignSingleButton}
@@ -243,7 +254,7 @@ function FreshmenTable({ students, onAssign, assigningId, assignError }) {
   );
 }
 
-function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onToggle, onAssign, assigningId, assignError }) {
+function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onToggle, onAssign, assigningId, assignError, roomsAssigned }) {
   const assignedCount = students.filter((s) => s.status === ASSIGNMENT_STATUS.ASSIGNED).length;
   const noRoomCount = students.filter((s) => s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM).length;
 
@@ -268,9 +279,9 @@ function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onTog
       {isOpen && (
         <div className={styles.cardBody}>
           {isFreshmanView ? (
-            <FreshmenTable students={students} onAssign={onAssign} assigningId={assigningId} assignError={assignError} />
+            <FreshmenTable students={students} onAssign={onAssign} assigningId={assigningId} assignError={assignError} roomsAssigned={roomsAssigned} />
           ) : (
-            <OlderStudentsTable students={students} onAssign={onAssign} assigningId={assigningId} assignError={assignError} />
+            <OlderStudentsTable students={students} onAssign={onAssign} assigningId={assigningId} assignError={assignError} roomsAssigned={roomsAssigned} />
           )}
         </div>
       )}
@@ -450,14 +461,15 @@ export default function DormManagerRanking({ competitionId, isFreshmanView, isCo
             onAssign={handleAssignSingle}
             assigningId={assigningStudentId}
             assignError={singleAssignError}
+            roomsAssigned={roomsAssigned}
           />
         ))}
-        {singleAssignError && (
+      {singleAssignError && (
         <div className={styles.toast}>
           {singleAssignError.message}
         </div>
       )}
     </div>
-    
+
   );
 }

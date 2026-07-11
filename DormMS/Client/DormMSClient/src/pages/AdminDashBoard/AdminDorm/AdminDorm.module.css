@@ -69,7 +69,7 @@
 
 .field input[type="range"] {
     padding: 0;
-    accent-color: #4a7c59;
+    /* accent-color: #4a7c59; */
 }
 
 .row {

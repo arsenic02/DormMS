@@ -89,7 +89,8 @@
 
 .occupancyFill {
     height: 100%;
-    background: #4a7c59;
+    /* background: #4a7c59; */
+    background:#1a3a5c;
     border-radius: 999px;
     transition: width 0.3s ease;
 }

@@ -6,13 +6,13 @@ using DormMS.Server.Models;
 
 namespace DormMS.Server.Services.Implementations;
 
-public class AssignmentService : IAssignmentService
+public class AssignmentService : Interfaces.IAssignmentService
 {
-    private readonly IAssignmentRepository _assignmentRepository;
+    private readonly Repositories.Interfaces.IAssignmentRepository _assignmentRepository;
     private readonly INotificationService _notificationService;
     private readonly AppDbContext _context;
 
-    public AssignmentService(IAssignmentRepository assignmentRepository, INotificationService notificationService, AppDbContext context)
+    public AssignmentService(Repositories.Interfaces.IAssignmentRepository assignmentRepository, INotificationService notificationService, AppDbContext context)
     {
         _assignmentRepository = assignmentRepository;
         _notificationService = notificationService;
@@ -125,6 +125,10 @@ public class AssignmentService : IAssignmentService
                 // assignment.Status = AssignmentStatus.Waitlisted;
                 assignment.Status = AssignmentStatus.AssignedNoRoomAvailable;
                 rankingResult.Status = AssignmentStatus.AssignedNoRoomAvailable;
+
+                await _notificationService.NotifyStudentAsync(
+                    student.Id,
+                    "Nažalost, trenutno nema slobodnih mesta u domu za Vas. Bićete obavešteni kada se oslobodi soba.");
             }
 
             result.Assignments.Add(assignment);
@@ -571,6 +575,10 @@ public class AssignmentService : IAssignmentService
 
         rankingResult.Status = AssignmentStatus.Assigned;
         await _context.SaveChangesAsync();
+
+        await _notificationService.NotifyStudentAsync(
+            rankingResult.StudentId,
+            $"Dodeljena vam je soba {foundRoom.RoomNumber} u domu.");
 
         return new StudentAssignmentDto
         {

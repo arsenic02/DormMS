@@ -11,6 +11,7 @@ public class MoveOutRequestService : IMoveOutRequestService
     private readonly IStudentRepository _studentRepository;
     private readonly IDormManagerRepository _dormManagerRepository;
     private readonly INotificationService _notificationService;
+    private readonly IAssignmentRepository _assignmentRepository;
     private readonly AppDbContext _context;
 
     public MoveOutRequestService(
@@ -18,12 +19,14 @@ public class MoveOutRequestService : IMoveOutRequestService
         IStudentRepository studentRepository,
         IDormManagerRepository dormManagerRepository,
         INotificationService notificationService,
+        IAssignmentRepository assignmentRepository,
         AppDbContext context)
     {
         _moveOutRepository = moveOutRepository;
         _studentRepository = studentRepository;
         _dormManagerRepository = dormManagerRepository;
         _notificationService = notificationService;
+        _assignmentRepository = assignmentRepository;
         _context = context;
     }
 
@@ -106,9 +109,9 @@ public class MoveOutRequestService : IMoveOutRequestService
                 throw new InvalidOperationException(
                     "Student je u međuvremenu promenio sobu — zahtev nije više validan.");
 
-            student.DormitoryRoomId = null;
-
-            await _studentRepository.UpdateAsync(student);
+            await _assignmentRepository.ReleaseRoomAsync(student.Id);
+            // student.DormitoryRoomId = null;
+            // await _studentRepository.UpdateAsync(student);
 
             request.Status = MoveOutStatus.Approved;
             request.RespondedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);

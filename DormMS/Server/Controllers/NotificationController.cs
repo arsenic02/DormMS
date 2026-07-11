@@ -33,7 +33,10 @@ public class NotificationController : ControllerBase
 
     [HttpGet("my")]
     [Authorize(Roles = "Student")]
-    public async Task<IActionResult> GetMyNotifications([FromQuery] bool unreadOnly = false)
+    public async Task<IActionResult> GetMyNotifications(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] bool unreadOnly = false)
     {
         var userId = GetCurrentUserId();
 
@@ -41,7 +44,7 @@ public class NotificationController : ControllerBase
         if (student is null)
             return NotFound("Vaš studentski profil nije pronađen.");
 
-        var result = await _notificationService.GetForStudentAsync(student.Id, unreadOnly);
+        var result = await _notificationService.GetForStudentPagedAsync(student.Id, pageNumber, pageSize, unreadOnly);
         return Ok(result);
     }
 

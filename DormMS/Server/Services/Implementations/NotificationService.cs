@@ -63,6 +63,39 @@ public class NotificationService : INotificationService
             .ToListAsync();
     }
 
+    public async Task<PagedResultDto<NotificationDto>> GetForStudentPagedAsync(int studentId, int pageNumber, int pageSize, bool unreadOnly = false)
+    {
+        var query = _context.Notifications
+            .AsNoTracking()
+            .Where(n => n.StudentId == studentId);
+
+        if (unreadOnly)
+            query = query.Where(n => !n.IsRead);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(n => n.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(n => new NotificationDto
+            {
+                Id = n.Id,
+                Message = n.Message,
+                IsRead = n.IsRead,
+                CreatedAt = n.CreatedAt
+            })
+            .ToListAsync();
+
+        return new PagedResultDto<NotificationDto>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
+
     public async Task<PagedResultDto<NotificationDto>> GetForDormPagedAsync(int dormId, int pageNumber, int pageSize, bool unreadOnly = false)
     {
         var query = _context.Notifications

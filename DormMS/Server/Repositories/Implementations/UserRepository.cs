@@ -177,7 +177,7 @@ public class UserRepository : IUserRepository
     public async Task<DormManagerProfileDto?> GetDormManagerProfileAsync(int userId)
     {
         var user = await _context.Users
-            .Include(u => u.DormManager)
+            .Include(u => u.DormManager!)
             .ThenInclude(dm => dm.Dorm)
             .FirstOrDefaultAsync(u => u.Id == userId);
 

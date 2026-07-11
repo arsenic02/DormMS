@@ -257,13 +257,14 @@ function FreshmenTable({ students, onAssign, assigningId, assignError, roomsAssi
 function FacultyAccordion({ facultyName, students, isFreshmanView, isOpen, onToggle, onAssign, assigningId, assignError, roomsAssigned }) {
   const assignedCount = students.filter((s) => s.status === ASSIGNMENT_STATUS.ASSIGNED).length;
   const noRoomCount = students.filter((s) => s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM).length;
+  const displayName = facultyName === 'Unknown' ? 'Nema fakulteta' : facultyName;
 
   return (
     <div className={styles.card}>
       <button className={styles.cardHeader} onClick={onToggle} type="button">
         <div className={styles.cardHeaderLeft}>
           <i className={`ti ti-chevron-right ${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} aria-hidden="true" />
-          <span className={styles.facultyName}>{facultyName}</span>
+          <span className={styles.facultyName}>{displayName}</span>
         </div>
         <span className={styles.summary}>
           {students.length} prijavljenih &middot; {assignedCount} primljeno

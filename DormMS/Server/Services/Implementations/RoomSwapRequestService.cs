@@ -237,7 +237,7 @@ public class RoomSwapRequestService : IRoomSwapRequestService
         StudentIdNumber = s.StudentIDNumber,
         Name = s.Name,
         Surname = s.Surname,
-        FacultyName = s.FacultyName,
+        FacultyName = s.FacultyName ?? "Nepoznat fakultet",
         RoomNumber = s.DormitoryRoom?.RoomNumber
     }).ToList();
 }

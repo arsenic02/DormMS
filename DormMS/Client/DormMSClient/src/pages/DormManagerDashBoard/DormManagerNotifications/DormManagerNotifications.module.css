@@ -71,7 +71,7 @@
 }
 
 .card.unread {
-    border-left: 3px solid #4a7c59;
+    border-left: 3px solid #1a3a5c;
 }
 
 .cardHeader {
@@ -114,8 +114,10 @@
 }
 
 .markReadBtn:hover {
-    border-color: #4a7c59;
-    color: #4a7c59;
+    /* border-color: #4a7c59;
+    color: #4a7c59; */
+    border-color: #1a3a5c;
+    color: #1a3a5c; 
 }
 
 .pagination {
@@ -141,8 +143,8 @@
 }
 
 .pageButton:hover:not(:disabled) {
-    border-color: #4a7c59;
-    color: #4a7c59;
+    border-color: #1a3a5c;
+    color: #1a3a5c;
     background: #f4f9f6;
 }
 

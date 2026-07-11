@@ -42,3 +42,22 @@ export async function markNotificationAsRead(id) {
 
     return true
 }
+
+export async function getMyNotifications(pageNumber = 1, pageSize = 10, unreadOnly = false) {
+    const params = new URLSearchParams({
+        pageNumber: pageNumber.toString(),
+        pageSize: pageSize.toString(),
+        unreadOnly: unreadOnly.toString()
+    })
+
+    const res = await fetchWithAuth(`${BASE_URL}/my?${params.toString()}`, {
+        headers: authHeaders()
+    })
+
+    if (!res.ok) {
+        const text = await res.text()
+        throw new Error(text || 'Greška prilikom učitavanja notifikacija.')
+    }
+
+    return res.json()
+}

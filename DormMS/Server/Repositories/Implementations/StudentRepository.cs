@@ -219,96 +219,14 @@ public class StudentRepository : IStudentRepository
         if (!string.IsNullOrWhiteSpace(surname))
             query = query.Where(s => EF.Functions.ILike(s.Surname, $"%{surname}%"));
 
+        // if (!string.IsNullOrWhiteSpace(faculty))
+        //     query = query.Where(s => EF.Functions.ILike(s.FacultyName, $"%{faculty}%"));
         if (!string.IsNullOrWhiteSpace(faculty))
-            query = query.Where(s => EF.Functions.ILike(s.FacultyName, $"%{faculty}%"));
+            query = query.Where(s => s.FacultyName != null && EF.Functions.ILike(s.FacultyName, $"%{faculty}%"));
 
         if (!string.IsNullOrWhiteSpace(room))
             query = query.Where(s => s.DormitoryRoom != null && EF.Functions.ILike(s.DormitoryRoom.RoomNumber, $"%{room}%"));
 
         return await query.Take(20).ToListAsync();
     }
-
-    // public async Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
-    // int pageNumber,
-    // int pageSize,
-    // StudentProfileStatus? profileStatusFilter,
-    // string? facultyFilter,
-    // bool? isFreshmanFilter)
-    // {
-    //     var query = _context.Students
-    //         .AsNoTracking()
-    //         .Include(s => s.FinancialStatus)
-    //         .AsQueryable();
-
-    //     if (profileStatusFilter.HasValue)
-    //         query = query.Where(s => s.ProfileStatus == profileStatusFilter.Value);
-
-    //     if (!string.IsNullOrWhiteSpace(facultyFilter))
-    //         query = query.Where(s => s.FacultyName != null && s.FacultyName.Contains(facultyFilter));
-
-    //     var totalCount = await query.CountAsync();
-
-    //     // IsFreshman je computed property (DateTime.Now.Year - YearOfEnrollment + 1 == 1),
-    //     // ne postoji kao kolona u bazi, pa filter mora da se primeni nad materijalizovanom listom
-    //     var students = await query
-    //         .OrderBy(s => s.Surname)
-    //         .ThenBy(s => s.Name)
-    //         .ToListAsync();
-
-    //     if (isFreshmanFilter.HasValue)
-    //         students = students.Where(s => s.IsFreshman == isFreshmanFilter.Value).ToList();
-
-    //     var totalCountAfterFreshmanFilter = isFreshmanFilter.HasValue ? students.Count : totalCount;
-
-    //     var pagedStudents = students
-    //         .Skip((pageNumber - 1) * pageSize)
-    //         .Take(pageSize)
-    //         .ToList();
-
-    //     var items = pagedStudents.Select(s => new StudentGetDto
-    //     {
-    //         Id = s.Id,
-    //         Name = s.Name,
-    //         Surname = s.Surname,
-    //         Email = s.Email,
-    //         JMBG = s.JMBG,
-    //         StudentIDNumber = s.StudentIDNumber,
-    //         HomeAddress = s.HomeAddress,
-    //         MunicipalityOfResidence = s.MunicipalityOfResidence,
-    //         Age = s.Age,
-    //         Gender = s.Gender,
-    //         YearOfEnrollment = s.YearOfEnrollment,
-    //         StudyLevel = s.StudyLevel,
-    //         Status = s.Status,
-    //         FacultyId = s.FacultyId,
-    //         FacultyName = s.FacultyName,
-    //         ESPB = s.ESPB,
-    //         AverageGrade = s.AverageGrade,
-    //         HighSchoolAverageGrade = s.HighSchoolAverageGrade,
-    //         IsBudgetStudent = s.IsBudgetStudent,
-    //         DormitoryRoomId = s.DormitoryRoomId,
-    //         CurrentYearOfStudy = s.CurrentYearOfStudy,
-    //         IsFreshman = s.IsFreshman,
-    //         ProfileStatus = s.ProfileStatus,
-    //         IsEligibleToApply = s.IsEligibleToApply,
-    //         FinancialStatus = s.FinancialStatus != null ? new StudentFinancialStatusGetDto
-    //         {
-    //             TotalFamilyIncome = s.FinancialStatus.TotalFamilyIncome,
-    //             FamilyMemberCount = s.FinancialStatus.FamilyMemberCount,
-    //             IncomePerMember = s.FinancialStatus.IncomePerMember,
-    //             VerificationStatus = s.FinancialStatus.VerificationStatus,
-    //             SubmittedAt = s.FinancialStatus.SubmittedAt,
-    //             VerifiedAt = s.FinancialStatus.VerifiedAt
-    //         } : null
-    //     }).ToList();
-
-    //     return new PagedResultDto<StudentGetDto>
-    //     {
-    //         Items = items,
-    //         TotalCount = totalCountAfterFreshmanFilter,
-    //         PageNumber = pageNumber,
-    //         PageSize = pageSize
-    //     };
-    // }
-
 }

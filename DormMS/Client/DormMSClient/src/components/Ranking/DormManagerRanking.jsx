@@ -25,13 +25,14 @@ function formatNumber(value) {
   return Number(value).toLocaleString('sr-RS', { maximumFractionDigits: 2 });
 }
 
-// Backend enum: Assigned=0, Waitlisted=1, NotAssigned=2, Error=3
+// Backend enum: Assigned=0, Waitlisted=1, NotAssigned=2, Error=3, AssignedNoRoom=4, Expelled=5
 const ASSIGNMENT_STATUS = {
   ASSIGNED: 0,
   WAITLISTED: 1,
   NOT_ASSIGNED: 2,
   ERROR: 3,
   ASSIGNED_NO_ROOM: 4,
+  EXPELLED: 5,
 };
 
 function StatusBadge({ status }) {
@@ -50,16 +51,26 @@ function StatusBadge({ status }) {
   if (status === ASSIGNMENT_STATUS.ERROR) {
     return <span className={styles.badgeNeutral}>Greška</span>;
   }
+  if (status === ASSIGNMENT_STATUS.EXPELLED) {
+    return <span className={styles.badgeExpelled}>Izbačen</span>;
+  }
   return <span className={styles.badgeNeutral}>{status}</span>;
 }
 
 function OlderStudentsTable({ students, onAssign, assigningId, assignError, roomsAssigned }) {
 
-  const firstUnassignedIdx = students.findIndex(
+  // Filter out expelled students and find first eligible for room assignment
+  // Priority: ASSIGNED_NO_ROOM first, then WAITLISTED
+  const noRoomStudents = students.filter(
     (s) =>
-      (s.status === ASSIGNMENT_STATUS.ASSIGNED && !s.isPhysicallyAssigned) ||
-      s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM
+      s.status !== ASSIGNMENT_STATUS.EXPELLED &&
+      (s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM ||
+      (s.status === ASSIGNMENT_STATUS.ASSIGNED && !s.isPhysicallyAssigned))
   );
+
+  const firstEligibleStudentId = noRoomStudents.length > 0
+    ? noRoomStudents[0].studentId
+    : students.filter(s => s.status === ASSIGNMENT_STATUS.WAITLISTED)[0]?.studentId || null;
   //const firstUnassignedIdx = students.findIndex((s) => s.status !== ASSIGNMENT_STATUS.ASSIGNED);
 
   return (
@@ -85,7 +96,9 @@ function OlderStudentsTable({ students, onAssign, assigningId, assignError, room
                 ? styles.rowAssigned
                 : s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM
                   ? styles.rowNoRoom
-                  : undefined
+                  : s.status === ASSIGNMENT_STATUS.EXPELLED
+                    ? styles.rowExpelled
+                    : undefined
             }>
             <td>{s.studentName} {s.studentSurname}</td>
             <td className={styles.muted}>{s.studentIDNumber}</td>
@@ -97,7 +110,7 @@ function OlderStudentsTable({ students, onAssign, assigningId, assignError, room
             <td className={styles.numericBold}>{formatNumber(s.calculatedPoints)}</td>
             <td className={styles.statusCell}>
               <StatusBadge status={s.status} />
-              {roomsAssigned && idx === firstUnassignedIdx && (
+              {roomsAssigned && s.studentId === firstEligibleStudentId && (
                 <div className={styles.assignBox}>
                   <button
                     className={styles.assignSingleButton}
@@ -179,11 +192,18 @@ function OlderStudentsTable({ students, onAssign, assigningId, assignError, room
 // }
 
 function FreshmenTable({ students, onAssign, assigningId, assignError, roomsAssigned }) {
-  const firstUnassignedIdx = students.findIndex(
+  // Filter out expelled students and find first eligible for room assignment
+  // Priority: ASSIGNED_NO_ROOM first, then WAITLISTED
+  const noRoomStudents = students.filter(
     (s) =>
-      (s.status === ASSIGNMENT_STATUS.ASSIGNED && !s.isPhysicallyAssigned) ||
-      s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM
+      s.status !== ASSIGNMENT_STATUS.EXPELLED &&
+      (s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM ||
+      (s.status === ASSIGNMENT_STATUS.ASSIGNED && !s.isPhysicallyAssigned))
   );
+
+  const firstEligibleStudentId = noRoomStudents.length > 0
+    ? noRoomStudents[0].studentId
+    : students.filter(s => s.status === ASSIGNMENT_STATUS.WAITLISTED)[0]?.studentId || null;
   //const firstUnassignedIdx = students.findIndex((s) => s.status !== ASSIGNMENT_STATUS.ASSIGNED);
   return (
     <table className={styles.table}>
@@ -206,7 +226,9 @@ function FreshmenTable({ students, onAssign, assigningId, assignError, roomsAssi
                 ? styles.rowAssigned
                 : s.status === ASSIGNMENT_STATUS.ASSIGNED_NO_ROOM
                   ? styles.rowNoRoom
-                  : undefined
+                  : s.status === ASSIGNMENT_STATUS.EXPELLED
+                    ? styles.rowExpelled
+                    : undefined
             }>
             <td>{s.studentName} {s.studentSurname}</td>
             <td className={styles.muted}>{s.studentIDNumber}</td>
@@ -216,7 +238,7 @@ function FreshmenTable({ students, onAssign, assigningId, assignError, roomsAssi
 
             <td className={styles.statusCell}>
               <StatusBadge status={s.status} />
-              {roomsAssigned && idx === firstUnassignedIdx && (
+              {roomsAssigned && s.studentId === firstEligibleStudentId && (
                 <div className={styles.assignBox}>
                   <button
                     className={styles.assignSingleButton}

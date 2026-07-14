@@ -305,8 +305,25 @@
   white-space: nowrap;
 }
 
+.badgeExpelled {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #ffcccc;
+  color: #a32d2d;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 .rowNoRoom {
   background: #fdf3e6;
+}
+
+.rowExpelled {
+  background: #ffe6e6;
 }
 
 .noRoomHighlight {

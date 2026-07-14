@@ -532,7 +532,8 @@ public class AssignmentService : Interfaces.IAssignmentService
             throw new InvalidOperationException("Student već ima dodeljenu sobu.");
 
         if (rankingResult.Status != AssignmentStatus.Assigned
-            && rankingResult.Status != AssignmentStatus.AssignedNoRoomAvailable)
+            && rankingResult.Status != AssignmentStatus.AssignedNoRoomAvailable
+            && rankingResult.Status != AssignmentStatus.Waitlisted)
             throw new InvalidOperationException("Student nije prošao rangiranje po kvoti.");
 
         var dorms = await _assignmentRepository.GetAllDormsWithRoomsAsync();
@@ -608,6 +609,14 @@ public class AssignmentService : Interfaces.IAssignmentService
 
         await _assignmentRepository.ReleaseRoomAsync(studentId);
 
+        var rankingResult = await _context.RankingResults
+            .FirstOrDefaultAsync(r => r.StudentId == studentId);
+        if (rankingResult != null)
+        {
+            rankingResult.Status = AssignmentStatus.Expelled;
+            await _context.SaveChangesAsync();
+        }
+
         await _notificationService.NotifyStudentAsync(
             studentId,
             $"Uklonjeni ste iz sobe {roomNumber}. Za dodatne informacije obratite se referentu doma.");
@@ -646,8 +655,6 @@ public class AssignmentService : Interfaces.IAssignmentService
         if (!assignedResults.Any())
             return false;
 
-        // Brojimo koliko studenata se uklanja iz svake sobe, da bismo tacno
-        // dekrementirali CurrentOccupancy (ne na 0, vec za tacan broj).
         var roomIdsToDecrement = assignedResults
             .Where(r => r.Student.DormitoryRoomId != null)
             .Select(r => r.Student.DormitoryRoomId!.Value)

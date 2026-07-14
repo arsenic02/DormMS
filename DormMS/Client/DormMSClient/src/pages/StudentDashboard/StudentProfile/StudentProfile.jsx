@@ -157,6 +157,10 @@ function StudentProfile() {
             err.age = 'Godine moraju biti izmedju 17 i 100'
         }
 
+        if(!formData.facultyName) {
+            err.facultyName = 'Fakultet je obavezan'
+        }
+
         const espb = Number(formData.espb)
         if (formData.espb === '' || espb < 0) {
             err.espb = 'ESPB ne moze biti negativan broj'
@@ -400,7 +404,7 @@ function StudentProfile() {
                             <div className={styles.field}>
                                 <label htmlFor="facultyName">Fakultet</label>
                                 <select id="facultyName" name="facultyName" value={formData.facultyName} onChange={handleChange}>
-                                    {/* <option value="">Izaberi fakultet</option> */}
+                                     <option value="">Izaberi fakultet</option> 
                                     {facultyOptions.map(f => (
                                         <option key={f} value={f}>{f}</option>
                                     ))}

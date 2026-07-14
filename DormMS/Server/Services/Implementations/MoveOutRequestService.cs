@@ -1,5 +1,6 @@
 namespace DormMS.Server.Services;
 
+using DormMS.Server.DTOs;
 using DormMS.Server.Models;
 using DormMS.Server.Repositories.Interfaces;
 using DormMS.Server.Services.Interfaces;
@@ -116,6 +117,14 @@ public class MoveOutRequestService : IMoveOutRequestService
             request.Status = MoveOutStatus.Approved;
             request.RespondedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
             await _moveOutRepository.UpdateAsync(request);
+
+            var rankingResult = await _context.RankingResults
+                .FirstOrDefaultAsync(r => r.StudentId == student.Id);
+            if (rankingResult != null)
+            {
+                rankingResult.Status = AssignmentStatus.Expelled;
+                await _context.SaveChangesAsync();
+            }
 
             await transaction.CommitAsync();
 

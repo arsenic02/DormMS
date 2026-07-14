@@ -123,6 +123,7 @@ function DormManagerCompetition() {
         try {
             await createCompetition(payload)
             setSuccess(true)
+            setTimeout(() => setSuccess(false), 3000)
             setForm({
                 name: '',
                 description: '',

@@ -91,6 +91,7 @@ public enum AssignmentStatus
     Waitlisted,
     NotAssigned,
     Error,
-    AssignedNoRoomAvailable // prosao po rangu/kvoti, ali nema slobodne sobe odgovarajuceg pola
+    AssignedNoRoomAvailable, // prosao po rangu/kvoti, ali nema slobodne sobe odgovarajuceg pola
+    Expelled // izbacen iz doma
 }
 

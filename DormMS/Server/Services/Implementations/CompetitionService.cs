@@ -92,8 +92,8 @@ public class CompetitionService : ICompetitionService
         if (dorm is null)
             return new(null, "Dom nije pronađen u sistemu");
 
-        if (dto.MaxStudents > dorm.AvailableSpots)
-            return new(null, $"Maksimalan broj studenata ({dto.MaxStudents}) premašuje slobodna mesta u domu ({dorm.AvailableSpots})");
+        // if (dto.MaxStudents > dorm.AvailableSpots)
+        //     return new(null, $"Maksimalan broj studenata ({dto.MaxStudents}) premašuje slobodna mesta u domu ({dorm.AvailableSpots})");
 
         if (role == "Admin")
         {
@@ -149,7 +149,7 @@ public class CompetitionService : ICompetitionService
             .Include(d => d.Rooms)
             .FirstOrDefaultAsync();
 
-        if (dorm != null && dto.MaxStudents > dorm.AvailableSpots)
+        if (dorm != null /*&& dto.MaxStudents > dorm.AvailableSpots*/)
             return null;
 
         competition.Name = dto.Name.Trim();

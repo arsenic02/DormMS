@@ -39,6 +39,8 @@ public class StudentProfileUpdateDto
     public decimal? HighSchoolAverageGrade { get; set; }
     public bool IsBudgetStudent { get; set; }
     public int? DormitoryRoomId { get; set; }
+    public decimal? TotalFamilyIncome { get; set; }
+    public int? FamilyMemberCount { get; set; }
 }
 
 public class StudentFinancialStatusCreateDto

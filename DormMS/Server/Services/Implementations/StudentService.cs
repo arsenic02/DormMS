@@ -125,6 +125,34 @@ public class StudentService : IStudentService
         student.ProfileStatus = StudentProfileStatus.PendingVerification;
         await _repository.UpdateAsync(student);
 
+        // Handle financial data if provided
+        if (dto.TotalFamilyIncome.HasValue && dto.FamilyMemberCount.HasValue)
+        {
+            var existingFinancialStatus = await _repository.GetFinancialStatusByStudentIdAsync(student.Id);
+
+            if (existingFinancialStatus is not null)
+            {
+                existingFinancialStatus.TotalFamilyIncome = dto.TotalFamilyIncome.Value;
+                existingFinancialStatus.FamilyMemberCount = dto.FamilyMemberCount.Value;
+                existingFinancialStatus.VerificationStatus = FinancialVerificationStatus.Pending;
+                existingFinancialStatus.SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+                existingFinancialStatus.VerifiedAt = null;
+            }
+            else
+            {
+                var financialStatus = new StudentFinancialStatus
+                {
+                    StudentId = student.Id,
+                    TotalFamilyIncome = dto.TotalFamilyIncome.Value,
+                    FamilyMemberCount = dto.FamilyMemberCount.Value,
+                    VerificationStatus = FinancialVerificationStatus.Pending,
+                    SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
+                };
+                await _repository.AddFinancialStatusAsync(financialStatus);
+            }
+            await _context.SaveChangesAsync();
+        }
+
         return MapToGetDto(student);
     }
 

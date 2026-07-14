@@ -31,6 +31,7 @@ public class DocumentGenerationService : IDocumentGenerationService
 
         var applicationsWithoutDocument = await _context.CompetitionApplications
             .Include(a => a.Student)
+            .ThenInclude(s => s.FinancialStatus)
             .Where(a => a.CompetitionId == competitionId && string.IsNullOrWhiteSpace(a.DocumentUrl))
             .ToListAsync();
 
@@ -121,6 +122,63 @@ public class DocumentGenerationService : IDocumentGenerationService
                     col.Item().Text("(potpis ovlašćenog lica)").FontSize(9).FontColor(Colors.Grey.Darken1);
                 });
             });
+
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(2.5f, Unit.Centimetre);
+                page.DefaultTextStyle(x => x.FontFamily("DejaVu Sans").FontSize(11));
+
+                page.Header().Column(col =>
+                {
+                    col.Item().AlignCenter().Text("Republika Srbija").FontSize(10).FontColor(Colors.Grey.Darken1);
+                    col.Item().AlignCenter().Text($"Opština {student.MunicipalityOfResidence}").FontSize(15).Bold();
+                    col.Item().AlignCenter().PaddingBottom(15).Text("Odeljenje za socijalno i finansijsko pitanja")
+                        .FontSize(10).FontColor(Colors.Grey.Darken1);
+                    col.Item().AlignCenter().PaddingBottom(15).Text("POTVRDA O FINANSIJSKOM STATUSU").FontSize(13).Bold();
+                });
+
+                page.Content().Column(col =>
+                {
+                    col.Spacing(8);
+
+                    void Row(string label, string value)
+                    {
+                        col.Item().Row(row =>
+                        {
+                            row.ConstantItem(200).Text(label).Bold();
+                            row.RelativeItem().Text(value);
+                        });
+                    }
+
+                    Row("Ime i prezime:", $"{student.Name} {student.Surname}");
+                    Row("JMBG:", student.JMBG);
+                    Row("Adresa prebivališta:", student.HomeAddress);
+                    Row("Opština prebivališta:", student.MunicipalityOfResidence);
+                    
+                    if (student.FinancialStatus != null)
+                    {
+                        Row("Ukupan prihod porodice:", $"{student.FinancialStatus.TotalFamilyIncome:0.00} RSD");
+                        Row("Broj članova porodice:", student.FinancialStatus.FamilyMemberCount.ToString());
+                        Row("Prihod po članu porodice:", $"{student.FinancialStatus.IncomePerMember:0.00} RSD");
+                    }
+                    else
+                    {
+                        Row("Ukupan prihod porodice:", "Nije dostupno");
+                        Row("Broj članova porodice:", "Nije dostupno");
+                        Row("Prihod po članu porodice:", "Nije dostupno");
+                    }
+
+                    col.Item().PaddingTop(20).Text(
+                        "Ovim se potvrđuje da su gore navedeni podaci o finansijskom statusu " +
+                        "porodice tačni prema evidenciji opštine. Dokument se izdaje u svrhu konkurisanja " +
+                        "za smeštaj u studentskom domu.");
+
+                    col.Item().PaddingTop(30).Text($"Mesto i datum izdavanja: {student.MunicipalityOfResidence}, {DateTime.Now:dd.MM.yyyy}.");
+                    col.Item().PaddingTop(30).Text("M.P. ____________________________");
+                    col.Item().Text("(potpis ovlašćenog lica opštine)").FontSize(9).FontColor(Colors.Grey.Darken1);
+                });
+            });
         });
 
         document.GeneratePdf(filePath);
@@ -174,6 +232,63 @@ public class DocumentGenerationService : IDocumentGenerationService
                     col.Item().PaddingTop(30).Text("Mesto i datum izdavanja: Niš, 20.06.2026.");
                     col.Item().PaddingTop(30).Text("M.P. ____________________________");
                     col.Item().Text("(potpis ovlašćenog lica studentske službe)").FontSize(9).FontColor(Colors.Grey.Darken1);
+                });
+            });
+
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(2.5f, Unit.Centimetre);
+                page.DefaultTextStyle(x => x.FontFamily("DejaVu Sans").FontSize(11));
+
+                page.Header().Column(col =>
+                {
+                    col.Item().AlignCenter().Text("Republika Srbija").FontSize(10).FontColor(Colors.Grey.Darken1);
+                    col.Item().AlignCenter().Text($"Opština {student.MunicipalityOfResidence}").FontSize(15).Bold();
+                    col.Item().AlignCenter().PaddingBottom(15).Text("Odeljenje za socijalno i finansijsko pitanja")
+                        .FontSize(10).FontColor(Colors.Grey.Darken1);
+                    col.Item().AlignCenter().PaddingBottom(15).Text("POTVRDA O FINANSIJSKOM STATUSU").FontSize(13).Bold();
+                });
+
+                page.Content().Column(col =>
+                {
+                    col.Spacing(8);
+
+                    void Row(string label, string value)
+                    {
+                        col.Item().Row(row =>
+                        {
+                            row.ConstantItem(200).Text(label).Bold();
+                            row.RelativeItem().Text(value);
+                        });
+                    }
+
+                    Row("Ime i prezime:", $"{student.Name} {student.Surname}");
+                    Row("JMBG:", student.JMBG);
+                    Row("Adresa prebivališta:", student.HomeAddress);
+                    Row("Opština prebivališta:", student.MunicipalityOfResidence);
+                    
+                    if (student.FinancialStatus != null)
+                    {
+                        Row("Ukupan prihod porodice:", $"{student.FinancialStatus.TotalFamilyIncome:0.00} RSD");
+                        Row("Broj članova porodice:", student.FinancialStatus.FamilyMemberCount.ToString());
+                        Row("Prihod po članu porodice:", $"{student.FinancialStatus.IncomePerMember:0.00} RSD");
+                    }
+                    else
+                    {
+                        Row("Ukupan prihod porodice:", "Nije dostupno");
+                        Row("Broj članova porodice:", "Nije dostupno");
+                        Row("Prihod po članu porodice:", "Nije dostupno");
+                    }
+
+                    col.Item().PaddingTop(20).Text(
+                        "Ovim se potvrđuje da su gore navedeni podaci o finansijskom statusu " +
+                        "porodice tačni prema evidenciji opštine. Dokument se izdaje u svrhu konkurisanja " +
+                        "za smeštaj u studentskom domu.");
+
+                    col.Item().PaddingTop(30).Text($"Mesto i datum izdavanja: {student.MunicipalityOfResidence}, {DateTime.Now:dd.MM.yyyy}.");
+                    col.Item().PaddingTop(30).Text("M.P. ____________________________");
+                    col.Item().Text("(potpis ovlašćenog lica opštine)").FontSize(9).FontColor(Colors.Grey.Darken1);
                 });
             });
         });

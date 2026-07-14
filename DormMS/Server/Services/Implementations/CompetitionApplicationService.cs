@@ -42,7 +42,9 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         if (!competition.IsOpen)
             return new(null, "Konkurs nije otvoren za prijave");
 
-        var student = await _studentRepository.GetByIdWithFinancialStatusAsync((int)studentId);
+        var student = await _context.Students
+            .Include(s => s.FinancialStatus)
+            .FirstOrDefaultAsync(s => s.Id == (int)studentId);
         if (student is null)
             return new(null, "Student nije pronađen");
 
@@ -61,11 +63,32 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         if (student.ProfileStatus != StudentProfileStatus.Verified)
             return new(null, "Vaš profil još nije verifikovan od strane referenta.");
 
-        if (student.FinancialStatus is null)
-            return new(null, "Morate popuniti finansijski status pre prijave na konkurs.");
+        // Use financial data from request if provided, otherwise use student's existing financial status
+        decimal totalFamilyIncome;
+        int familyMemberCount;
 
-        if (student.FinancialStatus.VerificationStatus != FinancialVerificationStatus.Verified)
-            return new(null, "Vaš finansijski status još nije verifikovan od strane referentta.");
+        if (dto.FinancialData is not null)
+        {
+            if (dto.FinancialData.TotalFamilyIncome <= 0)
+                return new(null, "Ukupan prihod porodice mora biti veći od 0.");
+
+            if (dto.FinancialData.FamilyMemberCount <= 0)
+                return new(null, "Broj članova porodice mora biti veći od 0.");
+
+            totalFamilyIncome = dto.FinancialData.TotalFamilyIncome;
+            familyMemberCount = dto.FinancialData.FamilyMemberCount;
+        }
+        else
+        {
+            if (student.FinancialStatus is null)
+                return new(null, "Nemate popunjene finansijske podatke u profilu. Molim vas da popunite finansijske podatke u svom profilu pre prijave na konkurs.");
+
+            if (student.FinancialStatus.VerificationStatus != FinancialVerificationStatus.Verified)
+                return new(null, "Vaši finansijski podaci nisu verifikovani. Molim vas sačekajte na verifikaciju.");
+
+            totalFamilyIncome = student.FinancialStatus.TotalFamilyIncome;
+            familyMemberCount = student.FinancialStatus.FamilyMemberCount;
+        }
 
         if (student.DormitoryRoomId != null)
             return new(null, "Već imate dodeljeno mesto u domu. Ne možete se prijaviti na konkurs.");
@@ -98,6 +121,32 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             // AppliedAt = DateTime.UtcNow
             AppliedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
         };
+
+        // Create or update financial status for this application only if new data was provided
+        if (dto.FinancialData is not null)
+        {
+            var financialStatus = await _context.StudentFinancialStatuses
+                .FirstOrDefaultAsync(fs => fs.StudentId == studentId.Value);
+
+            if (financialStatus is null)
+            {
+                financialStatus = new StudentFinancialStatus
+                {
+                    StudentId = studentId.Value,
+                    TotalFamilyIncome = totalFamilyIncome,
+                    FamilyMemberCount = familyMemberCount,
+                    VerificationStatus = FinancialVerificationStatus.Verified, // Auto-verified since it's part of application
+                    SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
+                };
+                _context.StudentFinancialStatuses.Add(financialStatus);
+            }
+            else
+            {
+                financialStatus.TotalFamilyIncome = totalFamilyIncome;
+                financialStatus.FamilyMemberCount = familyMemberCount;
+                financialStatus.VerificationStatus = FinancialVerificationStatus.Verified; // Auto-verified since it's part of application
+            }
+        }
 
         await _repository.AddAsync(application);
         var full = await _repository.GetApplicationByIdAsync(application.Id);

@@ -302,3 +302,49 @@
     background: #fef9ec;
     border-left: 3px solid #f0b429;
 }
+
+.financialSection {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.financialTitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: #334155;
+}
+
+.financialFields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.financialField {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.financialLabel {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #475569;
+}
+
+.financialInput {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.financialInput:focus {
+    outline: none;
+    border-color: #4338ca;
+}

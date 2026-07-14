@@ -4,14 +4,14 @@ const API_URL = 'http://localhost:5153/api/CompetitionApplication'
 
 const getToken = () => localStorage.getItem('token')
 
-export const applyToCompetition = async (competitionId, notes = '', documentUrl = null) => {
+export const applyToCompetition = async (competitionId, notes = '', documentUrl = null, financialData = null) => {
     const res = await fetchWithAuth(`${API_URL}/${competitionId}/apply`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${getToken()}`,
         },
-        body: JSON.stringify({ notes, documentUrl }),
+        body: JSON.stringify({ notes, documentUrl, financialData }),
     })
 
     if (!res.ok) {

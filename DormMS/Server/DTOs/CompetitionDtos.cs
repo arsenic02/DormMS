@@ -47,6 +47,13 @@ public class CompetitionApplicationCreateDto
     public int CompetitionId { get; set; }
     public string? Notes { get; set; }
     public string? DocumentUrl { get; set; }
+    public FinancialDataDto? FinancialData { get; set; }
+}
+
+public class FinancialDataDto
+{
+    public decimal TotalFamilyIncome { get; set; }
+    public int FamilyMemberCount { get; set; }
 }
 
 public class CompetitionApplicationUpdateDto

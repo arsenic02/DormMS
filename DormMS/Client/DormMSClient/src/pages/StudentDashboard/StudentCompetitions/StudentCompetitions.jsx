@@ -84,6 +84,7 @@ function StudentCompetitions() {
         setSelectedFiles((prev) => ({ ...prev, [competitionId]: file }))
     }
 
+
     const performApply = async (competitionId) => {
         setApplyError(null)
         setApplyErrorId(null)
@@ -99,7 +100,7 @@ function StudentCompetitions() {
                 documentUrl = uploadResult.documentUrl
             }
 
-            await applyToCompetition(competitionId, '', documentUrl)
+            await applyToCompetition(competitionId, '', documentUrl, null)
 
             setCompetitions((prev) =>
                 prev.map((c) =>
@@ -270,7 +271,7 @@ function CompetitionCard({
                 <>
                     <div className={styles.fileField}>
                         <label htmlFor={`file-${comp.id}`} className={styles.fileLabel}>
-                            Dokument (PDF)
+                            Dokument (PDF) - Svedočanstvo/Potvrda + Finansijska potvrda
                         </label>
                         <div className={styles.fileRow}>
                             <label htmlFor={`file-${comp.id}`} className={styles.fileButton}>

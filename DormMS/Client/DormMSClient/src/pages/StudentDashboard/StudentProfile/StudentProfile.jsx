@@ -1,10 +1,10 @@
 import styles from './StudentProfile.module.css'
 import { useAuth } from '../../../context/AuthContext'
 import { useState, useEffect } from 'react'
-import { submitFinancialStatus, updateStudentProfile } from '../../../api/student'
-
+import { updateStudentProfile } from '../../../api/student'
 import { useStudentProfile } from '../../../hooks/useStudentProfile'
 import { useFinancialStatus } from '../../../hooks/useFinancialStatus'
+import { submitFinancialStatus } from '../../../api/student'
 
 
 
@@ -32,6 +32,7 @@ const financialStatusLabel = {
     1: { text: 'Verifikovan', color: '#2f855a' },
     2: { text: 'Odbijen', color: '#c53030' }
 }
+
 
 const facultyOptions = [
     'Elektronski fakultet',
@@ -81,13 +82,13 @@ function StudentProfile() {
     } = useFinancialStatus(auth?.token)
 
     const [errors, setErrors] = useState({})
-    const [financialErrors, setFinancialErrors] = useState({})
     const [successMessage, setSuccessMessage] = useState('')
-    const [financialSuccessMessage, setFinancialSuccessMessage] = useState('')
     const [submitError, setSubmitError] = useState('')
-    const [financialSubmitError, setFinancialSubmitError] = useState('')
     const [isEditing, setIsEditing] = useState(false)
-    const [isFinancialEditing, setIsFinancialEditing] = useState(false)
+    const [isEditingFinancial, setIsEditingFinancial] = useState(false)
+    const [financialSuccessMessage, setFinancialSuccessMessage] = useState('')
+    const [financialSubmitError, setFinancialSubmitError] = useState('')
+    // const [financialError, setFinancialError] = useState('')
 
     const selectedGender = genderOptions.find(g => Number(g.value) === Number(formData.gender))?.label
     const selectedStudyLevel = studyLevelOptions.find(s => Number(s.value) === Number(formData.studyLevel))?.label
@@ -124,20 +125,6 @@ function StudentProfile() {
         }))
     }
 
-    const handleFinancialChange = (e) => {
-        const { name, value } = e.target
-
-        setFinancialData(prev => ({
-            ...prev,
-            [name]: value
-        }))
-
-        setFinancialErrors(prev => ({
-            ...prev,
-            [name]: ''
-        }))
-    }
-
     const validate = () => {
         const err = {}
 
@@ -157,7 +144,7 @@ function StudentProfile() {
             err.age = 'Godine moraju biti izmedju 17 i 100'
         }
 
-        if(!formData.facultyName) {
+        if (!formData.facultyName) {
             err.facultyName = 'Fakultet je obavezan'
         }
 
@@ -181,24 +168,6 @@ function StudentProfile() {
         return err
     }
 
-    const validateFinancial = () => {
-        const err = {}
-
-        if (!financialData.totalFamilyIncome && financialData.totalFamilyIncome !== 0) {
-            err.totalFamilyIncome = 'Ukupan prihod je obavezan'
-        }
-
-        if (!financialData.familyMemberCount && financialData.familyMemberCount !== 0) {
-            err.familyMemberCount = 'Broj clanova porodice je obavezan'
-        }
-
-        if (Number(financialData.familyMemberCount) <= 0) {
-            err.familyMemberCount = 'Broj clanova mora biti veci od 0'
-        }
-
-        return err
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         setSubmitError('')
@@ -209,8 +178,14 @@ function StudentProfile() {
             return
         }
 
+        const {
+            totalFamilyIncome,
+            familyMemberCount,
+            ...profileFields
+        } = formData
+
         const payload = {
-            ...formData,
+            ...profileFields,
             age: Number(formData.age),
             espb: Number(formData.espb),
             averageGrade: isFreshman ? null : Number(formData.averageGrade),
@@ -231,13 +206,22 @@ function StudentProfile() {
         }
     }
 
+    const handleFinancialChange = (e) => {
+        const { name, value } = e.target
+        setFinancialData(prev => ({ ...prev, [name]: value }))
+    }
+
     const handleFinancialSubmit = async (e) => {
         e.preventDefault()
         setFinancialSubmitError('')
 
-        const validationErrors = validateFinancial()
-        if (Object.keys(validationErrors).length > 0) {
-            setFinancialErrors(validationErrors)
+        if (!financialData.totalFamilyIncome || Number(financialData.totalFamilyIncome) <= 0) {
+            setFinancialSubmitError('Ukupan prihod porodice je obavezan i mora biti veći od 0')
+            return
+        }
+
+        if (!financialData.familyMemberCount || Number(financialData.familyMemberCount) <= 0) {
+            setFinancialSubmitError('Broj članova porodice je obavezan i mora biti veći od 0')
             return
         }
 
@@ -247,15 +231,21 @@ function StudentProfile() {
         }
 
         try {
-            const savedFinancialStatus = await submitFinancialStatus(payload, auth.token)
-            const nextFinancialData = savedFinancialStatus || {
-                ...financialData,
-                incomePerMember: payload.totalFamilyIncome / payload.familyMemberCount
-            }
-
-            setFinancialData(nextFinancialData)
-            setFinancialSuccessMessage('Finansijski status uspesno azuriran!')
-            setIsFinancialEditing(false)
+            const saved = await submitFinancialStatus(payload, auth.token)
+            setFormData(prev => ({
+                ...prev,
+                totalFamilyIncome: saved.totalFamilyIncome,
+                familyMemberCount: saved.familyMemberCount,
+                incomePerMember: saved.incomePerMember,
+                verificationStatus: saved.verificationStatus
+            }))
+            // await updateStudentProfile({
+            //     ...formData,
+            //     totalFamilyIncome: payload.totalFamilyIncome,
+            //     familyMemberCount: payload.familyMemberCount
+            // }, auth.token)
+            setFinancialSuccessMessage('Finansijski podaci uspešno ažurirani!')
+            setIsEditingFinancial(false)
             setTimeout(() => setFinancialSuccessMessage(''), 3000)
         } catch (err) {
             setFinancialSubmitError(err.message)
@@ -278,7 +268,7 @@ function StudentProfile() {
                 </div>
 
                 {profileError && <p className={styles.error}>{profileError.message}</p>}
-                {submitError && <p className={styles.error}>{submitError}</p>}
+                {financialSubmitError && <p className={styles.error}>{financialSubmitError}</p>}
                 {successMessage && <p className={styles.success}>{successMessage}</p>}
 
                 {!isEditing ? (
@@ -404,7 +394,7 @@ function StudentProfile() {
                             <div className={styles.field}>
                                 <label htmlFor="facultyName">Fakultet</label>
                                 <select id="facultyName" name="facultyName" value={formData.facultyName} onChange={handleChange}>
-                                     <option value="">Izaberi fakultet</option> 
+                                    <option value="">Izaberi fakultet</option>
                                     {facultyOptions.map(f => (
                                         <option key={f} value={f}>{f}</option>
                                     ))}
@@ -482,7 +472,7 @@ function StudentProfile() {
 
             <div className={styles.card}>
                 <div className={styles.cardHeader}>
-                    <h2>Finansijski status</h2>
+                    <h2>Finansijski podaci</h2>
                     <div
                         className={styles.statusBadge}
                         style={{ color: financialStatusLabel[financialData.verificationStatus]?.color }}
@@ -491,72 +481,123 @@ function StudentProfile() {
                     </div>
                 </div>
 
-                {financialLoading && <p className={styles.muted}>Ucitavanje finansija...</p>}
-                {financialError && <p className={styles.error}>{financialError.message}</p>}
+                {financialLoading && <p className={styles.muted}>Učitavanje finansija...</p>}
                 {financialSubmitError && <p className={styles.error}>{financialSubmitError}</p>}
                 {financialSuccessMessage && <p className={styles.success}>{financialSuccessMessage}</p>}
 
-                {!isFinancialEditing ? (
+                {!isEditingFinancial ? (
                     <div className={styles.viewMode}>
                         <div className={styles.viewGrid}>
-                            <ViewItem label="Ukupan prihod" value={financialData.totalFamilyIncome} />
-                            <ViewItem label="Clanovi porodice" value={financialData.familyMemberCount} />
-                            <ViewItem label="Po clanu" value={financialData.incomePerMember} />
-                            <ViewItem label="Status" value={financialStatusLabel[financialData.verificationStatus]?.text || 'Status nije poznat'} />
+                            <ViewItem label="Ukupan prihod porodice" value={financialData.totalFamilyIncome ? `${financialData.totalFamilyIncome} RSD` : '-'} />
+                            <ViewItem label="Broj članova porodice" value={financialData.familyMemberCount || '-'} />
+                            {financialData.totalFamilyIncome && financialData.familyMemberCount && (
+                                <ViewItem label="Prihod po članu" value={`${(financialData.totalFamilyIncome / financialData.familyMemberCount).toFixed(2)} RSD`} />
+                            )}
                         </div>
 
                         {financialData.verificationStatus !== 1 ? (
-                            <button type="button" className={styles.editBtn} onClick={() => setIsFinancialEditing(true)}>
-                                Izmeni finansije
+                            <button type="button" className={styles.editBtn} onClick={() => setIsEditingFinancial(true)}>
+                                Izmeni finansijske podatke
                             </button>
                         ) : (
                             <p className={styles.muted}>
                                 Finansijski status je verifikovan i ne može se menjati.
                             </p>
                         )}
-
                     </div>
                 ) : (
                     <form onSubmit={handleFinancialSubmit} className={styles.form}>
-                        <div className={styles.formGrid}>
-                            <div className={styles.field}>
-                                <label htmlFor="totalFamilyIncome">Ukupan prihod</label>
-                                <input
-                                    id="totalFamilyIncome"
-                                    name="totalFamilyIncome"
-                                    value={financialData.totalFamilyIncome}
-                                    onChange={handleFinancialChange}
-                                    type="number"
-                                    min="0"
-                                    className={financialErrors.totalFamilyIncome ? styles.inputError : ''}
-                                />
-                                {financialErrors.totalFamilyIncome && <span className={styles.error}>{financialErrors.totalFamilyIncome}</span>}
-                            </div>
+                        <div className={styles.field}>
+                            <label htmlFor="totalFamilyIncome">Ukupan prihod porodice (RSD)</label>
+                            <input
+                                id="totalFamilyIncome"
+                                name="totalFamilyIncome"
+                                value={financialData.totalFamilyIncome}
+                                onChange={handleFinancialChange}
+                                type="number"
+                                min="0"
+                            />
+                        </div>
 
-                            <div className={styles.field}>
-                                <label htmlFor="familyMemberCount">Clanovi porodice</label>
-                                <input
-                                    id="familyMemberCount"
-                                    name="familyMemberCount"
-                                    value={financialData.familyMemberCount}
-                                    onChange={handleFinancialChange}
-                                    type="number"
-                                    min="1"
-                                    className={financialErrors.familyMemberCount ? styles.inputError : ''}
-                                />
-                                {financialErrors.familyMemberCount && <span className={styles.error}>{financialErrors.familyMemberCount}</span>}
-                            </div>
+                        <div className={styles.field}>
+                            <label htmlFor="familyMemberCount">Broj članova porodice</label>
+                            <input
+                                id="familyMemberCount"
+                                name="familyMemberCount"
+                                value={financialData.familyMemberCount}
+                                onChange={handleFinancialChange}
+                                type="number"
+                                min="1"
+                            />
                         </div>
 
                         <div className={styles.actions}>
-                            <button type="submit" className={styles.btn}>Sacuvaj</button>
-                            <button type="button" className={styles.cancelBtn} onClick={() => setIsFinancialEditing(false)}>
+                            <button type="submit" className={styles.btn}>Sačuvaj</button>
+                            <button type="button" className={styles.cancelBtn} onClick={() => setIsEditingFinancial(false)}>
                                 Odustani
                             </button>
                         </div>
                     </form>
                 )}
             </div>
+
+            {/* <div className={styles.card}>
+                <div className={styles.cardHeader}>
+                    <h2>Finansijski podaci</h2>
+                </div>
+
+                {financialError && <p className={styles.error}>{financialError}</p>}
+                {financialSuccessMessage && <p className={styles.success}>{financialSuccessMessage}</p>}
+
+                {!isEditingFinancial ? (
+                    <div className={styles.viewMode}>
+                        <div className={styles.viewGrid}>
+                            <ViewItem label="Ukupan prihod porodice" value={formData.totalFamilyIncome ? `${formData.totalFamilyIncome} RSD` : '-'} />
+                            <ViewItem label="Broj članova porodice" value={formData.familyMemberCount || '-'} />
+                            {formData.totalFamilyIncome && formData.familyMemberCount && (
+                                <ViewItem label="Prihod po članu" value={`${(formData.totalFamilyIncome / formData.familyMemberCount).toFixed(2)} RSD`} />
+                            )}
+                        </div>
+
+                        <button type="button" className={styles.editBtn} onClick={() => setIsEditingFinancial(true)}>
+                            Izmeni finansijske podatke
+                        </button>
+                    </div>
+                ) : (
+                    <form onSubmit={handleFinancialSubmit} className={styles.form}>
+                        <div className={styles.field}>
+                            <label htmlFor="totalFamilyIncome">Ukupan prihod porodice (RSD)</label>
+                            <input
+                                id="totalFamilyIncome"
+                                name="totalFamilyIncome"
+                                value={formData.totalFamilyIncome}
+                                onChange={handleChange}
+                                type="number"
+                                min="0"
+                            />
+                        </div>
+
+                        <div className={styles.field}>
+                            <label htmlFor="familyMemberCount">Broj članova porodice</label>
+                            <input
+                                id="familyMemberCount"
+                                name="familyMemberCount"
+                                value={formData.familyMemberCount}
+                                onChange={handleChange}
+                                type="number"
+                                min="1"
+                            />
+                        </div>
+
+                        <div className={styles.actions}>
+                            <button type="submit" className={styles.btn}>Sačuvaj</button>
+                            <button type="button" className={styles.cancelBtn} onClick={() => setIsEditingFinancial(false)}>
+                                Odustani
+                            </button>
+                        </div>
+                    </form>
+                )}
+            </div> */}
         </div>
     )
 }

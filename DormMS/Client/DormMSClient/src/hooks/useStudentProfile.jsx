@@ -18,7 +18,9 @@ export function useStudentProfile(token) {
         espb: '',
         averageGrade: '',
         highSchoolAverageGrade: '',
-        isBudgetStudent: true
+        isBudgetStudent: true,
+        totalFamilyIncome: '',
+        familyMemberCount: ''
     })
 
     const [profileStatus, setProfileStatus] = useState(null)
@@ -46,7 +48,9 @@ export function useStudentProfile(token) {
                     espb: data.espb || '',
                     averageGrade: data.averageGrade || '',
                     highSchoolAverageGrade: data.highSchoolAverageGrade || '',
-                    isBudgetStudent: data.isBudgetStudent ?? true
+                    isBudgetStudent: data.isBudgetStudent ?? true,
+                    totalFamilyIncome: data.financialStatus?.totalFamilyIncome || '',
+                    familyMemberCount: data.financialStatus?.familyMemberCount || ''
                 })
 
                 setProfileStatus(data.profileStatus)

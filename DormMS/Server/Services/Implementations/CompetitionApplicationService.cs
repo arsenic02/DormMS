@@ -13,16 +13,24 @@ public class CompetitionApplicationService : ICompetitionApplicationService
     private readonly IStudentRepository _studentRepository;
     private readonly AppDbContext _context;
 
+    private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment _environment;
+
     public CompetitionApplicationService(
         ICompetitionApplicationRepository repository,
         ICompetitionRepository competitionRepository,
         IStudentRepository studentRepository,
-        AppDbContext context)
+        AppDbContext context,
+        IConfiguration configuration,
+        IWebHostEnvironment environment
+        )
     {
         _repository = repository;
         _competitionRepository = competitionRepository;
         _studentRepository = studentRepository;
         _context = context;
+        _configuration = configuration;
+        _environment = environment;
     }
 
     public async Task<ApplyResult> ApplyAsync(int userId, CompetitionApplicationCreateDto dto)
@@ -411,7 +419,8 @@ public class CompetitionApplicationService : ICompetitionApplicationService
 
     public async Task<string> SaveDocumentAsync(IFormFile file)
     {
-        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "documents");
+        var configuredPath = _configuration["FileStorage:UploadsPath"] ?? "../DormMS-Uploads";
+        var uploadsFolder = Path.GetFullPath(Path.Combine(_environment.ContentRootPath, configuredPath, "documents"));
         Directory.CreateDirectory(uploadsFolder);
 
         var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
@@ -424,5 +433,21 @@ public class CompetitionApplicationService : ICompetitionApplicationService
 
         return $"/uploads/documents/{fileName}";
     }
+
+    // public async Task<string> SaveDocumentAsync(IFormFile file)
+    // {
+    //     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "documents");
+    //     Directory.CreateDirectory(uploadsFolder);
+
+    //     var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+    //     var filePath = Path.Combine(uploadsFolder, fileName);
+
+    //     using (var stream = new FileStream(filePath, FileMode.Create))
+    //     {
+    //         await file.CopyToAsync(stream);
+    //     }
+
+    //     return $"/uploads/documents/{fileName}";
+    // }
 
 }

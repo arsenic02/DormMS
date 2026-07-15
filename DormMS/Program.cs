@@ -14,6 +14,7 @@ using QuestPDF.Drawing;
 using DormMS.Server.Services;
 using DormMS.Server.Repositories;
 using Npgsql;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -126,6 +127,19 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+// Eksterna putanja za upload-ovane dokumente (van projekta, van dotnet watch praćenja)
+var uploadsPath = Path.GetFullPath(Path.Combine(
+    app.Environment.ContentRootPath,
+    app.Configuration["FileStorage:UploadsPath"] ?? "../DormMS-Uploads"));
+
+Directory.CreateDirectory(uploadsPath);
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads"
+});
 
 app.UseHttpsRedirection();
 

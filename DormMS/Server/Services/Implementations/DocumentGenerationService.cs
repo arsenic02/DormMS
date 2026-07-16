@@ -14,15 +14,18 @@ public class DocumentGenerationService : IDocumentGenerationService
     private readonly ICompetitionApplicationRepository _applicationRepository;
     private readonly IWebHostEnvironment _env;
     private readonly AppDbContext _context;
+    private readonly IConfiguration _configuration;
 
     public DocumentGenerationService(
            ICompetitionApplicationRepository applicationRepository,
            IWebHostEnvironment env,
-           AppDbContext context)
+           AppDbContext context,
+           IConfiguration configuration)
     {
         _applicationRepository = applicationRepository;
         _env = env;
         _context = context;
+        _configuration = configuration;
     }
 
     public async Task<GenerateDocumentsResultDto> GenerateDocumentsForCompetitionAsync(int competitionId)
@@ -37,7 +40,10 @@ public class DocumentGenerationService : IDocumentGenerationService
 
         result.TotalProcessed = applicationsWithoutDocument.Count;
 
-        var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "documents");
+        //var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "documents");
+
+        var configuredPath = _configuration["FileStorage:UploadsPath"] ?? "../DormMS-Uploads";
+        var uploadsFolder = Path.GetFullPath(Path.Combine(_env.ContentRootPath, configuredPath, "documents"));
         Directory.CreateDirectory(uploadsFolder);
 
         foreach (var application in applicationsWithoutDocument)
@@ -69,7 +75,7 @@ public class DocumentGenerationService : IDocumentGenerationService
             }
         }
 
-        await _context.SaveChangesAsync(); 
+        await _context.SaveChangesAsync();
 
         return result;
     }
@@ -155,7 +161,7 @@ public class DocumentGenerationService : IDocumentGenerationService
                     Row("JMBG:", student.JMBG);
                     Row("Adresa prebivališta:", student.HomeAddress);
                     Row("Opština prebivališta:", student.MunicipalityOfResidence);
-                    
+
                     if (student.FinancialStatus != null)
                     {
                         Row("Ukupan prihod porodice:", $"{student.FinancialStatus.TotalFamilyIncome:0.00} RSD");
@@ -267,7 +273,7 @@ public class DocumentGenerationService : IDocumentGenerationService
                     Row("JMBG:", student.JMBG);
                     Row("Adresa prebivališta:", student.HomeAddress);
                     Row("Opština prebivališta:", student.MunicipalityOfResidence);
-                    
+
                     if (student.FinancialStatus != null)
                     {
                         Row("Ukupan prihod porodice:", $"{student.FinancialStatus.TotalFamilyIncome:0.00} RSD");

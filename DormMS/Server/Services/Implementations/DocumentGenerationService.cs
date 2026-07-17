@@ -139,7 +139,7 @@ public class DocumentGenerationService : IDocumentGenerationService
                 {
                     col.Item().AlignCenter().Text("Republika Srbija").FontSize(10).FontColor(Colors.Grey.Darken1);
                     col.Item().AlignCenter().Text($"Opština {student.MunicipalityOfResidence}").FontSize(15).Bold();
-                    col.Item().AlignCenter().PaddingBottom(15).Text("Odeljenje za socijalno i finansijsko pitanja")
+                    col.Item().AlignCenter().PaddingBottom(15).Text("Odeljenje za socijalna i finansijska pitanja")
                         .FontSize(10).FontColor(Colors.Grey.Darken1);
                     col.Item().AlignCenter().PaddingBottom(15).Text("POTVRDA O FINANSIJSKOM STATUSU").FontSize(13).Bold();
                 });
@@ -161,6 +161,7 @@ public class DocumentGenerationService : IDocumentGenerationService
                     Row("JMBG:", student.JMBG);
                     Row("Adresa prebivališta:", student.HomeAddress);
                     Row("Opština prebivališta:", student.MunicipalityOfResidence);
+                    Row("Mesto prebivališta:", student.MunicipalityOfResidence ?? "Nije dostupno");
 
                     if (student.FinancialStatus != null)
                     {
@@ -176,15 +177,16 @@ public class DocumentGenerationService : IDocumentGenerationService
                     }
 
                     col.Item().PaddingTop(20).Text(
-                        "Ovim se potvrđuje da su gore navedeni podaci o finansijskom statusu " +
-                        "porodice tačni prema evidenciji opštine. Dokument se izdaje u svrhu konkurisanja " +
-                        "za smeštaj u studentskom domu.");
+                       "Ovim se potvrđuje da su gore navedeni podaci o mestu prebivališta i finansijskom statusu " +
+    "porodice tačni prema evidenciji opštine. Dokument se izdaje u svrhu konkurisanja " +
+    "za smeštaj u studentskom domu.");
 
                     col.Item().PaddingTop(30).Text($"Mesto i datum izdavanja: {student.MunicipalityOfResidence}, {DateTime.Now:dd.MM.yyyy}.");
                     col.Item().PaddingTop(30).Text("M.P. ____________________________");
                     col.Item().Text("(potpis ovlašćenog lica opštine)").FontSize(9).FontColor(Colors.Grey.Darken1);
                 });
             });
+
         });
 
         document.GeneratePdf(filePath);
@@ -251,7 +253,7 @@ public class DocumentGenerationService : IDocumentGenerationService
                 {
                     col.Item().AlignCenter().Text("Republika Srbija").FontSize(10).FontColor(Colors.Grey.Darken1);
                     col.Item().AlignCenter().Text($"Opština {student.MunicipalityOfResidence}").FontSize(15).Bold();
-                    col.Item().AlignCenter().PaddingBottom(15).Text("Odeljenje za socijalno i finansijsko pitanja")
+                    col.Item().AlignCenter().PaddingBottom(15).Text("Odeljenje za socijalna i finansijska pitanja")
                         .FontSize(10).FontColor(Colors.Grey.Darken1);
                     col.Item().AlignCenter().PaddingBottom(15).Text("POTVRDA O FINANSIJSKOM STATUSU").FontSize(13).Bold();
                 });
@@ -273,6 +275,7 @@ public class DocumentGenerationService : IDocumentGenerationService
                     Row("JMBG:", student.JMBG);
                     Row("Adresa prebivališta:", student.HomeAddress);
                     Row("Opština prebivališta:", student.MunicipalityOfResidence);
+                    Row("Mesto prebivališta:", student.MunicipalityOfResidence ?? "Nije dostupno");
 
                     if (student.FinancialStatus != null)
                     {
@@ -288,7 +291,7 @@ public class DocumentGenerationService : IDocumentGenerationService
                     }
 
                     col.Item().PaddingTop(20).Text(
-                        "Ovim se potvrđuje da su gore navedeni podaci o finansijskom statusu " +
+                        "Ovim se potvrđuje da su gore navedeni podaci o mestu prebivališta i finansijskom statusu " +
                         "porodice tačni prema evidenciji opštine. Dokument se izdaje u svrhu konkurisanja " +
                         "za smeštaj u studentskom domu.");
 

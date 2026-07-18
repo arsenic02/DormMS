@@ -120,8 +120,7 @@ public class StudentRepository : IStudentRepository
     int pageSize,
     StudentProfileStatus? profileStatusFilter,
     string? facultyFilter,
-    bool? isFreshmanFilter,
-    FinancialVerificationStatus? financialStatusFilter = null)
+    bool? isFreshmanFilter)
     {
         var query = _context.Students
             .AsNoTracking()
@@ -133,9 +132,6 @@ public class StudentRepository : IStudentRepository
 
         if (!string.IsNullOrWhiteSpace(facultyFilter))
             query = query.Where(s => s.FacultyName != null && s.FacultyName.Contains(facultyFilter));
-
-        if (financialStatusFilter.HasValue)
-            query = query.Where(s => s.FinancialStatus != null && s.FinancialStatus.VerificationStatus == financialStatusFilter.Value);
 
         var totalCount = await query.CountAsync();
 
@@ -187,9 +183,7 @@ public class StudentRepository : IStudentRepository
                 TotalFamilyIncome = s.FinancialStatus.TotalFamilyIncome,
                 FamilyMemberCount = s.FinancialStatus.FamilyMemberCount,
                 IncomePerMember = s.FinancialStatus.IncomePerMember,
-                VerificationStatus = s.FinancialStatus.VerificationStatus,
-                SubmittedAt = s.FinancialStatus.SubmittedAt,
-                VerifiedAt = s.FinancialStatus.VerifiedAt
+                SubmittedAt = s.FinancialStatus.SubmittedAt
             } : null
         }).ToList();
 

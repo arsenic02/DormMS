@@ -67,13 +67,12 @@ public class StudentController : ControllerBase
 [FromQuery] int pageSize = 10,
 [FromQuery] StudentProfileStatus? profileStatus = null,
 [FromQuery] string? faculty = null,
-[FromQuery] bool? isFreshman = null,
-[FromQuery] FinancialVerificationStatus? financialStatus = null)
+[FromQuery] bool? isFreshman = null)
     {
         if (pageNumber < 1) pageNumber = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 10;
 
-        var result = await _studentService.GetPagedAsync(pageNumber, pageSize, profileStatus, faculty, isFreshman, financialStatus);
+        var result = await _studentService.GetPagedAsync(pageNumber, pageSize, profileStatus, faculty, isFreshman);
         return Ok(result);
     }
 

@@ -29,6 +29,5 @@ public interface IStudentRepository
     int pageSize,
     StudentProfileStatus? profileStatusFilter,
     string? facultyFilter,
-    bool? isFreshmanFilter,
-    FinancialVerificationStatus? financialStatusFilter = null); //za admina
+    bool? isFreshmanFilter);
 }

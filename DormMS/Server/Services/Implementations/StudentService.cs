@@ -233,9 +233,7 @@ public class StudentService : IStudentService
                         {
                             StudentId = student.Id,
                             TotalFamilyIncome = record.TotalFamilyIncome,
-                            FamilyMemberCount = record.FamilyMemberCount,
-                            VerificationStatus = FinancialVerificationStatus.Verified,
-                            VerifiedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
+                            FamilyMemberCount = record.FamilyMemberCount
                         };
                         _context.StudentFinancialStatuses.Add(financialStatus);
                         await _context.SaveChangesAsync();
@@ -336,8 +334,7 @@ public class StudentService : IStudentService
 
         if (student.FinancialStatus != null)
         {
-            student.FinancialStatus.VerificationStatus = FinancialVerificationStatus.Verified;
-            student.FinancialStatus.VerifiedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            // Financial status exists, no verification needed
         }
     }
 
@@ -402,9 +399,7 @@ public class StudentService : IStudentService
                 TotalFamilyIncome = existingFinancialStatus.TotalFamilyIncome,
                 FamilyMemberCount = existingFinancialStatus.FamilyMemberCount,
                 IncomePerMember = existingFinancialStatus.IncomePerMember,
-                VerificationStatus = existingFinancialStatus.VerificationStatus,
-                SubmittedAt = existingFinancialStatus.SubmittedAt,
-                VerifiedAt = existingFinancialStatus.VerifiedAt
+                SubmittedAt = existingFinancialStatus.SubmittedAt
             };
         }
 
@@ -423,9 +418,7 @@ public class StudentService : IStudentService
             TotalFamilyIncome = financialStatus.TotalFamilyIncome,
             FamilyMemberCount = financialStatus.FamilyMemberCount,
             IncomePerMember = financialStatus.IncomePerMember,
-            VerificationStatus = financialStatus.VerificationStatus,
-            SubmittedAt = financialStatus.SubmittedAt,
-            VerifiedAt = financialStatus.VerifiedAt
+            SubmittedAt = financialStatus.SubmittedAt
         };
     }
 
@@ -502,8 +495,8 @@ public class StudentService : IStudentService
     }
 
     public Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
-    int pageNumber, int pageSize, StudentProfileStatus? profileStatusFilter, string? facultyFilter, bool? isFreshmanFilter, FinancialVerificationStatus? financialStatusFilter = null)
-    => _repository.GetPagedAsync(pageNumber, pageSize, profileStatusFilter, facultyFilter, isFreshmanFilter, financialStatusFilter);
+    int pageNumber, int pageSize, StudentProfileStatus? profileStatusFilter, string? facultyFilter, bool? isFreshmanFilter)
+    => _repository.GetPagedAsync(pageNumber, pageSize, profileStatusFilter, facultyFilter, isFreshmanFilter);
 
     // public Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
     //     int pageNumber, int pageSize, StudentProfileStatus? profileStatusFilter, string? facultyFilter, bool? isFreshmanFilter)
@@ -567,9 +560,7 @@ public class StudentService : IStudentService
             TotalFamilyIncome = student.FinancialStatus.TotalFamilyIncome,
             FamilyMemberCount = student.FinancialStatus.FamilyMemberCount,
             IncomePerMember = student.FinancialStatus.IncomePerMember,
-            VerificationStatus = student.FinancialStatus.VerificationStatus,
-            SubmittedAt = student.FinancialStatus.SubmittedAt,
-            VerifiedAt = student.FinancialStatus.VerifiedAt
+            SubmittedAt = student.FinancialStatus.SubmittedAt
         }
     };
 }

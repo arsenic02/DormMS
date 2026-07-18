@@ -27,6 +27,5 @@ public interface IStudentService
     int pageNumber, int pageSize,
     StudentProfileStatus? profileStatusFilter,
     string? facultyFilter,
-    bool? isFreshmanFilter,
-    FinancialVerificationStatus? financialStatusFilter = null);
+    bool? isFreshmanFilter);
 }

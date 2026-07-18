@@ -54,9 +54,7 @@ public class StudentFinancialStatusGetDto
     public decimal TotalFamilyIncome { get; set; }
     public int FamilyMemberCount { get; set; }
     public decimal IncomePerMember { get; set; }
-    public FinancialVerificationStatus VerificationStatus { get; set; }
     public DateTime SubmittedAt { get; set; }
-    public DateTime? VerifiedAt { get; set; }
 }
 
 public class StudentGetDto

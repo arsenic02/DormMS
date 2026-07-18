@@ -140,7 +140,6 @@ public class CompetitionApplicationService : ICompetitionApplicationService
                     StudentId = studentId.Value,
                     TotalFamilyIncome = totalFamilyIncome,
                     FamilyMemberCount = familyMemberCount,
-                    VerificationStatus = FinancialVerificationStatus.Verified, // Auto-verified since it's part of application
                     SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
                 };
                 _context.StudentFinancialStatuses.Add(financialStatus);
@@ -149,7 +148,6 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             {
                 financialStatus.TotalFamilyIncome = totalFamilyIncome;
                 financialStatus.FamilyMemberCount = familyMemberCount;
-                financialStatus.VerificationStatus = FinancialVerificationStatus.Verified; // Auto-verified since it's part of application
             }
         }
 

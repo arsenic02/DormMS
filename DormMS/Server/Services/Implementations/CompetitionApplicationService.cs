@@ -68,8 +68,8 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         if (!student.IsBudgetStudent)
             return new(null, "Samo budžetski studenti mogu da konkurišu za smeštaj u domu.");
 
-        if (student.ProfileStatus != StudentProfileStatus.Verified)
-            return new(null, "Vaš profil još nije verifikovan od strane referenta.");
+        if (student.ProfileStatus == StudentProfileStatus.Incomplete)
+            return new(null, "Molim vas da popunite podatke o profilu pre prijave na konkurs.");
 
         // Use financial data from request if provided, otherwise use student's existing financial status
         decimal totalFamilyIncome;
@@ -90,9 +90,6 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         {
             if (student.FinancialStatus is null)
                 return new(null, "Nemate popunjene finansijske podatke u profilu. Molim vas da popunite finansijske podatke u svom profilu pre prijave na konkurs.");
-
-            if (student.FinancialStatus.VerificationStatus != FinancialVerificationStatus.Verified)
-                return new(null, "Vaši finansijski podaci nisu verifikovani. Molim vas sačekajte na verifikaciju.");
 
             totalFamilyIncome = student.FinancialStatus.TotalFamilyIncome;
             familyMemberCount = student.FinancialStatus.FamilyMemberCount;

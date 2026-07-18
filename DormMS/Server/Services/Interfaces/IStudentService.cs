@@ -17,11 +17,11 @@ public interface IStudentService
     Task<StudentFinancialStatusGetDto?> SubmitFinancialStatusAsync(
     int userId,
     StudentFinancialStatusCreateDto dto);
-    Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status);
-    Task<bool> VerifyFinancialStatusAsync(int studentId, FinancialVerificationStatus status);
+    //Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status);
+    //Task<bool> VerifyFinancialStatusAsync(int studentId, FinancialVerificationStatus status);
     //Task<int> FixBulkImportedStudentsAsync();
     Task<int> ClearAllStudentsAsync();
-    Task<int> BulkVerifyProfilesAsync(BulkVerifyProfilesDto dto);
+    //Task<int> BulkVerifyProfilesAsync(BulkVerifyProfilesDto dto);
     Task<List<StudentSummaryDto>> GetByFreshmanStatusAsync(bool? isFreshman);
     Task<PagedResultDto<StudentGetDto>> GetPagedAsync(
     int pageNumber, int pageSize,

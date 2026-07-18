@@ -122,7 +122,7 @@ public class StudentService : IStudentService
             return null;
 
         ApplyProfile(dto, student);
-        student.ProfileStatus = StudentProfileStatus.PendingVerification;
+        student.ProfileStatus = StudentProfileStatus.Verified;
         await _repository.UpdateAsync(student);
 
         // Handle financial data if provided
@@ -134,9 +134,7 @@ public class StudentService : IStudentService
             {
                 existingFinancialStatus.TotalFamilyIncome = dto.TotalFamilyIncome.Value;
                 existingFinancialStatus.FamilyMemberCount = dto.FamilyMemberCount.Value;
-                existingFinancialStatus.VerificationStatus = FinancialVerificationStatus.Pending;
                 existingFinancialStatus.SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
-                existingFinancialStatus.VerifiedAt = null;
             }
             else
             {
@@ -145,7 +143,6 @@ public class StudentService : IStudentService
                     StudentId = student.Id,
                     TotalFamilyIncome = dto.TotalFamilyIncome.Value,
                     FamilyMemberCount = dto.FamilyMemberCount.Value,
-                    VerificationStatus = FinancialVerificationStatus.Pending,
                     SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
                 };
                 await _repository.AddFinancialStatusAsync(financialStatus);
@@ -354,25 +351,24 @@ public class StudentService : IStudentService
         return students.Count;
     }
 
-    public async Task<int> BulkVerifyProfilesAsync(BulkVerifyProfilesDto dto)
+    public async Task<List<StudentSummaryDto>> GetByFreshmanStatusAsync(bool? isFreshman)
     {
-        var studentIds = GetIdsFromDto(dto.StudentIds, dto.StartId, dto.EndId);
-        var students = await _context.Students.Where(s => studentIds.Contains(s.Id)).ToListAsync();
-        foreach (var student in students) student.ProfileStatus = dto.Status;
-        await _context.SaveChangesAsync();
-        return students.Count;
-    }
+        var students = await _repository.GetAllAsync();
 
-    private List<int> GetIdsFromDto(List<int>? ids, int? startId, int? endId)
-    {
-        if (ids != null && ids.Any()) return ids;
-        if (startId.HasValue && endId.HasValue)
-        {
-            var start = Math.Min(startId.Value, endId.Value);
-            var end = Math.Max(startId.Value, endId.Value);
-            return Enumerable.Range(start, end - start + 1).ToList();
-        }
-        return new List<int>();
+        var filtered = isFreshman.HasValue
+            ? students.Where(s => s.IsFreshman == isFreshman.Value)
+            : students;
+
+        return filtered
+            .Select(s => new StudentSummaryDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Surname = s.Surname,
+                FacultyName = s.FacultyName,
+                IsFreshman = s.IsFreshman
+            })
+            .ToList();
     }
 
     public async Task<StudentFinancialStatusGetDto?> SubmitFinancialStatusAsync(
@@ -397,9 +393,7 @@ public class StudentService : IStudentService
         {
             existingFinancialStatus.TotalFamilyIncome = dto.TotalFamilyIncome;
             existingFinancialStatus.FamilyMemberCount = dto.FamilyMemberCount;
-            existingFinancialStatus.VerificationStatus = FinancialVerificationStatus.Pending;
             existingFinancialStatus.SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
-            existingFinancialStatus.VerifiedAt = null;
 
             await _context.SaveChangesAsync();
 
@@ -419,7 +413,6 @@ public class StudentService : IStudentService
             StudentId = student.Id,
             TotalFamilyIncome = dto.TotalFamilyIncome,
             FamilyMemberCount = dto.FamilyMemberCount,
-            VerificationStatus = FinancialVerificationStatus.Pending,
             SubmittedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
         };
 
@@ -506,60 +499,6 @@ public class StudentService : IStudentService
         }
 
         return 0;
-    }
-    public async Task<StudentGetDto?> VerifyProfileAsync(int studentId, StudentProfileStatus status)
-    {
-        var student = await _repository.GetByIdTrackedAsync(studentId);
-
-        if (student is null)
-        {
-
-            var untrackedStudent = await _repository.GetByIdAsync(studentId);
-            if (untrackedStudent is null) return null;
-
-            student = untrackedStudent;
-            _context.Students.Update(student);
-        }
-
-        student.ProfileStatus = status;
-        await _repository.UpdateProfileAsync(student);
-
-        var updated = await _repository.GetByIdAsync(studentId);
-        return updated != null ? MapToGetDto(updated) : null;
-    }
-
-    public async Task<bool> VerifyFinancialStatusAsync(int studentId, FinancialVerificationStatus status)
-    {
-        var financialStatus = await _context.StudentFinancialStatuses
-            .FirstOrDefaultAsync(fs => fs.StudentId == studentId);
-
-        if (financialStatus == null) return false;
-
-        financialStatus.VerificationStatus = status;
-        financialStatus.VerifiedAt = status == FinancialVerificationStatus.Verified ? DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified) : null;
-
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<List<StudentSummaryDto>> GetByFreshmanStatusAsync(bool? isFreshman)
-    {
-        var students = await _repository.GetAllAsync();
-
-        var filtered = isFreshman.HasValue
-            ? students.Where(s => s.IsFreshman == isFreshman.Value)
-            : students;
-
-        return filtered
-            .Select(s => new StudentSummaryDto
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Surname = s.Surname,
-                FacultyName = s.FacultyName,
-                IsFreshman = s.IsFreshman
-            })
-            .ToList();
     }
 
     public Task<PagedResultDto<StudentGetDto>> GetPagedAsync(

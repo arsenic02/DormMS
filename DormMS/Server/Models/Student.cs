@@ -29,9 +29,8 @@ public class Student
     public StudentFinancialStatus? FinancialStatus { get; set; }
 
     public bool IsEligibleToApply =>
-        ProfileStatus == StudentProfileStatus.Verified &&
+        ProfileStatus != StudentProfileStatus.Incomplete &&
         FinancialStatus != null &&
-        FinancialStatus.VerificationStatus == FinancialVerificationStatus.Verified &&
         IsBudgetStudent &&
         DormitoryRoomId == null;
 

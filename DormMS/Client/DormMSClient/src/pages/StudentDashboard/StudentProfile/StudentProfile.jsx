@@ -259,12 +259,6 @@ function StudentProfile() {
             <div className={styles.card}>
                 <div className={styles.cardHeader}>
                     <h2>Moj profil</h2>
-                    <div
-                        className={styles.statusBadge}
-                        style={{ color: profileStatusLabel[profileStatus]?.color }}
-                    >
-                        {profileStatusLabel[profileStatus]?.text || 'Status nije poznat'}
-                    </div>
                 </div>
 
                 {profileError && <p className={styles.error}>{profileError.message}</p>}
@@ -295,15 +289,9 @@ function StudentProfile() {
                             <ViewItem label="Finansiranje" value={formData.isBudgetStudent ? 'Budzet' : 'Samofinansiranje'} />
                         </div>
 
-                        {profileStatus !== 2 ? (
-                            <button type="button" className={styles.editBtn} onClick={() => setIsEditing(true)}>
-                                Izmeni profil
-                            </button>
-                        ) : (
-                            <p className={styles.muted}>
-                                Profil je verifikovan i ne može se menjati.
-                            </p>
-                        )}
+                        <button type="button" className={styles.editBtn} onClick={() => setIsEditing(true)}>
+                            Izmeni profil
+                        </button>
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className={styles.form}>
@@ -473,12 +461,6 @@ function StudentProfile() {
             <div className={styles.card}>
                 <div className={styles.cardHeader}>
                     <h2>Finansijski podaci</h2>
-                    <div
-                        className={styles.statusBadge}
-                        style={{ color: financialStatusLabel[financialData.verificationStatus]?.color }}
-                    >
-                        {financialStatusLabel[financialData.verificationStatus]?.text || 'Status nije poznat'}
-                    </div>
                 </div>
 
                 {financialLoading && <p className={styles.muted}>Učitavanje finansija...</p>}
@@ -495,15 +477,9 @@ function StudentProfile() {
                             )}
                         </div>
 
-                        {financialData.verificationStatus !== 1 ? (
-                            <button type="button" className={styles.editBtn} onClick={() => setIsEditingFinancial(true)}>
-                                Izmeni finansijske podatke
-                            </button>
-                        ) : (
-                            <p className={styles.muted}>
-                                Finansijski status je verifikovan i ne može se menjati.
-                            </p>
-                        )}
+                        <button type="button" className={styles.editBtn} onClick={() => setIsEditingFinancial(true)}>
+                            Izmeni finansijske podatke
+                        </button>
                     </div>
                 ) : (
                     <form onSubmit={handleFinancialSubmit} className={styles.form}>

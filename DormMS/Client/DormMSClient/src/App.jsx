@@ -9,7 +9,6 @@ import StudentNotifications from './pages/StudentDashboard/StudentNotifications/
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import DormManagerCompetition from './pages/DormManagerDashBoard/DormManagerCompetitions/DormManagerCompetitions'
 import StudentCompetitions from './pages/StudentDashboard/StudentCompetitions/StudentCompetitions'
-import DormManagerVerifications from './pages/DormManagerDashBoard/DormManagerVerifications/DormManagerVerifications'
 import DormManagerRankingPage from './pages/DormManagerDashBoard/DormManagerRankings/DormManagerRankingPage/DormManagerRankingPage'
 import DormManagerRankings from './pages/DormManagerDashBoard/DormManagerRankings/DormManagerRankings'
 import DormManagerRanking from './components/Ranking/DormManagerRanking'
@@ -63,7 +62,6 @@ function App() {
 
         <Route element={<ProtectedRoute allowedRoles={['DormManager']} />}>
           <Route path="/dorm-manager/competitions" element={<DormManagerCompetition />} />
-          <Route path="/dorm-manager/verifications" element={<DormManagerVerifications />} />
           <Route path="/dorm-manager/rankings" element={<DormManagerRankings />} />
           <Route path="/dorm-manager/rankings/:id" element={<DormManagerRankingPage />} />
           <Route path="/dorm-manager/rooms" element={<DormManagerRooms />} />

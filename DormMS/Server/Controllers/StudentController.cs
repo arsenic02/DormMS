@@ -145,38 +145,12 @@ public class StudentController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPatch("{studentId}/verify-profile")]
-    [Authorize(Roles = "Admin,DormManager")]
-    public async Task<IActionResult> VerifyProfile(int studentId, StudentProfileVerificationDto dto)
-    {
-        var result = await _studentService.VerifyProfileAsync(studentId, dto.Status);
-        if (result is null) return NotFound();
-        return Ok(result);
-    }
-
-    [HttpPatch("{studentId}/verify-financial-status")]
-    [Authorize(Roles = "Admin,DormManager")]
-    public async Task<IActionResult> VerifyFinancialStatus(int studentId, [FromBody] FinancialVerificationStatus status)
-    {
-        var result = await _studentService.VerifyFinancialStatusAsync(studentId, status);
-        if (!result) return NotFound();
-        return Ok(new { Message = $"Financial status for student {studentId} has been set to {status}." });
-    }
-
     [HttpDelete("all")]
     [Authorize(Roles = "Admin,DormManager")]
     public async Task<ActionResult<int>> ClearAllStudents()
     {
         var count = await _studentService.ClearAllStudentsAsync();
         return Ok(new { Message = $"Successfully deleted {count} students and their user accounts.", Count = count });
-    }
-
-    [HttpPost("bulk-verify-profiles")]
-    [Authorize(Roles = "Admin,DormManager")]
-    public async Task<ActionResult<int>> BulkVerifyProfiles([FromBody] BulkVerifyProfilesDto dto)
-    {
-        var count = await _studentService.BulkVerifyProfilesAsync(dto);
-        return Ok(new { Message = $"Successfully updated {count} student profiles to {dto.Status}.", Count = count });
     }
 
     [HttpGet("by-freshman-status")]

@@ -37,31 +37,6 @@
   font-size: 1.35rem;
 }
 
-.statusBadge,
-.verifiedBadge,
-.unverifiedBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background-color: #f7fafc;
-  font-size: 0.85rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.verifiedBadge {
-  color: #2f855a;
-  background-color: #e6f4ea;
-}
-
-.unverifiedBadge {
-  color: #b7791f;
-  background-color: #fff7df;
-}
-
 .viewMode {
   display: flex;
   flex-direction: column;

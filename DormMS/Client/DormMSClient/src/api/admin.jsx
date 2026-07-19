@@ -152,15 +152,12 @@ export async function createDormManager(dto) {
 
 const STUDENTS_URL = 'http://localhost:5153/api/student'
 
-export async function getStudentsPaged(pageNumber, pageSize, profileStatus, faculty, isFreshman) {
+export async function getStudentsPaged(pageNumber, pageSize, faculty, isFreshman) {
     const params = new URLSearchParams({
         pageNumber: pageNumber.toString(),
         pageSize: pageSize.toString()
     })
 
-    if (profileStatus !== '' && profileStatus !== null && profileStatus !== undefined) {
-        params.append('profileStatus', profileStatus.toString())
-    }
     if (faculty && faculty.trim()) {
         params.append('faculty', faculty.trim())
     }

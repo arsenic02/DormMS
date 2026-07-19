@@ -23,7 +23,6 @@ export function useStudentProfile(token) {
         familyMemberCount: ''
     })
 
-    const [profileStatus, setProfileStatus] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
@@ -52,8 +51,6 @@ export function useStudentProfile(token) {
                     totalFamilyIncome: data.financialStatus?.totalFamilyIncome || '',
                     familyMemberCount: data.financialStatus?.familyMemberCount || ''
                 })
-
-                setProfileStatus(data.profileStatus)
             })
             .catch(err => setError(err))
             .finally(() => setLoading(false))
@@ -63,8 +60,6 @@ export function useStudentProfile(token) {
     return {
         formData,
         setFormData,
-        profileStatus,
-        setProfileStatus,
         loading,
         error
     }

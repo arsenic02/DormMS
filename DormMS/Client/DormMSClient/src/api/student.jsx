@@ -95,12 +95,6 @@ export async function getStudentsPaged(token, pageNumber = 1, pageSize = 10, fil
     pageSize: pageSize.toString(),
   })
 
-  if (filters.profileStatus !== undefined && filters.profileStatus !== null) {
-    queryParams.append('profileStatus', filters.profileStatus.toString())
-  }
-  if (filters.financialStatus !== undefined && filters.financialStatus !== null) {
-    queryParams.append('financialStatus', filters.financialStatus.toString())
-  }
   if (filters.faculty) {
     queryParams.append('faculty', filters.faculty)
   }
@@ -119,44 +113,6 @@ export async function getStudentsPaged(token, pageNumber = 1, pageSize = 10, fil
 
   if (!response.ok) {
     throw new Error(data?.message || 'Greška pri učitavanju studenata')
-  }
-
-  return data
-}
-
-export async function verifyStudentProfile(studentId, status, token) {
-  const response = await fetchWithAuth(`${BASE_URL}/${studentId}/verify-profile`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({ status })
-  })
-
-  const data = await response.json().catch(() => null)
-
-  if (!response.ok) {
-    throw new Error(data?.message || 'Greška pri verifikaciji profila')
-  }
-
-  return data
-}
-
-export async function verifyStudentFinancialStatus(studentId, status, token) {
-  const response = await fetchWithAuth(`${BASE_URL}/${studentId}/verify-financial-status`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(status)
-  })
-
-  const data = await response.json().catch(() => null)
-
-  if (!response.ok) {
-    throw new Error(data?.message || 'Greška pri verifikaciji finansijskog statusa')
   }
 
   return data

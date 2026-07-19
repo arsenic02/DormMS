@@ -2,20 +2,6 @@ import { useState, useEffect } from 'react'
 import styles from './AdminStudents.module.css'
 import { getStudentsPaged } from '../../../api/admin'
 
-const profileStatusLabel = {
-    0: 'Nekompletan',
-    1: 'Na čekanju',
-    2: 'Verifikovan',
-    3: 'Odbijen'
-}
-
-const profileStatusClass = {
-    0: 'incomplete',
-    1: 'pending',
-    2: 'verified',
-    3: 'rejected'
-}
-
 const PAGE_SIZE = 10
 
 function AdminStudents() {
@@ -24,7 +10,6 @@ function AdminStudents() {
     const [totalPages, setTotalPages] = useState(1)
     const [totalCount, setTotalCount] = useState(0)
 
-    const [profileStatusFilter, setProfileStatusFilter] = useState('')
     const [facultyFilter, setFacultyFilter] = useState('')
     const [freshmanFilter, setFreshmanFilter] = useState('')
 
@@ -35,7 +20,7 @@ function AdminStudents() {
         setLoading(true)
         setError(null)
         try {
-            const data = await getStudentsPaged(pageNumber, PAGE_SIZE, profileStatusFilter, facultyFilter, freshmanFilter)
+            const data = await getStudentsPaged(pageNumber, PAGE_SIZE, facultyFilter, freshmanFilter)
             setStudents(data.items)
             setTotalPages(data.totalPages)
             setTotalCount(data.totalCount)
@@ -48,7 +33,7 @@ function AdminStudents() {
 
     useEffect(() => {
         fetchStudents()
-    }, [pageNumber, profileStatusFilter, freshmanFilter])
+    }, [pageNumber, freshmanFilter])
 
     const handleFacultySearch = (e) => {
         e.preventDefault()
@@ -56,10 +41,6 @@ function AdminStudents() {
         fetchStudents()
     }
 
-    const handleProfileStatusChange = (e) => {
-        setProfileStatusFilter(e.target.value)
-        setPageNumber(1)
-    }
 
     const handleFreshmanChange = (e) => {
         setFreshmanFilter(e.target.value)
@@ -73,17 +54,6 @@ function AdminStudents() {
             </div>
 
             <div className={styles.filters}>
-                <div className={styles.filterField}>
-                    <label htmlFor="profileStatusFilter">Status profila:</label>
-                    <select id="profileStatusFilter" value={profileStatusFilter} onChange={handleProfileStatusChange}>
-                        <option value="">Svi</option>
-                        <option value="0">Nekompletan</option>
-                        <option value="1">Na čekanju</option>
-                        <option value="2">Verifikovan</option>
-                        <option value="3">Odbijen</option>
-                    </select>
-                </div>
-
                 <div className={styles.filterField}>
                     <label htmlFor="freshmanFilter">Godina:</label>
                     <select id="freshmanFilter" value={freshmanFilter} onChange={handleFreshmanChange}>
@@ -129,9 +99,6 @@ function AdminStudents() {
                                     {student.isBudgetStudent && (
                                         <span className={styles.budgetBadge}>Budžet</span>
                                     )}
-                                    <span className={`${styles.statusBadge} ${styles[profileStatusClass[student.profileStatus]]}`}>
-                                        {profileStatusLabel[student.profileStatus] ?? 'N/A'}
-                                    </span>
                                 </div>
                             </div>
                         ))}

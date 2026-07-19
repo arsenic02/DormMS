@@ -20,20 +20,6 @@ const studyLevelOptions = [
     { value: 3, label: 'Integrisane studije' }
 ]
 
-const profileStatusLabel = {
-    0: { text: 'Profil nije kompletan', color: '#e53e3e' },
-    1: { text: 'Verifikacija u toku', color: '#d69e2e' },
-    2: { text: 'Verifikovan', color: '#2f855a' },
-    3: { text: 'Odbijen', color: '#c53030' }
-}
-
-const financialStatusLabel = {
-    0: { text: 'Na čekanju', color: '#d69e2e' },
-    1: { text: 'Verifikovan', color: '#2f855a' },
-    2: { text: 'Odbijen', color: '#c53030' }
-}
-
-
 const facultyOptions = [
     'Elektronski fakultet',
     'Pravni fakultet',
@@ -68,8 +54,6 @@ function StudentProfile() {
     const {
         formData,
         setFormData,
-        profileStatus,
-        setProfileStatus,
         loading: profileLoading,
         error: profileError
     } = useStudentProfile(auth?.token)
@@ -197,7 +181,6 @@ function StudentProfile() {
 
         try {
             const updatedProfile = await updateStudentProfile(payload, auth.token)
-            setProfileStatus(updatedProfile?.profileStatus ?? 1)
             setSuccessMessage('Profil uspesno azuriran!')
             setIsEditing(false)
             setTimeout(() => setSuccessMessage(''), 3000)

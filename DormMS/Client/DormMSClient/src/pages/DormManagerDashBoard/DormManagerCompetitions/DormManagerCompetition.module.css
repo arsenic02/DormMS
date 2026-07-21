@@ -209,6 +209,16 @@
     color: #d4a017;
 }
 
+.badge.draft {
+    background: #eef0f2;
+    color: #64748b;
+}
+
+.badge.completed {
+    background: #eef2ff;
+    color: #4338ca;
+}
+
 .cardActions {
     margin-top: 12px;
     display: flex;

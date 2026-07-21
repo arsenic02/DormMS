@@ -282,7 +282,8 @@ function DormManagerCompetition() {
                                     <span className={styles.cardName}>{comp.name}</span>
                                     <div className={styles.badges}>
                                         <span className={styles.typeBadge}>{typeLabel[comp.type] ?? 'N/A'}</span>
-                                        <span className={`${styles.badge} ${styles[comp.status?.toString().toLowerCase() ?? '']}`}>
+                                        
+                                        <span className={`${styles.badge} ${styles[statusClass[comp.status]] ?? ''}`}>
                                             {statusLabel[comp.status] ?? 'N/A'}
                                         </span>
                                     </div>

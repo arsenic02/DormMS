@@ -304,6 +304,16 @@ function StudentProfile() {
                             </div>
 
                             <div className={styles.field}>
+                                <label htmlFor="studentIDNumber">Broj indeksa</label>
+                                <input
+                                    id="studentIDNumber"
+                                    name="studentIDNumber"
+                                    value={formData.studentIDNumber}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className={styles.field}>
                                 <label htmlFor="jmbg">JMBG</label>
                                 <input
                                     id="jmbg"

@@ -47,7 +47,15 @@ function StudentCompetitions() {
     const [applyErrorId, setApplyErrorId] = useState(null)
     const [applySuccessId, setApplySuccessId] = useState(null)
 
-    const [confirmModalId, setConfirmModalId] = useState(null)
+    useEffect(() => {
+        if (applyError) {
+            const timer = setTimeout(() => {
+                setApplyError(null)
+                setApplyErrorId(null)
+            }, 5000)
+            return () => clearTimeout(timer)
+        }
+    }, [applyError])
 
     const fetchCompetitions = async () => {
         setListLoading(true)
@@ -122,21 +130,12 @@ function StudentCompetitions() {
         const file = selectedFiles[competitionId]
 
         if (!file) {
-            setConfirmModalId(competitionId)
+            setApplyError('Morate priložiti PDF dokument da biste se prijavili na konkurs.')
+            setApplyErrorId(competitionId)
             return
         }
 
         performApply(competitionId)
-    }
-
-    const handleConfirmWithoutDocument = () => {
-        const competitionId = confirmModalId
-        setConfirmModalId(null)
-        performApply(competitionId)
-    }
-
-    const handleCancelConfirm = () => {
-        setConfirmModalId(null)
     }
 
     const formatDate = (dateStr) => {
@@ -150,6 +149,13 @@ function StudentCompetitions() {
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Konkursi</h1>
+
+            <div className={styles.warningBox}>
+                <p className={styles.warningText}>
+                    ⚠️ <strong>Važno:</strong> Pre prijave na konkurs, proverite da li su vaši podaci u profilu tačni i ažurirani.
+                    Netačni podaci mogu uticati na vašu prijavu.
+                </p>
+            </div>
 
             {listLoading && <p className={styles.info}>Učitavanje...</p>}
             {listError && <p className={styles.error}>{listError}</p>}
@@ -199,25 +205,6 @@ function StudentCompetitions() {
                     </section>
                 </>
             )}
-
-            <Modal
-                title="Potvrda prijave"
-                isOpen={confirmModalId !== null}
-                onClose={handleCancelConfirm}
-                maxWidth="380px"
-            >
-                <p className={styles.modalText}>
-                    Niste priložili dokument. Da li ste sigurni da želite da se prijavite bez njega?
-                </p>
-                <div className={styles.modalActions}>
-                    <button className={styles.modalCancelBtn} onClick={handleCancelConfirm}>
-                        Otkaži
-                    </button>
-                    <button className={styles.modalConfirmBtn} onClick={handleConfirmWithoutDocument}>
-                        Prijavi se bez dokumenta
-                    </button>
-                </div>
-            </Modal>
         </div>
     )
 }

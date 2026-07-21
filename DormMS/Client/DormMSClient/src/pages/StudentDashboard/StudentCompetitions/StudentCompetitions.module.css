@@ -11,6 +11,22 @@
     color: #1a1a1a;
 }
 
+.warningBox {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-left: 4px solid #f97316;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.warningText {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #9a3412;
+    line-height: 1.5;
+}
+
 .section {
     margin-bottom: 2rem;
 }

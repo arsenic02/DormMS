@@ -142,6 +142,26 @@
     color: #555;
 }
 
+.badge.draft {
+    background: #eef0f2;
+    color: #64748b;
+}
+
+.badge.open {
+    background: #edfaf3;
+    color: #27ae60;
+}
+
+.badge.closed {
+    background: #fdf0ef;
+    color: #c0392b;
+}
+
+.badge.completed {
+    background: #eef2ff;
+    color: #4338ca;
+}
+
 /* Lista prijava */
 .list {
     display: flex;

@@ -25,6 +25,13 @@ const competitionStatusLabel = {
     3: 'Završen',
 }
 
+const competitionStatusClass = {
+    0: 'draft',
+    1: 'open',
+    2: 'closed',
+    3: 'completed',
+}
+
 const typeLabel = {
     0: 'Stariji studenti',
     1: 'Brucoši',
@@ -139,7 +146,9 @@ function DormManagerCompetitionApplications() {
                         <h1 className={styles.title}>{competition.name}</h1>
                         <div className={styles.badges}>
                             <span className={styles.typeBadge}>{typeLabel[competition.type] ?? 'N/A'}</span>
-                            <span className={styles.badge}>{competitionStatusLabel[competition.status] ?? 'N/A'}</span>
+                            <span className={`${styles.badge} ${styles[competitionStatusClass[competition.status]] ?? ''}`}>
+                                {competitionStatusLabel[competition.status] ?? 'N/A'}
+                            </span>
                         </div>
                     </div>
                     <p className={styles.competitionDesc}>{competition.description}</p>

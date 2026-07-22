@@ -198,7 +198,7 @@ public class StudentService : IStudentService
                         StudentIDNumber = indexNumber,
                         Email = normalizedEmail,
                         Status = StudentStatus.Active,
-                        ProfileStatus = StudentProfileStatus.Incomplete,
+                        ProfileStatus = StudentProfileStatus.Verified,
                         ESPB = record.ESPB,
                         AverageGrade = record.AverageGrade,
                         YearOfEnrollment = record.YearOfEnrollment > 0 ? record.YearOfEnrollment : DateTime.Now.Year - random.Next(1, 5),
@@ -227,17 +227,14 @@ public class StudentService : IStudentService
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
 
-                    if (record.TotalFamilyIncome > 0 && record.FamilyMemberCount > 0)
+                    var financialStatus = new StudentFinancialStatus
                     {
-                        var financialStatus = new StudentFinancialStatus
-                        {
-                            StudentId = student.Id,
-                            TotalFamilyIncome = record.TotalFamilyIncome,
-                            FamilyMemberCount = record.FamilyMemberCount
-                        };
-                        _context.StudentFinancialStatuses.Add(financialStatus);
-                        await _context.SaveChangesAsync();
-                    }
+                        StudentId = student.Id,
+                        TotalFamilyIncome = record.TotalFamilyIncome > 0 ? record.TotalFamilyIncome : 0,
+                        FamilyMemberCount = record.FamilyMemberCount > 0 ? record.FamilyMemberCount : 1
+                    };
+                    _context.StudentFinancialStatuses.Add(financialStatus);
+                    await _context.SaveChangesAsync();
 
                     result.SuccessfullyImported++;
                 }
@@ -330,12 +327,6 @@ public class StudentService : IStudentService
         if (student.AverageGrade == 0) student.AverageGrade = Math.Round((decimal)(random.NextDouble() * 3.5 + 6.5), 2);
 
         student.IsBudgetStudent = true;
-        student.ProfileStatus = StudentProfileStatus.Verified;
-
-        if (student.FinancialStatus != null)
-        {
-            // Financial status exists, no verification needed
-        }
     }
 
     public async Task<int> ClearAllStudentsAsync()

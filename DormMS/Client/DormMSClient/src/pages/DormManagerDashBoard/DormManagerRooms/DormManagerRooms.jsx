@@ -207,7 +207,7 @@ function RoomCard({ room, onStudentRemoved }) {
                                 onClick={() => setStudentToRemove(student)}
                                 disabled={removingId === student.id}
                                 type="button"
-                                title="Ukloni studenta iz sobe"
+                                title="Iseli studenta iz sobe"
                             >
                                 {removingId === student.id ? '...' : <>&times;</>}
                             </button>
@@ -217,14 +217,14 @@ function RoomCard({ room, onStudentRemoved }) {
             </div>
 
             <Modal
-                title="Ukloni studenta"
+                title="Iseli studenta"
                 isOpen={studentToRemove !== null}
                 onClose={() => {
                     if (!removingId) setStudentToRemove(null)
                 }}
             >
                 <p className={styles.confirmText}>
-                    Da li ste sigurni da želite da uklonite studenta "{studentToRemove?.name} {studentToRemove?.surname}" iz sobe {room.roomNumber}?
+                    Da li ste sigurni da želite da iselite studenta {studentToRemove?.name} {studentToRemove?.surname} iz sobe {room.roomNumber}?
                 </p>
                 <div className={styles.modalActions}>
                     <button
@@ -241,7 +241,7 @@ function RoomCard({ room, onStudentRemoved }) {
                         onClick={handleRemove}
                         disabled={removingId !== null}
                     >
-                        {removingId ? 'Uklanjanje...' : 'Da, ukloni'}
+                        {removingId ? 'Iseljavanje...' : 'Da, iseli'}
                     </button>
                 </div>
             </Modal>

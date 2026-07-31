@@ -46,9 +46,7 @@ function Information() {
                 </p>
                 <p className={styles.text}>
                     Da bi student konkurisao, potrebno je da se prvo registruje na sistemu, popuni
-                    svoj profil sa ličnim i akademskim podacima, i dostavi tražena dokumenta. Nakon
-                    verifikacije profila i ispunjavanja uslova, student može da podnese prijavu na
-                    otvoreni konkurs.
+                    svoj profil sa ličnim i akademskim podacima. Nakon toga, student može da podnese prijavu na otvoreni konkurs i uz prijavu prilaže dokumenta. Referent proverava podatke i dokumenta, i odobrava ili odbija prijavu.
                 </p>
             </section>
 

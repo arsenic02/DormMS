@@ -256,7 +256,7 @@ function StudentProfile() {
                             <ViewItem label="Broj indeksa" value={formData.studentIDNumber} />
                             <ViewItem label="Email" value={formData.email} />
                             <ViewItem label="Adresa" value={formData.homeAddress} />
-                            <ViewItem label="Opstina" value={formData.municipalityOfResidence} />
+                            <ViewItem label="Opština" value={formData.municipalityOfResidence} />
                             <ViewItem label="JMBG" value={formData.jmbg} />
                             <ViewItem label="Godine" value={formData.age} />
                             <ViewItem label="Pol" value={selectedGender} />
@@ -265,11 +265,11 @@ function StudentProfile() {
                             <ViewItem label="Fakultet" value={formData.facultyName} />
                             <ViewItem label="ESPB" value={formData.espb} />
                             {isFreshman ? (
-                                <ViewItem label="Prosecna ocena (srednja skola)" value={formData.highSchoolAverageGrade} />
+                                <ViewItem label="Prosečna ocena (srednja škola)" value={formData.highSchoolAverageGrade} />
                             ) : (
-                                <ViewItem label="Prosecna ocena (fakultet)" value={formData.averageGrade} />
+                                <ViewItem label="Prosečna ocena (fakultet)" value={formData.averageGrade} />
                             )}
-                            <ViewItem label="Finansiranje" value={formData.isBudgetStudent ? 'Budzet' : 'Samofinansiranje'} />
+                            <ViewItem label="Finansiranje" value={formData.isBudgetStudent ? 'Budžet' : 'Samofinansiranje'} />
                         </div>
 
                         <button type="button" className={styles.editBtn} onClick={() => setIsEditing(true)}>
@@ -292,7 +292,7 @@ function StudentProfile() {
                             </div>
 
                             <div className={styles.field}>
-                                <label htmlFor="municipalityOfResidence">Opstina</label>
+                                <label htmlFor="municipalityOfResidence">Opština</label>
                                 <input
                                     id="municipalityOfResidence"
                                     name="municipalityOfResidence"
@@ -398,7 +398,7 @@ function StudentProfile() {
 
                             {isFreshman ? (
                                 <div className={styles.field}>
-                                    <label htmlFor="highSchoolAverageGrade">Prosecna ocena (srednja skola)</label>
+                                    <label htmlFor="highSchoolAverageGrade">Prosečna ocena (srednja škola)</label>
                                     <input
                                         id="highSchoolAverageGrade"
                                         name="highSchoolAverageGrade"
@@ -414,7 +414,7 @@ function StudentProfile() {
                                 </div>
                             ) : (
                                 <div className={styles.field}>
-                                    <label htmlFor="averageGrade">Prosecna ocena (fakultet)</label>
+                                    <label htmlFor="averageGrade">Prosečna ocena (fakultet)</label>
                                     <input
                                         id="averageGrade"
                                         name="averageGrade"
@@ -438,11 +438,11 @@ function StudentProfile() {
                                 checked={formData.isBudgetStudent}
                                 onChange={handleChange}
                             />
-                            <span>Budzet student</span>
+                            <span>Budžetski student</span>
                         </label>
 
                         <div className={styles.actions}>
-                            <button type="submit" className={styles.btn}>Sacuvaj</button>
+                            <button type="submit" className={styles.btn}>Sačuvaj</button>
                             <button type="button" className={styles.cancelBtn} onClick={() => setIsEditing(false)}>
                                 Odustani
                             </button>

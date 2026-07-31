@@ -7,10 +7,7 @@ const faqItems = [
         question: 'Kako se registrujem na sistem?',
         answer: 'Kliknite na "Registruj se" i unesite svoj email i lozinku. Nakon registracije, potrebno je da popunite svoj profil sa ličnim, akademskim i finansijskim podacima.'
     },
-    {
-        question: 'Šta ako mi profil bude odbijen?',
-        answer: 'Ako referent odbije vaš profil, moći ćete da ispravite i ponovo pošaljete podatke na verifikaciju.'
-    },
+   
     {
         question: 'Da li mogu da se prijavim na konkurs ako nisam budžetski student?',
         answer: 'Ne, prijava na konkurs za smeštaj dostupna je samo budžetskim studentima sa verifikovanim profilom i finansijskim statusom.'
@@ -59,10 +56,10 @@ function Information() {
                 <h2 className={styles.sectionTitle}>Uslovi za prijavu</h2>
                 <ul className={styles.list}>
                     <li>Status budžetskog studenta na fakultetu</li>
-                    <li>Verifikovan studentski profil i finansijski status studenta</li>
                     <li>Za brucoše: prosečna ocena iz srednje škole</li>
                     <li>Za starije studente: prosečna ocena na fakultetu i broj ostvarenih ESPB bodova</li>
-                    <li>Dokument koji dokazuje navedene podatke</li>
+                    <li>Dokument koji dokazuje navedene podatke i podatke o mestu prebivališta</li>
+                    <li>Student se uspešno prijavio na konkurs nakon što referent pregleda podatke i dokument i odobri prijavu</li>
                 </ul>
             </section>
 

@@ -112,3 +112,33 @@ public class GenerateDocumentsResultDto
     public int Failed { get; set; }
     public List<string> Errors { get; set; } = new();
 }
+
+public class CompetitionApplicationStudentDataDto
+{
+    public int ApplicationId { get; set; }
+    public int StudentId { get; set; }
+    public string StudentName { get; set; } = string.Empty;
+    public string StudentSurname { get; set; } = string.Empty;
+    public string StudentEmail { get; set; } = string.Empty;
+    public string StudentIDNumber { get; set; } = string.Empty;
+    public string JMBG { get; set; } = string.Empty;
+    public string HomeAddress { get; set; } = string.Empty;
+    public string MunicipalityOfResidence { get; set; } = string.Empty;
+    public int Age { get; set; }
+    public string Gender { get; set; } = string.Empty;
+    public int YearOfEnrollment { get; set; }
+    public string StudyLevel { get; set; } = string.Empty;
+    public string StudentStatus { get; set; } = string.Empty;
+    public string FacultyName { get; set; } = string.Empty;
+    public int ESPB { get; set; }
+    public decimal? AverageGrade { get; set; }
+    public decimal? HighSchoolAverageGrade { get; set; }
+    public bool IsBudgetStudent { get; set; }
+    public int CurrentYearOfStudy { get; set; }
+    public bool IsFreshman { get; set; }
+    public decimal? TotalFamilyIncome { get; set; }
+    public int? FamilyMemberCount { get; set; }
+    public decimal? IncomePerMember { get; set; }
+    public string? Notes { get; set; }
+    public DateTime AppliedAt { get; set; }
+}

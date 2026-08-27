@@ -215,6 +215,12 @@
     flex-wrap: wrap;
 }
 
+.cardActionsLinks {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
 .docLink {
     font-size: 0.85rem;
     color: #1a3a5c;
@@ -223,6 +229,17 @@
 }
 
 .docLink:hover {
+    text-decoration: underline;
+}
+
+.dataLink {
+    font-size: 0.85rem;
+    color: #1a3a5c;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.dataLink:hover {
     text-decoration: underline;
 }
 

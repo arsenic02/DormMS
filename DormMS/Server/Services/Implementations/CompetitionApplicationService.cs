@@ -429,6 +429,49 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         return $"/uploads/documents/{fileName}";
     }
 
+    public async Task<CompetitionApplicationStudentDataDto?> GetApplicationStudentDataAsync(int applicationId)
+    {
+        var application = await _context.CompetitionApplications
+            .Include(a => a.Student)
+            .ThenInclude(s => s.FinancialStatus)
+            .FirstOrDefaultAsync(a => a.Id == applicationId);
+
+        if (application is null)
+            return null;
+
+        var student = application.Student;
+
+        return new CompetitionApplicationStudentDataDto
+        {
+            ApplicationId = application.Id,
+            StudentId = student.Id,
+            StudentName = student.Name,
+            StudentSurname = student.Surname,
+            StudentEmail = student.Email,
+            StudentIDNumber = student.StudentIDNumber,
+            JMBG = student.JMBG,
+            HomeAddress = student.HomeAddress,
+            MunicipalityOfResidence = student.MunicipalityOfResidence,
+            Age = student.Age,
+            Gender = student.Gender.ToString(),
+            YearOfEnrollment = student.YearOfEnrollment,
+            StudyLevel = student.StudyLevel.ToString(),
+            StudentStatus = student.Status.ToString(),
+            FacultyName = student.FacultyName ?? string.Empty,
+            ESPB = student.ESPB,
+            AverageGrade = student.AverageGrade,
+            HighSchoolAverageGrade = student.HighSchoolAverageGrade,
+            IsBudgetStudent = student.IsBudgetStudent,
+            CurrentYearOfStudy = student.CurrentYearOfStudy,
+            IsFreshman = student.IsFreshman,
+            TotalFamilyIncome = student.FinancialStatus?.TotalFamilyIncome,
+            FamilyMemberCount = student.FinancialStatus?.FamilyMemberCount,
+            IncomePerMember = student.FinancialStatus?.IncomePerMember,
+            Notes = application.Notes,
+            AppliedAt = application.AppliedAt
+        };
+    }
+
     // public async Task<string> SaveDocumentAsync(IFormFile file)
     // {
     //     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "documents");

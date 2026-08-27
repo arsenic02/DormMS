@@ -208,18 +208,26 @@ function DormManagerCompetitionApplications() {
                                 {app.notes && <p className={styles.cardNotes}>Napomena: {app.notes}</p>}
 
                                 <div className={styles.cardActions}>
-                                    {app.documentUrl ? (
-                                        <a
-                                            href={buildDocumentUrl(app.documentUrl)}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={styles.docLink}
+                                    <div className={styles.cardActionsLinks}>
+                                        <Link
+                                            to={`/dorm-manager/applications/${app.id}/student-data`}
+                                            className={styles.dataLink}
                                         >
-                                            Pogledaj dokument
-                                        </a>
-                                    ) : (
-                                        <span className={styles.noDoc}>Nema priloženog dokumenta</span>
-                                    )}
+                                            Pregledaj podatke
+                                        </Link>
+                                        {app.documentUrl ? (
+                                            <a
+                                                href={buildDocumentUrl(app.documentUrl)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={styles.docLink}
+                                            >
+                                                Pogledaj dokument
+                                            </a>
+                                        ) : (
+                                            <span className={styles.noDoc}>Nema priloženog dokumenta</span>
+                                        )}
+                                    </div>
 
                                     <div className={styles.decisionButtons}>
                                         {app.status === 0 ? (

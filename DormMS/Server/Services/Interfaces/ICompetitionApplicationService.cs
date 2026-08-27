@@ -23,6 +23,7 @@ public interface ICompetitionApplicationService
     Task<BulkVerifyApplicationsResultDto> BulkVerifyApplicationsAsync(BulkVerifyApplicationsDto dto);
 
     Task<BulkVerifyApplicationsResultDto> BulkVerifyAllForCompetitionAsync(int competitionId, ApplicationStatus status);
+    Task<CompetitionApplicationStudentDataDto?> GetApplicationStudentDataAsync(int applicationId);
 }
 
 public class CompetitionImportResultDto

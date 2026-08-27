@@ -88,3 +88,14 @@ export const verifyApplication = async (applicationId, status) => {
 
     return res.json()
 }
+
+export const getApplicationStudentData = async (applicationId) => {
+    const res = await fetchWithAuth(`${API_URL}/applications/${applicationId}/student-data`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+    })
+    if (!res.ok) {
+        const text = await res.text().catch(() => null)
+        throw new Error(text || 'Greška prilikom učitavanja podataka studenta.')
+    }
+    return res.json()
+}

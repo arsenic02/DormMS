@@ -14,6 +14,7 @@ import DormManagerRankings from './pages/DormManagerDashBoard/DormManagerRanking
 import DormManagerRanking from './components/Ranking/DormManagerRanking'
 import DormManagerRooms from './pages/DormManagerDashBoard/DormManagerRooms/DormManagerRooms'
 import DormManagerCompetitionApplications from './pages/DormManagerDashBoard/DormManagerCompetitionApplications/DormManagerCompetitionApplications'
+import ApplicationStudentData from './pages/DormManagerDashBoard/DormManagerCompetitionApplications/ApplicationStudentData/ApplicationStudentData'
 import DormManagerRoomSwaps from './pages/DormManagerDashBoard/DormManagerRoomSwaps/DormManagerRoomSwaps'
 import RoomSwapRequest from './pages/StudentDashboard/StudentRoom/RoomSwapRequest/RoomSwapRequest'
 import MoveOutRequest from './pages/StudentDashboard/StudentRoom/MoveOutRequest/MoveOutRequest'
@@ -66,6 +67,7 @@ function App() {
           <Route path="/dorm-manager/rankings/:id" element={<DormManagerRankingPage />} />
           <Route path="/dorm-manager/rooms" element={<DormManagerRooms />} />
           <Route path="/dorm-manager/competitions/:competitionId/applications" element={<DormManagerCompetitionApplications />} />
+          <Route path="/dorm-manager/applications/:applicationId/student-data" element={<ApplicationStudentData />} />
           <Route path="/dorm-manager/notifications" element={<DormManagerNotifications />} />
           <Route path="/dorm-manager/room-swap-requests" element={<DormManagerRoomSwaps />} />
           <Route path="/dorm-manager/move-out-requests" element={<DormManagerMoveOuts />} />

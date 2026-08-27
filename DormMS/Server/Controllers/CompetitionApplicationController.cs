@@ -165,6 +165,17 @@ public class CompetitionApplicationController : ControllerBase
         var result = await _documentGenerationService.GenerateDocumentsForCompetitionAsync(competitionId);
         return Ok(result);
     }
+
+    [Authorize(Roles = "Admin,DormManager")]
+    [HttpGet("applications/{applicationId}/student-data")]
+    public async Task<ActionResult<CompetitionApplicationStudentDataDto>> GetApplicationStudentData(int applicationId)
+    {
+        var data = await _applicationService.GetApplicationStudentDataAsync(applicationId);
+        if (data is null)
+            return NotFound();
+
+        return Ok(data);
+    }
     private int? GetCurrentUserId()
     {
         var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier)

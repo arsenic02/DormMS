@@ -3,10 +3,10 @@
 # 🏢 DormMS – Dormitory Management & Services System
 
 <p align="center">
-  <b>A modern web application for automating administration, room allocation, and student services in dormitories.</b>
+  <b>A modern web application for managing application contests, room allocations, student ranking, and daily dormitory services.</b>
 </p>
 
-[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -20,7 +20,9 @@
 - [About The Project](#-about-the-project)
 - [Tech Stack](#-tech-stack)
 - [Architecture](#-architecture)
-- [Features](#-features)
+- [Core Modules & Features](#-core-modules--features)
+  - [1. Admissions & Room Allocation](#1-admissions--room-allocation)
+  - [2. Daily Dormitory Services](#2-daily-dormitory-services)
 - [Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
   - [1. Clone the Repository](#1-clone-the-repository)
@@ -33,14 +35,14 @@
 
 ## 📖 About The Project
 
-**DormMS** (Dormitory Management System) is a comprehensive software solution designed to streamline and automate dormitory management. It simplifies administrative workflows, tracks student accommodation and services, provides multi-role authentication, and leverages vector-based search for efficient data retrieval.
+**DormMS** (Dormitory Management System) is a comprehensive software solution built to digitize and automate the entire lifecycle of student accommodation. It handles the complete admission process—from application contests and automated student ranking to room assignment—as well as daily resident services such as laundry machine booking, room swaps, and check-outs.
 
 ---
 
 ## ⚙️ Tech Stack
 
 ### **Backend**
-* **C# / .NET 8 Web API** – RESTful web service architecture
+* **C# / .NET 10 Web API** – RESTful web service architecture
 * **Entity Framework Core** – Object-Relational Mapping (ORM)
 * **PostgreSQL** – Relational database with `pgvector` extension support
 
@@ -52,20 +54,26 @@
 
 ## 🏗 Architecture
 
-The project is structured as a 3-tier system divided into distinct modules:
+The project is structured as a 3-tier application divided into distinct modules:
 
-1. **Frontend (`DormMS.Client`)**: React SPA handling UI rendering and client-side logic.
-2. **Backend (`DormMS.Server`)**: ASP.NET Core REST API handling business logic and API endpoints.
-3. **Database (`DormMS.Database`)**: Entity Framework Core data context, models, and migrations.
+1. **Frontend (`DormMS.Client`)**: React SPA handling user interfaces, application forms, and service booking dashboards.
+2. **Backend (`DormMS.Server`)**: ASP.NET Core REST API providing endpoints for rankings, room management, and student service operations.
+3. **Database (`DormMS.Database`)**: Entity Framework Core data context, schema migrations, and vector storage.
 
 ---
 
-## ✨ Features
+## ✨ Core Modules & Features
 
-* 🎓 **Student & Accommodation Management** – Efficient tracking of student profiles, room allocations, and capacity.
-* 🛠 **Maintenance & Services** – Issue reporting, room service requests, and maintenance tracking.
-* 🔒 **Authentication & Authorization** – Secure role-based access control (Admin, Student, Staff).
-* 🔍 **Smart Vector Search** – Fast and context-aware query processing using PostgreSQL vector embeddings.
+### 1. Admissions & Room Allocation
+* 📢 **Contest & Application Management** – Creation and administration of dormitory placement contests with online student applications.
+* 📊 **Student Ranking System** – Automated calculation of points and ranking lists based on academic success and student criteria.
+* 🔑 **Room Allocation** – Transparent room assignment and capacity tracking based on placement results.
+
+### 2. Daily Dormitory Services
+* 🧺 **Laundry Room Booking** – Scheduling system for reserving washing machines and dryers.
+* 🔄 **Room Swaps** – Managed workflow for students to request and execute room exchanges.
+* 🚪 **Check-out / Departure** – Streamlined process for student departures and room clearance.
+* 🔍 **Vector-Powered Search** – Fast contextual querying across system data using PostgreSQL vector embeddings.
 
 ---
 
@@ -74,7 +82,7 @@ The project is structured as a 3-tier system divided into distinct modules:
 ### Prerequisites
 
 Make sure you have the following installed on your machine:
-* [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+* [.NET 10.0 SDK](https://dotnet.microsoft.com/download)
 * [Node.js](https://nodejs.org/) (v18 or higher)
 * [PostgreSQL](https://www.postgresql.org/download/)
 

@@ -20,6 +20,7 @@
 - [About The Project](#-about-the-project)
 - [Tech Stack](#-tech-stack)
 - [Architecture](#-architecture)
+   - [Backend Architecture](#-backend-architecture)
 - [Core Modules & Features](#-core-modules--features)
   - [1. Admissions & Room Allocation](#1-admissions--room-allocation)
   - [2. Daily Dormitory Services](#2-daily-dormitory-services)
@@ -44,7 +45,7 @@
 
 ### **Frontend**
 * **React 19** – Component-based UI framework (powered by Vite)
-* **CSS / Tailwind CSS** – Responsive and modern styling
+* **CSS Modules** – Responsive and modern styling
 
 ---
 
@@ -55,6 +56,42 @@ The project is structured as a 3-tier application divided into distinct modules:
 1. **Frontend (`DormMS.Client`)**: React SPA handling user interfaces, application forms, and service booking dashboards.
 2. **Backend (`DormMS.Server`)**: ASP.NET Core REST API providing endpoints for rankings, room management, and student service operations.
 3. **Database (`DormMS.Database`)**: Entity Framework Core data context, schema migrations, and vector storage.
+
+---
+
+## 🧱 Backend Architecture
+
+The backend follows a layered **Controller → Service → Repository** structure. Each layer has a single responsibility and depends only on the layer directly below it, through interfaces registered in the DI container.
+
+```mermaid
+flowchart LR
+    Client[React SPA] -->|HTTP / JSON| C[Controllers]
+    C -->|DTOs| S[Services]
+    S -->|Entities| R[Repositories]
+    R -->|EF Core| DB[(PostgreSQL)]
+```
+
+| Layer | Responsibility |
+|-------|----------------|
+| **Controllers** | Thin HTTP layer: routing, role-based authorization (`Student` / `Admin` / `DormManager`), reading the current user from the JWT, mapping service results to HTTP responses. No business logic. |
+| **Services** | Business rules and orchestration: contest validation, ranking and quota distribution, room assignment, laundry slot rules, room swap approval flow. Return explicit result objects instead of throwing for expected failures. |
+| **Repositories** | Data access only: EF Core queries, filtering, pagination and DTO projections. Services never touch `DbContext` directly. |
+
+### Conventions
+
+* **Result pattern** – expected business failures (e.g. an invalid application) are returned as result records, not exceptions.
+* **DTOs** – entities are never exposed through the API; lists are returned as `PagedResultDto<T>`.
+* **Read vs. write queries** – read-only methods use `AsNoTracking` or `Select()` projections, while write paths use tracked queries (`GetByIdAsync` vs. `GetByIdTrackedAsync`).
+* **Entity configuration** – each entity has its own `IEntityTypeConfiguration<T>`.
+* **Global error handling** – `IExceptionHandler` with RFC 7807 `ProblemDetails` responses.
+* **Authentication** – stateless JWT bearer tokens.
+
+### Request flow example – submitting an application
+
+1. `CompetitionController` validates the request and extracts the user ID from the JWT.
+2. `CompetitionService.ApplyAsync` checks the contest type, deadlines and eligibility, then returns an `ApplyResult`.
+3. `CompetitionRepository` persists the application through EF Core.
+4. The controller maps the result to `200 OK`, `400 Bad Request` or `ProblemDetails`.
 
 ---
 

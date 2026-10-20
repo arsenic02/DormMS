@@ -7,8 +7,8 @@
 </p>
 
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
-[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 </div>
@@ -25,6 +25,7 @@
   - [2. Daily Dormitory Services](#2-daily-dormitory-services)
 - [Getting Started](#-getting-started)
 - [Prerequisites](#prerequisites)
+- [License](#-license)
 
 ---
 
@@ -39,10 +40,10 @@
 ### **Backend**
 * **C# / .NET 10 Web API** – RESTful web service architecture
 * **Entity Framework Core** – Object-Relational Mapping (ORM)
-* **PostgreSQL** – Relational database with `pgvector` extension support
+* **PostgreSQL 18** – Relational database with `pgvector` extension support
 
 ### **Frontend**
-* **React** – Component-based UI framework (powered by Vite)
+* **React 19** – Component-based UI framework (powered by Vite)
 * **CSS / Tailwind CSS** – Responsive and modern styling
 
 ---
@@ -79,4 +80,6 @@ The project is structured as a 3-tier application divided into distinct modules:
 Make sure you have the following installed on your machine:
 * [.NET 10.0 SDK](https://dotnet.microsoft.com/download)
 * [Node.js](https://nodejs.org/) (v18 or higher)
-* [PostgreSQL](https://www.postgresql.org/download/)
+* [PostgreSQL 18](https://www.postgresql.org/download/)
+
+---

@@ -82,8 +82,6 @@ flowchart LR
 * **Result pattern** – expected business failures (e.g. an invalid application) are returned as result records, not exceptions.
 * **DTOs** – entities are never exposed through the API; lists are returned as `PagedResultDto<T>`.
 * **Read vs. write queries** – read-only methods use `AsNoTracking` or `Select()` projections, while write paths use tracked queries (`GetByIdAsync` vs. `GetByIdTrackedAsync`).
-* **Entity configuration** – each entity has its own `IEntityTypeConfiguration<T>`.
-* **Global error handling** – `IExceptionHandler` with RFC 7807 `ProblemDetails` responses.
 * **Authentication** – stateless JWT bearer tokens.
 
 ### Request flow example – submitting an application
@@ -103,7 +101,7 @@ flowchart LR
 * 🔑 **Room Allocation** – Transparent room assignment and capacity tracking based on placement results.
 
 ### 2. Daily Dormitory Services
-* 🧺 **Laundry Room Booking** – Scheduling system for reserving washing machines and dryers.
+* 🧺 **Laundry Room Booking** – Scheduling system for reserving washing machines.
 * 🔄 **Room Swaps** – Managed workflow for students to request and execute room exchanges.
 * 🚪 **Check-out / Departure** – Streamlined process for student departures and room clearance.
 * 🔍 **Vector-Powered Search** – Fast contextual querying across system data using PostgreSQL vector embeddings.

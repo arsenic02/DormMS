@@ -83,3 +83,7 @@ Make sure you have the following installed on your machine:
 * [PostgreSQL 18](https://www.postgresql.org/download/)
 
 ---
+
+## 📜 License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.

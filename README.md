@@ -24,12 +24,7 @@
   - [1. Admissions & Room Allocation](#1-admissions--room-allocation)
   - [2. Daily Dormitory Services](#2-daily-dormitory-services)
 - [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [1. Clone the Repository](#1-clone-the-repository)
-  - [2. Backend & Database Setup](#2-backend--database-setup)
-  - [3. Frontend Setup](#3-frontend-setup)
-- [Project Structure](#-project-structure)
-- [License](#-license)
+- [Prerequisites](#prerequisites)
 
 ---
 
@@ -85,11 +80,3 @@ Make sure you have the following installed on your machine:
 * [.NET 10.0 SDK](https://dotnet.microsoft.com/download)
 * [Node.js](https://nodejs.org/) (v18 or higher)
 * [PostgreSQL](https://www.postgresql.org/download/)
-
----
-
-### 1. Clone the Repository
-
-```bash
-git clone [https://github.com/arsenic02/DormMS.git](https://github.com/arsenic02/DormMS.git)
-cd DormMS

@@ -119,6 +119,13 @@ QuestPDF.Drawing.FontManager.RegisterFont(
 QuestPDF.Drawing.FontManager.RegisterFont(
     File.OpenRead(Path.Combine(builder.Environment.WebRootPath, "fonts", "DejaVuSans-Bold.ttf")));
 
+//automatska primena migracije pre seedovanja podataka
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
+
 await app.Services.SeedDefaultUsersAsync(builder.Configuration);
 await app.Services.SeedKnowledgeBaseAsync();
 

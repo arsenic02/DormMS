@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # 1. Baza: PostgreSQL 18 sa pgvector ekstenzijom
+  postgres:
+    image: ankane/pgvector
+    container_name: dormms_db
+    environment:
+      POSTGRES_DB: dormms_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: MojaLozinka123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dormms-net
+
+  # 2. Backend: .NET 10 API
+  backend:
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
+    container_name: dormms_backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=dormms_db;Username=postgres;Password=MojaLozinka123
+      - JwtSettings__Key=OvoJeNekiDovoljnoDugackiTajniKljucZaJwtToken123456!
+      - Ollama__BaseUrl=http://host.docker.internal:11434
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - dormms-net
+
+  # 3. Frontend: React 19 sa Nginx-om
+  frontend:
+    build:
+      context: ./Client/DormMSClient
+      dockerfile: Dockerfile
+    container_name: dormms_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - dormms-net
+
+volumes:
+  postgres_data:
+
+networks:
+  dormms-net:
+    driver: bridge

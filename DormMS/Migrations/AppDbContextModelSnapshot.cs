@@ -579,12 +579,6 @@ namespace DormMS.Migrations
                     b.Property<decimal>("TotalFamilyIncome")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("VerificationStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("VerifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
                     b.HasKey("Id");
 
                     b.HasIndex("StudentId")

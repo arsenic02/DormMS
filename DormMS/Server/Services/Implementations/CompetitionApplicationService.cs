@@ -71,7 +71,6 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         if (student.ProfileStatus == StudentProfileStatus.Incomplete)
             return new(null, "Molim vas da popunite podatke o profilu pre prijave na konkurs.");
 
-        // Use financial data from request if provided, otherwise use student's existing financial status
         decimal totalFamilyIncome;
         int familyMemberCount;
 
@@ -98,7 +97,6 @@ public class CompetitionApplicationService : ICompetitionApplicationService
         if (student.DormitoryRoomId != null)
             return new(null, "Već imate dodeljeno mesto u domu. Ne možete se prijaviti na konkurs.");
 
-        // Provera opstine
         if (competition.CreatedByDormManagerId.HasValue)
         {
             var dormManager = await _context.DormManagers
@@ -123,11 +121,9 @@ public class CompetitionApplicationService : ICompetitionApplicationService
             Notes = dto.Notes,
             DocumentUrl = dto.DocumentUrl,
             Status = ApplicationStatus.Pending,
-            // AppliedAt = DateTime.UtcNow
             AppliedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified)
         };
 
-        // Create or update financial status for this application only if new data was provided
         if (dto.FinancialData is not null)
         {
             var financialStatus = await _context.StudentFinancialStatuses

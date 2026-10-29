@@ -10,7 +10,8 @@ public class EmbeddingService : IEmbeddingService
 
     public EmbeddingService(IConfiguration config)
     {
-        var uri = new Uri(config["Ollama:BaseUrl"] ?? "http://localhost:11434");
+        var uri = new Uri(config["Ollama:BaseUrl"] ?? "http://host.docker.internal:11434");
+        //var uri = new Uri(config["Ollama:BaseUrl"] ?? "http://localhost:11434");
         _ollama = new OllamaApiClient(uri, "qwen3-embedding:0.6b");
     }
 

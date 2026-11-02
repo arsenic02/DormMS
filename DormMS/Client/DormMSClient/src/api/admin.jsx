@@ -1,6 +1,6 @@
 import { fetchWithAuth } from './httpClient'
 
-const DORM_URL = 'http://localhost:5153/api/dorm'
+const DORM_URL = '/api/dorm'
 
 function authHeaders() {
     const token = localStorage.getItem('token')
@@ -95,7 +95,7 @@ export async function deleteAllRooms(dormId) {
     return res.json()
 }
 
-const USERS_URL = 'http://localhost:5153/api/users'
+const USERS_URL = '/api/users'
 
 export async function getUsersPaged(pageNumber, pageSize, role) {
     const params = new URLSearchParams({
@@ -150,7 +150,7 @@ export async function createDormManager(dto) {
 }
 
 
-const STUDENTS_URL = 'http://localhost:5153/api/student'
+const STUDENTS_URL = '/api/student'
 
 export async function getStudentsPaged(pageNumber, pageSize, faculty, isFreshman) {
     const params = new URLSearchParams({

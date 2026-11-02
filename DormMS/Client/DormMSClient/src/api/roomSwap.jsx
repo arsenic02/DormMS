@@ -1,6 +1,6 @@
 import { fetchWithAuth } from "./httpClient"
 
-const BASE_URL = 'http://localhost:5153/api/room-swap-requests'
+const BASE_URL = '/api/room-swap-requests'
 
 function authHeaders() {
     const token = localStorage.getItem('token')
@@ -74,7 +74,7 @@ export async function getOutgoingSwapRequests() {
     return res.json()
 }
 
-const MANAGER_BASE_URL = 'http://localhost:5153/api/room-swap-requests/manager'
+const MANAGER_BASE_URL = '/api/room-swap-requests/manager'
 
 export async function getPendingSwapRequestsForManager() {
     const res = await fetchWithAuth(`${MANAGER_BASE_URL}/pending`, {

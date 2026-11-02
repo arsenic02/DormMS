@@ -1,6 +1,6 @@
 import { fetchWithAuth } from "./httpClient"
 
-const BASE_URL = 'http://localhost:5153/api'
+const BASE_URL = '/api'
 
 export async function loginUser(email, password) {
   const response = await fetch(`${BASE_URL}/auth/login`, {

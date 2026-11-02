@@ -38,7 +38,7 @@ const typeLabel = {
 }
 
 const PAGE_SIZE = 10
-const BACKEND_BASE_URL = 'http://localhost:5153'
+const BACKEND_BASE_URL = ''
 
 const buildDocumentUrl = (documentUrl) => {
     if (!documentUrl) return null

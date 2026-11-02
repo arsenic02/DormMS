@@ -1,6 +1,6 @@
 import { fetchWithAuth } from './httpClient'
 
-const BASE_URL = 'http://localhost:5153/api/notifications'
+const BASE_URL = '/api/notifications'
 
 function authHeaders() {
     const token = localStorage.getItem('token')

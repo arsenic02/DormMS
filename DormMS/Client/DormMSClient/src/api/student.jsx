@@ -1,6 +1,6 @@
 import { fetchWithAuth } from "./httpClient"
 
-const BASE_URL = 'http://localhost:5153/api/Student'
+const BASE_URL = '/api/Student'
 const getToken = () => localStorage.getItem('token')
 
 export async function updateStudentProfile(profileData, token) {

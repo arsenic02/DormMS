@@ -24,8 +24,9 @@ services:
     container_name: dormms_backend
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=dormms_db;Username=postgres;Password=MojaLozinka123
-      - JwtSettings__Key=OvoJeNekiDovoljnoDugackiTajniKljucZaJwtToken123456!
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - JwtSettings__Key=${JWT_SECRET_KEY}
+      - AdminSeed__Password=${ADMIN_SEED_PASSWORD}
       - Ollama__BaseUrl=http://host.docker.internal:11434
     ports:
       - "8080:8080"

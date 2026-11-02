@@ -1,6 +1,6 @@
 import { fetchWithAuth } from "./httpClient"
 
-const BASE_URL = 'http://localhost:5153/api/laundry'
+const BASE_URL = '/api/laundry'
 
 export async function getAllMachines() {
   const token = localStorage.getItem('token')

@@ -1,6 +1,6 @@
 import { fetchWithAuth } from './httpClient'
 
-const API_URL = 'http://localhost:5153/api'
+const API_URL = '/api'
 
 export async function askChatbot(question) {
     const token = localStorage.getItem('token')

@@ -2,11 +2,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Pošto si u Server folderu, a .csproj je jedan nivo iznad (u root-u), kopiramo ga ovako:
-COPY ["../DormMS.csproj", "./"]
+# Build context je root projekta (docker-compose: context: "."), pa je .csproj u root-u konteksta.
+COPY ["DormMS.csproj", "./"]
 RUN dotnet restore "DormMS.csproj"
 
-# Kopiramo ostatak koda iz Server foldera i root-a (ili ceo projekat)
+# Kopiramo ceo projekat iz root konteksta
 COPY . .
 RUN dotnet publish "DormMS.csproj" -c Release -o /app/publish /p:UseAppHost=false
 

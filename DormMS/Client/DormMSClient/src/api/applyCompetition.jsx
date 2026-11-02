@@ -1,6 +1,6 @@
 import { fetchWithAuth } from "./httpClient"
 
-const API_URL = 'http://localhost:5153/api/CompetitionApplication'
+const API_URL = '/api/CompetitionApplication'
 
 const getToken = () => localStorage.getItem('token')
 

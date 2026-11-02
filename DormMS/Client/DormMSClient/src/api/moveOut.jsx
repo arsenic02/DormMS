@@ -1,6 +1,6 @@
 import { fetchWithAuth } from "./httpClient"
 
-const BASE_URL = 'http://localhost:5153/api/move-out-requests'
+const BASE_URL = '/api/move-out-requests'
 
 function authHeaders() {
     const token = localStorage.getItem('token')
@@ -37,7 +37,7 @@ export async function getMyMoveOutRequest() {
     return res.json()
 }
 
-const MANAGER_BASE_URL = 'http://localhost:5153/api/move-out-requests/manager'
+const MANAGER_BASE_URL = '/api/move-out-requests/manager'
 
 export async function getPendingMoveOutRequestsForManager() {
     const res = await fetchWithAuth(`${MANAGER_BASE_URL}/pending`, {

@@ -1,0 +1,21 @@
+# Tajne i lokalna konfiguracija
+.env
+
+# Git / IDE
+.git/
+.gitignore
+.vs/
+.vscode/
+
+# Build artefakti
+**/bin/
+**/obj/
+
+# Frontend (ima sopstveni Dockerfile i build context)
+Client/
+
+# Upload-ovani fajlovi (nisu deo koda)
+wwwroot/uploads/
+
+# Docker/compose fajlovi
+docker-compose.yml

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import DormManagerRanking from '../../../../components/Ranking/DormManagerRanking'
 import styles from './DormManagerRankingPage.module.css'
 
-const API_URL = 'http://localhost:5153/api/Competition'
+const API_URL = '/api/Competition'
 const COMPLETED_STATUS = 3
 
 const statusLabel = {

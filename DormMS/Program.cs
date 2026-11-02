@@ -127,6 +127,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 await app.Services.SeedDefaultUsersAsync(builder.Configuration);
+// Demo podaci se seeduju samo kada je Seed:DemoData = true (vidi appsettings.Development.json / docker-compose).
+await DormMS.Server.Seed.DemoDataSeeder.SeedDemoDataAsync(app.Services, builder.Configuration);
 await app.Services.SeedKnowledgeBaseAsync();
 
 if (app.Environment.IsDevelopment())

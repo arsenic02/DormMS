@@ -27,6 +27,7 @@ services:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - JwtSettings__Key=${JWT_SECRET_KEY}
       - AdminSeed__Password=${ADMIN_SEED_PASSWORD}
+      - Seed__DemoData=true
       - Ollama__BaseUrl=http://host.docker.internal:11434
     ports:
       - "8080:8080"

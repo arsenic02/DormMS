@@ -80,7 +80,15 @@ public class DormService : IDormService
         var rooms = new List<DormitoryRoom>();
         int counter = dorm.Rooms.Count + 1;
 
-        int doubleMaleCount = (int)Math.Round(dto.DoubleRooms * dto.MalePercentage / 100.0);
+        // Ukupan broj muških soba računa se JEDNOM (iz ukupnog broja soba), pa se zatim
+        // raspoređuje po tipu sobe. Da se svaka grupa zaokružuje nezavisno, greška bi se
+        // akumulirala (npr. 3+3 sobe pri 50% dalo bi 4/2 umesto 3/3).
+        int totalRooms = dto.DoubleRooms + dto.TripleRooms;
+        int maleRooms = (int)Math.Round(totalRooms * dto.MalePercentage / 100.0);
+
+        int doubleMaleCount = totalRooms == 0
+            ? 0
+            : (int)Math.Round((double)maleRooms * dto.DoubleRooms / totalRooms);
         int doubleFemaleCount = dto.DoubleRooms - doubleMaleCount;
 
         for (int i = 0; i < doubleMaleCount; i++)
@@ -109,7 +117,7 @@ public class DormService : IDormService
             });
         }
 
-        int tripleMaleCount = (int)Math.Round(dto.TripleRooms * dto.MalePercentage / 100.0);
+        int tripleMaleCount = maleRooms - doubleMaleCount;
         int tripleFemaleCount = dto.TripleRooms - tripleMaleCount;
 
         for (int i = 0; i < tripleMaleCount; i++)

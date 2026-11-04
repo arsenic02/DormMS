@@ -6,24 +6,6 @@ using FluentAssertions;
 using Moq;
 
 namespace DormMS.Tests.Services;
-
-/// <summary>
-/// Jedinični testovi za <see cref="DormService.GenerateRoomsAsync"/>.
-///
-/// Testiramo samo logiku servisa (podelu i numeraciju soba), bez prave baze:
-/// zavisnost <see cref="IDormRepository"/> zamenjujemo lažnim objektom (mock-om).
-///
-/// Moq pojmovi koji se koriste:
-///   new Mock&lt;IDormRepository&gt;()  -> lažni objekat koji implementira interfejs
-///   .Setup(r => r.Metod(...))       -> "kada se pozove ovaj metod..."
-///   .ReturnsAsync(vrednost)         -> "...vrati ovu vrednost" (za async metode)
-///   It.IsAny&lt;T&gt;()               -> "bilo koji argument ovog tipa"
-///   .Callback(...)                  -> hvata ono što servis pošalje repozitorijumu
-///   .Object                         -> stvarna instanca mock-a koja se predaje servisu
-///   .Verify(..., Times.Never)       -> provera da metod nije pozvan
-///
-/// xUnit pravi novu instancu klase za svaki test, pa je stanje iz konstruktora uvek sveže.
-/// </summary>
 public class DormServiceTests
 {
     private const int DefaultDormId = 1;

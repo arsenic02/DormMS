@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using DormMS.Server.Services.Interfaces;
 using DormMS.Server.Repositories.Interfaces;
 using DormMS.Server.DTOs;
+using DormMS.Server.Helpers;
 using DormMS.Server.Models;
 
 namespace DormMS.Server.Services.Implementations;
@@ -177,7 +178,7 @@ public class AssignmentService : Interfaces.IAssignmentService
                 continue;
             }
 
-            var calculatedPoints = CalculateOlderStudentPoints(
+            var calculatedPoints = StudentPointsCalculator.CalculateOlderStudentPoints(
                 student.AverageGrade ?? 0m,
                 student.ESPB,
                 yearsOfStudy,
@@ -216,7 +217,7 @@ public class AssignmentService : Interfaces.IAssignmentService
                     .ToList()
             );
 
-        var quotas = CalculateFacultyQuotas(
+        var quotas = FacultyQuotaCalculator.Calculate(
             groupedByFaculty.ToDictionary(k => k.Key, v => v.Value.Count),
             competition.MaxStudents);
 
@@ -300,15 +301,8 @@ public class AssignmentService : Interfaces.IAssignmentService
             var student = application.Student;
             var incomePerMember = student.FinancialStatus?.IncomePerMember ?? 0;
 
-            // bb = po * 8
             var highSchoolAverage = student.HighSchoolAverageGrade ?? 0;
-            var highSchoolPoints = highSchoolAverage * 8;
-
-            // Socijalni bonus: 1 bod ako je prihod po clanu < 50% prosecne plate
-            const decimal averageSalary = 121650m;
-            var socialBonus = incomePerMember > 0 && incomePerMember < (averageSalary * 0.5m) ? 1m : 0m;
-
-            var totalPoints = highSchoolPoints + socialBonus;
+            var points = StudentPointsCalculator.CalculateFreshmanPoints(highSchoolAverage, incomePerMember);
 
             var assignment = new FreshmanAssignmentDto
             {
@@ -318,9 +312,9 @@ public class AssignmentService : Interfaces.IAssignmentService
                 StudentIDNumber = student.StudentIDNumber,
                 HighSchoolAverageGrade = highSchoolAverage,
                 FacultyName = student.FacultyName,
-                HighSchoolPoints = Math.Round(highSchoolPoints, 2),
-                SocialBonus = socialBonus,
-                CalculatedPoints = Math.Round(totalPoints, 2),
+                HighSchoolPoints = points.HighSchoolPoints,
+                SocialBonus = points.SocialBonus,
+                CalculatedPoints = points.CalculatedPoints,
                 TotalFamilyIncome = student.FinancialStatus?.TotalFamilyIncome ?? 0,
                 FamilyMemberCount = student.FinancialStatus?.FamilyMemberCount ?? 0,
                 IncomePerMember = incomePerMember,
@@ -341,7 +335,7 @@ public class AssignmentService : Interfaces.IAssignmentService
                     .ToList()
             );
 
-        var quotas = CalculateFacultyQuotas(
+        var quotas = FacultyQuotaCalculator.Calculate(
             groupedByFaculty.ToDictionary(k => k.Key, v => v.Value.Count),
             competition.MaxStudents);
 
@@ -386,39 +380,6 @@ public class AssignmentService : Interfaces.IAssignmentService
         result.TotalStudents = freshmanAssignments.Count;
 
         return result;
-    }
-
-    private static Dictionary<string, int> CalculateFacultyQuotas(
-    Dictionary<string, int> facultyApplicationCounts,
-    int maxStudents)
-    {
-        var total = facultyApplicationCounts.Values.Sum();
-
-        if (total == 0)
-            return new Dictionary<string, int>();
-
-        var quotas = new Dictionary<string, int>();
-        var assigned = 0;
-
-        foreach (var faculty in facultyApplicationCounts)
-        {
-            var proportion = (double)faculty.Value / total;
-            var quota = (int)Math.Floor(proportion * maxStudents);
-            quotas[faculty.Key] = quota;
-            assigned += quota;
-        }
-
-        // Ostatak zbog Floor zaokruzivanja - dodeli fakultetima sa najvise prijava
-        var remaining = maxStudents - assigned;
-        var sortedBySize = facultyApplicationCounts
-            .OrderByDescending(f => f.Value)
-            .Select(f => f.Key)
-            .ToList();
-
-        for (int i = 0; i < remaining; i++)
-            quotas[sortedBySize[i % sortedBySize.Count]]++;
-
-        return quotas;
     }
 
     public async Task<object> GetSavedRankingResultsAsync(int competitionId, bool isFreshmanView)
@@ -695,30 +656,6 @@ public class AssignmentService : Interfaces.IAssignmentService
         return room.CurrentOccupancy >= room.Capacity
             ? RoomStatus.FullyOccupied
             : RoomStatus.Available;
-    }
-
-    private decimal CalculateOlderStudentPoints(decimal averageGrade, int espb, int yearsOfStudy, decimal incomePerMember)
-    {
-        if (yearsOfStudy <= 0)
-            return 0;
-
-        var academicPoints = (averageGrade * 5) + ((decimal)espb / yearsOfStudy * 0.8m);
-
-        var espbBonus = 0m;
-        if (espb >= 120 && espb <= 240)
-            espbBonus = 1m;
-        else if (espb > 240)
-            espbBonus = 2m;
-
-        const decimal averageSalary = 121650m;
-        var financialBonus = 0m;
-        if (incomePerMember > 0 && incomePerMember < (averageSalary * 0.5m))
-        {
-            financialBonus = 1m;
-        }
-
-        var totalPoints = academicPoints + espbBonus + financialBonus;
-        return Math.Round(totalPoints, 2);
     }
 
     private async Task<bool> TryAssignStudentAsync(StudentAssignmentDto assignment, Student student, List<Dorm> dorms)
